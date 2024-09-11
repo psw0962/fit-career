@@ -1,7 +1,7 @@
 'use client';
 
 const Auth = () => {
-  return <div>Auth</div>;
+  return <div>Aut</div>;
 };
 
 export default Auth;
