@@ -3,10 +3,14 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useGetUserData, useSignOut } from '@/actions/auth';
 
 const Nav = () => {
   const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const { data, isLoading } = useGetUserData();
+  const { mutate: logout } = useSignOut();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +27,7 @@ const Nav = () => {
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
+
   return (
     <nav className="fixed top-0 w-full shadow bg-white z-10 transition-all duration-300">
       <div
@@ -35,7 +40,14 @@ const Nav = () => {
             className="flex gap-2 items-center cursor-pointer"
             onClick={() => router.push('/')}
           >
-            <Image src="/3.svg" alt="logo" width={40} height={40} />
+            <Image
+              src="/logo.svg"
+              alt="logo"
+              width={40}
+              height={40}
+              style={{ width: 40, height: 40 }}
+              priority={true}
+            />
 
             <p className="text-2xl font-bold">FIT Career</p>
           </div>
@@ -45,29 +57,55 @@ const Nav = () => {
               className="text-xl font-bold cursor-pointer"
               onClick={() => router.push('/hiring')}
             >
-              채용
+              채용정보
             </li>
-            <li
+
+            {/* <li
               className="text-xl font-bold cursor-pointer"
               onClick={() => router.push('/community')}
             >
               커뮤니티
             </li>
+
             <li
               className="text-xl font-bold cursor-pointer"
               onClick={() => router.push('/competition')}
             >
               대회정보
-            </li>
+            </li> */}
           </ul>
         </div>
 
-        <div>
-          <div
-            className="flex gap-10 items-center cursor-pointer"
-            onClick={() => router.push('auth')}
-          >
-            <p className="text-xl font-bold">로그인/회원가입</p>
+        <div className="flex gap-4">
+          <div>
+            {data && (
+              <div
+                className="flex gap-10 items-center cursor-pointer"
+                onClick={() => router.push('/auth/my-page')}
+              >
+                <p className="text-xl font-bold">마이페이지</p>
+              </div>
+            )}
+          </div>
+
+          {data !== undefined && !data && (
+            <div
+              className="flex gap-10 items-center cursor-pointer"
+              onClick={() => router.push('/auth')}
+            >
+              <p className="text-xl font-bold">로그인/회원가입</p>
+            </div>
+          )}
+
+          <div>
+            {data && (
+              <div
+                className="flex gap-10 items-center cursor-pointer"
+                onClick={() => logout()}
+              >
+                <p className="text-xl font-bold">로그아웃</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

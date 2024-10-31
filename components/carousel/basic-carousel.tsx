@@ -36,7 +36,7 @@ const BasicCarousel = () => {
         <CarouselContent>
           {Array.from({ length: 5 }).map((_, index) => (
             <CarouselItem key={index}>
-              <Card className="">
+              <Card className="rounded-xl">
                 <CardContent className="flex items-center justify-center h-96 w-full">
                   <span className="text-4xl">{index + 1}</span>
                 </CardContent>

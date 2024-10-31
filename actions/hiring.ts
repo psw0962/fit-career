@@ -1,0 +1,84 @@
+import { useMutation, UseMutationOptions } from '@tanstack/react-query';
+import { createBrowserSupabaseClient } from '../utils/supabase/client';
+
+// =========================================
+// ============== post hiring
+// =========================================
+const postHiring = async (data: any) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const imageUrls: string[] = [];
+
+  for (const image of data.images) {
+    const { data, error } = await supabase.storage
+      .from('hiring')
+      .upload(`hiring/${Date.now()}-${image.name}`, image);
+
+    if (error) {
+      throw new Error(`이미지 업로드 실패: ${error.message}`);
+    }
+
+    const url = supabase.storage.from('hiring').getPublicUrl(data.path);
+    imageUrls.push(url.data.publicUrl);
+  }
+
+  const { error } = await supabase.from('hiring').insert([
+    {
+      address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
+      position:
+        data.position.job === '기타' ? data.position.etc : data.position.job,
+      period: data.period,
+      title: data.title,
+      content: data.content,
+      dead_line: data.deadLine,
+      images: imageUrls,
+    },
+  ]);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const usePostHiring = (
+  options?: UseMutationOptions<
+    void,
+    Error,
+    {
+      address: object;
+      position: object;
+      period: string;
+      title: string;
+      content: string;
+      deadLine: string;
+      images: File[];
+    },
+    void
+  >
+) => {
+  return useMutation<
+    void,
+    Error,
+    {
+      address: object;
+      position: object;
+      period: string;
+      title: string;
+      content: string;
+      deadLine: string;
+      images: File[];
+    },
+    void
+  >({
+    mutationFn: postHiring,
+    onSuccess: () => {
+      alert('채용 공고가 성공적으로 등록되었습니다.');
+      window.location.replace('/hiring');
+    },
+    onError: (error: Error) => {
+      console.error('채용 공고 등록 중 에러 발생:', error.message);
+      alert('채용 공고 등록에 실패했습니다. 다시 시도해주세요.');
+    },
+    ...options,
+  });
+};

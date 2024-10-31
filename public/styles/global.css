@@ -56,3 +56,30 @@ input, textarea {
   -ms-user-select: auto;
   user-select: auto;
 }
+
+/* data picker */
+.react-datepicker-popper {
+  width: fit-content !important;
+  transform: none !important;
+  position: relative !important;
+  top: 10px !important;
+}
+
+.react-datepicker {
+  border: none !important;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px !important;
+
+}
+
+.react-datepicker__triangle {
+  display: none !important;
+}
+
+.react-datepicker__header {
+  background-color: #206BA5 !important;
+  
+}
+
+.react-datepicker__current-month, .react-datepicker__day-names > div {
+  color: #fff !important
+}

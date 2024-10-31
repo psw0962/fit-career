@@ -26,20 +26,11 @@ const Home = () => {
 
         <p className="text-3xl pt-20 pb-5">{`채용 >`}</p>
 
-        <div className="grid gap-4 grid-cols-4">
-          <div className="border py-10 px-10">test</div>
-          <div className="border py-10 px-10">test</div>
-          <div className="border py-10 px-10">test</div>
-          <div className="border py-10 px-10">test</div>
-        </div>
-
-        <p className="text-3xl pt-20 pb-5">{`커뮤니티 >`}</p>
-
-        <div className="grid gap-4 grid-cols-4">
-          <div className="border py-10 px-10">test</div>
-          <div className="border py-10 px-10">test</div>
-          <div className="border py-10 px-10">test</div>
-          <div className="border py-10 px-10">test</div>
+        <div className="grid gap-4 grid-cols-4 mb-36">
+          <div className="border py-10 px-10 rounded-xl">test</div>
+          <div className="border py-10 px-10 rounded-xl">test</div>
+          <div className="border py-10 px-10 rounded-xl">test</div>
+          <div className="border py-10 px-10 rounded-xl">test</div>
         </div>
       </div>
     </main>
