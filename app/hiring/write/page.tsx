@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import DaumPostcode, { Address } from 'react-daum-postcode';
+import withAuth from '@/hoc/withAuth';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -149,6 +150,53 @@ const HiringWrite = () => {
     setImages(images.filter((_, i) => i !== index));
   };
 
+  const onSubmit = () => {
+    if (!address.zoneAddress || !address.detailAddress) {
+      alert('주소를 모두 입력해주세요.');
+      return;
+    }
+
+    if (!position.job) {
+      alert('직무를 선택해주세요.');
+      return;
+    }
+
+    if (position.job === '기타' && !position.etc) {
+      alert('기타 직무를 입력해주세요.');
+      return;
+    }
+
+    if (!period) {
+      alert('경력을 선택해주세요.');
+      return;
+    }
+
+    if (!title.trim()) {
+      alert('채용공고 제목을 입력해주세요.');
+      return;
+    }
+
+    if (!content.trim()) {
+      alert('채용공고 내용을 입력해주세요.');
+      return;
+    }
+
+    if (!deadLine) {
+      alert('마감일을 선택해주세요.');
+      return;
+    }
+
+    postHring.mutate({
+      address,
+      position,
+      period,
+      title,
+      content,
+      deadLine,
+      images,
+    });
+  };
+
   useEffect(() => {
     if (period === '') {
       setPeriod('신입 ~ 10년 이상');
@@ -157,7 +205,7 @@ const HiringWrite = () => {
   }, []);
 
   return (
-    <div className="flex flex-col p-4">
+    <div className="flex flex-col">
       <p className="text-3xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]">
         채용공고 등록
       </p>
@@ -418,17 +466,7 @@ const HiringWrite = () => {
 
       <button
         className="mx-auto mt-20 px-4 py-2 bg-[#4C71C0] text-white rounded w-fit"
-        onClick={() =>
-          postHring.mutate({
-            address,
-            position,
-            period,
-            title,
-            content,
-            deadLine,
-            images,
-          })
-        }
+        onClick={() => onSubmit()}
       >
         등록하기
       </button>
@@ -436,4 +474,4 @@ const HiringWrite = () => {
   );
 };
 
-export default HiringWrite;
+export default withAuth(HiringWrite);

@@ -6,12 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --cache",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --cache",
     "format": "prettier --write .",
     "generate-types": "npx supabase gen types typescript --project-id cgrwvmaglmelswmojclc --schema public > types_db.ts"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-slider": "^1.2.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@supabase/ssr": "^0.4.0",
@@ -42,7 +43,9 @@
     "autoprefixer": "^10.4.20",
     "eslint": "^8",
     "eslint-config-next": "14.2.5",
+    "eslint-config-prettier": "^9.1.0",
     "postcss": "^8",
+    "prettier": "^3.3.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

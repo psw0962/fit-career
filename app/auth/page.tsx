@@ -40,15 +40,10 @@ const Auth = () => {
             onClick={() => mutate()}
             className="w-full flex items-center justify-center bg-[#FEE500] text-black font-bold py-2 px-4 mt-10 rounded"
           >
-            <Image
-              className="mr-1"
-              src="/svg/kakao-logo.svg"
-              alt="logo"
-              width={40}
-              height={40}
-              style={{ width: 40, height: 40 }}
-              priority={true}
-            />
+            <div className="relative w-10 h-10 mr-1">
+              <Image src="/svg/kakao-logo.svg" alt="kakao-logo" fill priority />
+            </div>
+
             <p>카카오 계정으로 계속하기</p>
           </button>
         </div>

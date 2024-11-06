@@ -12,14 +12,9 @@ const Footer = () => {
           className="flex gap-2 items-center my-5 cursor-pointer"
           onClick={() => router.push('/')}
         >
-          <Image
-            src="/logo.svg"
-            alt="logo"
-            width={40}
-            height={40}
-            style={{ width: 40, height: 40 }}
-            priority={true}
-          />
+          <div className="relative w-10 h-10">
+            <Image src="/logo.svg" alt="logo" fill priority />
+          </div>
 
           <p className="text-2xl font-bold">FIT Career</p>
         </div>

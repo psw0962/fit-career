@@ -40,14 +40,9 @@ const Nav = () => {
             className="flex gap-2 items-center cursor-pointer"
             onClick={() => router.push('/')}
           >
-            <Image
-              src="/logo.svg"
-              alt="logo"
-              width={40}
-              height={40}
-              style={{ width: 40, height: 40 }}
-              priority={true}
-            />
+            <div className="relative w-10 h-10">
+              <Image src="/logo.svg" alt="logo" fill priority />
+            </div>
 
             <p className="text-2xl font-bold">FIT Career</p>
           </div>
@@ -77,36 +72,35 @@ const Nav = () => {
         </div>
 
         <div className="flex gap-4">
-          <div>
-            {data && (
-              <div
-                className="flex gap-10 items-center cursor-pointer"
-                onClick={() => router.push('/auth/my-page')}
-              >
-                <p className="text-xl font-bold">마이페이지</p>
-              </div>
-            )}
-          </div>
-
-          {data !== undefined && !data && (
-            <div
-              className="flex gap-10 items-center cursor-pointer"
-              onClick={() => router.push('/auth')}
-            >
-              <p className="text-xl font-bold">로그인/회원가입</p>
-            </div>
+          {isLoading ? (
+            <div className="text-xl font-bold">로딩 중...</div>
+          ) : (
+            <>
+              {data ? (
+                <>
+                  <div
+                    className="flex gap-10 items-center cursor-pointer"
+                    onClick={() => router.push('/auth/my-page')}
+                  >
+                    <p className="text-xl font-bold">마이페이지</p>
+                  </div>
+                  <div
+                    className="flex gap-10 items-center cursor-pointer"
+                    onClick={() => logout()}
+                  >
+                    <p className="text-xl font-bold">로그아웃</p>
+                  </div>
+                </>
+              ) : (
+                <div
+                  className="flex gap-10 items-center cursor-pointer"
+                  onClick={() => router.push('/auth')}
+                >
+                  <p className="text-xl font-bold">로그인/회원가입</p>
+                </div>
+              )}
+            </>
           )}
-
-          <div>
-            {data && (
-              <div
-                className="flex gap-10 items-center cursor-pointer"
-                onClick={() => logout()}
-              >
-                <p className="text-xl font-bold">로그아웃</p>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </nav>
