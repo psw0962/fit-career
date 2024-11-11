@@ -3,7 +3,7 @@
 import { regions } from '@/constant/regions';
 import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
-import { City, RegionsFilterProps } from '@/types/hiring/region-filter-type';
+import { City, RegionsFilterProps } from '@/types/hiring/filter-type';
 
 const RegionsFilter: React.FC<RegionsFilterProps> = ({
   regionFilter,
@@ -20,7 +20,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
     if (!regionFilter.selectedCity) return;
 
     const cityName = regionFilter.selectedCity.city;
-    const countyLabel = `${cityName}-${county}`;
+    const countyLabel = `${cityName} ${county}`;
     const isCountySelected =
       regionFilter.selectedCounties.includes(countyLabel);
 
@@ -29,7 +29,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
     if (county === `${cityName} 전체`) {
       if (regionFilter.allSelectedCities.includes(cityName)) {
         updatedCounties = regionFilter.selectedCounties.filter(
-          (item) => !item.startsWith(`${cityName}-`)
+          (item) => !item.startsWith(`${cityName}`)
         );
         setRegionFilter((prev) => ({
           ...prev,
@@ -41,11 +41,11 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
       } else {
         updatedCounties = [
           ...regionFilter.selectedCounties.filter(
-            (item) => !item.startsWith(`${cityName}-`)
+            (item) => !item.startsWith(`${cityName}`)
           ),
           ...regionFilter.selectedCity.county
             .filter((c) => c !== `${cityName} 전체`)
-            .map((c) => `${cityName}-${c}`),
+            .map((c) => `${cityName} ${c}`),
         ];
         setRegionFilter((prev) => ({
           ...prev,
@@ -60,7 +60,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
 
       const allCountiesSelected = regionFilter.selectedCity.county
         .filter((c) => c !== `${cityName} 전체`)
-        .every((c) => updatedCounties.includes(`${cityName}-${c}`));
+        .every((c) => updatedCounties.includes(`${cityName} ${c}`));
 
       setRegionFilter((prev) => ({
         ...prev,
@@ -109,18 +109,18 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
 
           {/* City selection */}
           <div className="flex w-full mt-3">
-            <div className="border p-4 w-full max-h-72 overflow-auto">
+            <div className="border p-4 w-full max-h-72 overflow-auto rounded">
               <ul>
                 {regions.map((region) => (
                   <li key={region.id} className="flex items-center">
                     <input
                       type="radio"
-                      id={`city-${region.id}`}
+                      id={`city ${region.id}`}
                       name="city"
                       checked={regionFilter.selectedCity?.id === region.id}
                       onChange={() => handleCitySelect(region)}
                     />
-                    <label htmlFor={`city-${region.id}`} className="ml-2">
+                    <label htmlFor={`city ${region.id}`} className="ml-2">
                       {region.city}
                     </label>
                   </li>
@@ -130,14 +130,14 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
 
             {/* County selection */}
             {regionFilter.selectedCity ? (
-              <div className="border p-4 w-full max-h-72 overflow-auto">
+              <div className="border p-4 w-full max-h-72 overflow-auto rounded">
                 <ul>
                   {regionFilter.selectedCity.county.map((county) => {
                     const countyLabel =
                       county ===
                       `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체`
                         ? county
-                        : `${regionFilter.selectedCity && regionFilter.selectedCity.city}-${county}`;
+                        : `${regionFilter.selectedCity && regionFilter.selectedCity.city} ${county}`;
 
                     const isAllSelected =
                       county ===
@@ -151,7 +151,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                         )
                         .every((c) =>
                           regionFilter.selectedCounties.includes(
-                            `${regionFilter.selectedCity && regionFilter.selectedCity.city}-${c}`
+                            `${regionFilter.selectedCity && regionFilter.selectedCity.city} ${c}`
                           )
                         );
 
@@ -159,7 +159,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                       <li key={county} className="flex items-center">
                         <input
                           type="checkbox"
-                          id={`county-${countyLabel}`}
+                          id={`county ${countyLabel}`}
                           checked={
                             county === `${regionFilter.selectedCity?.city} 전체`
                               ? (isAllSelected ?? false)
@@ -172,7 +172,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                           }
                         />
                         <label
-                          htmlFor={`county-${countyLabel}`}
+                          htmlFor={`county ${countyLabel}`}
                           className="ml-2"
                         >
                           {county}
@@ -183,7 +183,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                 </ul>
               </div>
             ) : (
-              <div className="flex items-center justify-center border p-4 w-full max-h-72 overflow-auto">
+              <div className="flex items-center justify-center border p-4 w-full max-h-72 overflow-auto rounded">
                 시/도를 선택해 주세요.
               </div>
             )}
@@ -192,7 +192,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
           <div className="flex flex-wrap gap-2 mt-4">
             {regionFilter.allSelectedCities.map((city) => (
               <div
-                key={`${city}-전체`}
+                key={`${city} 전체`}
                 className="w-fit px-2 py-2 bg-[#4C71C0] rounded text-white"
               >
                 {`${city} 전체`}
@@ -205,10 +205,13 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                 return !regionFilter.allSelectedCities.includes(cityName);
               })
               .map((county) => (
-                <div
-                  key={county}
-                  className="w-fit px-2 py-2 bg-[#4C71C0] rounded text-white"
-                >
+                //   <div
+                //   key={county}
+                //   className="w-fit px-2 py-2 bg-[#4C71C0] rounded text-white"
+                // >
+                //   {county}
+                // </div>
+                <div key={county} className="w-fit px-2 py-2 border rounded">
                   {county}
                 </div>
               ))}

@@ -1,0 +1,15 @@
+export const positions = [
+  { id: 1, position: '퍼스널 트레이너(PT)' },
+  { id: 2, position: '필라테스' },
+  { id: 3, position: '요가' },
+  { id: 4, position: '골프' },
+  { id: 5, position: 'GX(댄스/스피닝/에어로빅/그룹운동)' },
+  { id: 6, position: '체조/발레/무용' },
+  { id: 7, position: '점핑/트램펄린' },
+  { id: 8, position: '구기종목(축구/농구/배구/테니스/스쿼시)' },
+  { id: 9, position: '인포메이션(FC)' },
+  { id: 10, position: '지점 관리자' },
+  { id: 11, position: '학교 체육/방과후 강사' },
+  { id: 12, position: '경호/행사/이벤트' },
+  { id: 13, position: '기타' },
+];
