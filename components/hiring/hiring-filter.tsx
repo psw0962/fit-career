@@ -57,7 +57,25 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
     data =
       periodValueFilter[0] === 0 && periodValueFilter[1] === 10
         ? data
-        : data.filter((data) => data.period === periodValueFilter);
+        : data
+            .filter((data) => {
+              const [start, end] = periodValueFilter;
+
+              if (start === end) {
+                return data.period.some((period: number) => period >= start);
+              } else {
+                return data.period.some(
+                  (period: number) => period >= start && period <= end
+                );
+              }
+            })
+            .filter((data) => {
+              const [start, end] = periodValueFilter;
+
+              return data.period.every(
+                (period: number) => period >= start && period <= end
+              );
+            });
 
     setFilteredData(data);
   };

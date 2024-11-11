@@ -4,87 +4,36 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
 import { PeriodFilterProps } from '@/types/hiring/filter-type';
-import { useState } from 'react';
+import { useEffect } from 'react';
 
 const PeriodFilter: React.FC<PeriodFilterProps> = ({
   periodValueFilter,
   setPeriodValueFilter,
 }) => {
-  const [period, setPeriod] = useState<string>('전체');
-
-  //   const periodValueHandleChange = (
-  //     event: React.ChangeEvent<HTMLSelectElement>
-  //   ) => {
-  //     const value = event.target.value;
-  //     let result: string;
-
-  //     if (Array.isArray(periodValueFilter) && periodValueFilter.length === 2) {
-  //       const [start, end] = periodValueFilter;
-  //       result = `${start}년 ~ ${end}년 이상`;
-  //     } else {
-  //       result = value;
-  //     }
-
-  //     setPeriod(result);
-  //   };
-
-  const periodValueHandleChange = (value: number[]) => {
-    let result: string;
-
+  const formatPeriod = (value: number[]) => {
     if (value.length === 2) {
       const [start, end] = value;
-      result = `${start}년 ~ ${end}년 이상`;
-    } else {
-      result = `${value[0]}년`;
-    }
 
-    setPeriod(result);
-    setPeriodValueFilter(value);
+      if (start === 0 && end === 0) {
+        return '신입/연습생';
+      }
+
+      if (start === 0 && end === 10) {
+        return '전체';
+      }
+
+      if (start === end) {
+        return `${start}년 이상`;
+      }
+      return `${start}년 ~ ${end === 10 ? '10년 이상' : `${end}년 이상`}`;
+    } else {
+      return `${value[0]}년 이상`;
+    }
   };
 
-  //   const periodValueHandleChange = (newValue: number[]) => {
-  //     const [start, end] = newValue;
-
-  //     let result = '';
-
-  //     if (start === 0 && end === 10) {
-  //       result = '전체';
-  //       setPeriodValue(newValue);
-  //       setPeriodFilter(result);
-
-  //       return;
-  //     }
-
-  //     if (start === 0 && end === 0) {
-  //       result = `신입/연습생`;
-  //       setPeriodValue(newValue);
-  //       setPeriodFilter(result);
-
-  //       return;
-  //     }
-
-  //     if (start === end) {
-  //       result = `${start}년 이상`;
-  //       setPeriodValue(newValue);
-  //       setPeriodFilter(result);
-
-  //       return;
-  //     }
-
-  //     if (start === 0 || end === 0) {
-  //       result = `신입 ~ ${end}년 이상`;
-  //       setPeriodValue(newValue);
-  //       setPeriodFilter(result);
-
-  //       return;
-  //     }
-
-  //     result = `${start}년 ~ ${end === 10 ? '10년 이상' : `${end}년 이상`}`;
-  //     setPeriodValue(newValue);
-  //     setPeriodFilter(result);
-
-  //     return;
-  //   };
+  const periodValueHandleChange = (value: number[]) => {
+    setPeriodValueFilter(value);
+  };
 
   return (
     <Dialog.Root>
@@ -92,7 +41,7 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
         <button className="flex items-center gap-0.5 py-2 px-2 border rounded">
           <p>경력필터</p>
           <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">
-            {period}
+            {formatPeriod(periodValueFilter)}
           </p>
         </button>
       </Dialog.Trigger>
@@ -108,7 +57,6 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
           <button
             className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
             onClick={() => {
-              setPeriod('전체');
               setPeriodValueFilter([0, 10]);
             }}
           >
@@ -118,7 +66,7 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
             <p>초기화</p>
           </button>
 
-          <div className="mt-4">{period}</div>
+          <div className="mt-4">{formatPeriod(periodValueFilter)}</div>
 
           <div className="flex flex-wrap gap-2 mt-4 border rounded p-4">
             <Slider.Root
@@ -131,29 +79,17 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
               <Slider.Track className="relative h-[3px] grow rounded-full bg-blackA7">
                 <Slider.Range className="absolute h-full rounded-full bg-slate-200" />
               </Slider.Track>
+
+              <Slider.Thumb
+                className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
+                aria-label="Volume"
+              />
+
+              <Slider.Thumb
+                className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
+                aria-label="Volume"
+              />
             </Slider.Root>
-
-            {/* <Slider.Root
-              className="relative flex h-5 w-[300px] mt-2 touch-none select-none items-center"
-              value={periodValueFilter}
-              onValueChange={periodValueHandleChange}
-              max={10}
-              step={1}
-            >
-              <Slider.Track className="relative h-[3px] grow rounded-full bg-blackA7">
-                <Slider.Range className="absolute h-full rounded-full bg-slate-200" />
-              </Slider.Track>
-
-              <Slider.Thumb
-                className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
-                aria-label="Volume"
-              />
-
-              <Slider.Thumb
-                className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
-                aria-label="Volume"
-              />
-            </Slider.Root> */}
           </div>
 
           <Dialog.Close asChild>

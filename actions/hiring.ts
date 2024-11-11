@@ -38,7 +38,7 @@ const postHiring = async (data: any) => {
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
       position:
         data.position.job === '기타' ? data.position.etc : data.position.job,
-      period: data.period,
+      period: data.periodValue,
       title: data.title,
       content: data.content,
       dead_line: data.deadLine,
@@ -59,7 +59,7 @@ export const usePostHiring = (
     {
       address: object;
       position: object;
-      period: string;
+      periodValue: number[];
       title: string;
       content: string;
       deadLine: string;
@@ -74,7 +74,7 @@ export const usePostHiring = (
     {
       address: object;
       position: object;
-      period: string;
+      periodValue: number[];
       title: string;
       content: string;
       deadLine: string;

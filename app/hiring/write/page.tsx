@@ -8,7 +8,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import DaumPostcode, { Address } from 'react-daum-postcode';
@@ -68,7 +68,6 @@ const HiringWrite = () => {
     job: '',
     etc: '',
   });
-  const [period, setPeriod] = useState('');
   const [periodValue, setPeriodValue] = useState<number[]>([0, 10]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState(`
@@ -95,48 +94,29 @@ const HiringWrite = () => {
     });
   };
 
-  const periodValueHandleChange = (newValue: number[]) => {
-    const [start, end] = newValue;
+  const formatPeriod = (value: number[]) => {
+    if (value.length === 2) {
+      const [start, end] = value;
 
-    let result = '';
+      if (start === 0 && end === 0) {
+        return '신입/연습생';
+      }
 
-    if (start === 0 && end === 10) {
-      result = '전체';
-      setPeriodValue(newValue);
-      setPeriod(result);
+      if (start === 0 && end === 10) {
+        return '전체';
+      }
 
-      return;
+      if (start === end) {
+        return `${start}년 이상`;
+      }
+      return `${start}년 ~ ${end === 10 ? '10년 이상' : `${end}년 이상`}`;
+    } else {
+      return `${value[0]}년 이상`;
     }
+  };
 
-    if (start === 0 && end === 0) {
-      result = `신입/연습생`;
-      setPeriodValue(newValue);
-      setPeriod(result);
-
-      return;
-    }
-
-    if (start === end) {
-      result = `${start}년 이상`;
-      setPeriodValue(newValue);
-      setPeriod(result);
-
-      return;
-    }
-
-    if (start === 0 || end === 0) {
-      result = `신입 ~ ${end}년 이상`;
-      setPeriodValue(newValue);
-      setPeriod(result);
-
-      return;
-    }
-
-    result = `${start}년 ~ ${end === 10 ? '10년 이상' : `${end}년 이상`}`;
-    setPeriodValue(newValue);
-    setPeriod(result);
-
-    return;
+  const periodValueHandleChange = (value: number[]) => {
+    setPeriodValue(value);
   };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -166,7 +146,7 @@ const HiringWrite = () => {
       return;
     }
 
-    if (!period) {
+    if (!periodValue) {
       alert('경력을 선택해주세요.');
       return;
     }
@@ -189,20 +169,13 @@ const HiringWrite = () => {
     postHring.mutate({
       address,
       position,
-      period,
+      periodValue,
       title,
       content,
       deadLine,
       images,
     });
   };
-
-  useEffect(() => {
-    if (period === '') {
-      setPeriod('신입 ~ 10년 이상');
-      return;
-    }
-  }, []);
 
   return (
     <div className="flex flex-col">
@@ -328,7 +301,7 @@ const HiringWrite = () => {
           필요 경력
         </label>
 
-        {period}
+        {formatPeriod(periodValue)}
 
         <Slider.Root
           className="relative flex h-5 w-[300px] mt-2 touch-none select-none items-center"
