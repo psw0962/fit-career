@@ -86,8 +86,6 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
 
   return (
     <>
-      {hiringDataIsLoading && <p>Loading...</p>}
-
       <div className="grid grid-cols-5 gap-3">
         {filteredData !== undefined &&
           filteredData.map((x: any) => {
@@ -106,6 +104,7 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                   />
                 </div>
 

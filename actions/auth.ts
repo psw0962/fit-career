@@ -91,11 +91,11 @@ export const useGetUserData = () => {
   return useQuery<User | null, Error>({
     queryKey: ['userData'],
     queryFn: getUserData,
-    staleTime: 1000 * 60 * 5, // 5분 동안 stale 상태로 간주하지 않음
-    retry: 1, // 실패 시 1번만 재시도
-    refetchOnMount: false, // 마운트 시 다시 fetch하지 않음
-    refetchOnWindowFocus: false, // 창이 포커스를 얻을 때 다시 fetch하지 않음
-    refetchOnReconnect: false, // 네트워크 재연결 시 다시 fetch하지 않음
-    throwOnError: true,
+    retry: 4,
+    // staleTime: 1000 * 60 * 5,
+    // refetchOnMount: false,
+    // refetchOnWindowFocus: false,
+    // refetchOnReconnect: false,
+    // throwOnError: true,
   });
 };
