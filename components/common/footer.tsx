@@ -13,7 +13,13 @@ const Footer = () => {
           onClick={() => router.push('/')}
         >
           <div className="relative w-10 h-10">
-            <Image src="/logo.svg" alt="logo" fill priority />
+            <Image
+              src="/logo.svg"
+              alt="logo"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              fill
+              priority
+            />
           </div>
 
           <p className="text-2xl font-bold">FIT Career</p>

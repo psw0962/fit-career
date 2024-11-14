@@ -1,10 +1,12 @@
 'use client';
 
+import Profile from '@/components/my-page/profile';
 import * as Tabs from '@radix-ui/react-tabs';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState<string>('profile');
+  const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   const getClassName = (value: string) => {
     return `px-4 py-2 ${
@@ -14,37 +16,81 @@ const MyPage = () => {
     }`;
   };
 
+  useEffect(() => {
+    const activeTabRef = tabRefs.current[activeTab];
+    if (activeTabRef) {
+      activeTabRef.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+    }
+  }, [activeTab]);
+
   return (
-    <div className="p-4">
+    <div>
+      <p className="text-3xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]">
+        마이페이지
+      </p>
+
       <Tabs.Root
+        className="pt-4"
         defaultValue="profile"
         onValueChange={(value) => setActiveTab(value)}
       >
-        <Tabs.List className="flex border-b">
-          <Tabs.Trigger className={getClassName('profile')} value="profile">
+        <Tabs.List className="flex border-b whitespace-nowrap overflow-auto">
+          <Tabs.Trigger
+            ref={(el) => {
+              tabRefs.current['profile'] = el;
+            }}
+            className={getClassName('profile')}
+            value="profile"
+          >
             프로필
           </Tabs.Trigger>
 
-          <Tabs.Trigger className={getClassName('documents')} value="documents">
-            내 이력서
+          <Tabs.Trigger
+            ref={(el) => {
+              tabRefs.current['resume'] = el;
+            }}
+            className={getClassName('resume')}
+            value="resume"
+          >
+            이력서
           </Tabs.Trigger>
 
-          <Tabs.Trigger className={getClassName('settings')} value="settings">
-            기업회원
+          <Tabs.Trigger
+            ref={(el) => {
+              tabRefs.current['enterprise'] = el;
+            }}
+            className={getClassName('enterprise')}
+            value="enterprise"
+          >
+            기업 프로필
+          </Tabs.Trigger>
+
+          <Tabs.Trigger
+            ref={(el) => {
+              tabRefs.current['employment'] = el;
+            }}
+            className={getClassName('employment')}
+            value="employment"
+          >
+            내가 등록한 채용공고
           </Tabs.Trigger>
         </Tabs.List>
 
         <div className="mt-4">
           <Tabs.Content value="profile">
-            <p>프로필</p>
+            <Profile />
           </Tabs.Content>
 
-          <Tabs.Content value="documents">
-            <p>내 이력서</p>
+          <Tabs.Content value="resume">
+            <p>이력서</p>
           </Tabs.Content>
 
-          <Tabs.Content value="settings">
-            <p>기업회원</p>
+          <Tabs.Content value="enterprise">
+            <p>기업 프로필</p>
+          </Tabs.Content>
+
+          <Tabs.Content value="employment">
+            <p>내가 등록한 채용공고</p>
           </Tabs.Content>
         </div>
       </Tabs.Root>

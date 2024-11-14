@@ -42,7 +42,6 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
         ? hiringData
         : hiringData.filter((data) => {
             const addressParts = `${data.address.split(' ')[1]} ${data.address.split(' ')[2]}`;
-            console.log(addressParts);
 
             return regionFilter.selectedCounties.includes(addressParts);
           });

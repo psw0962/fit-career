@@ -43,7 +43,13 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
             }}
           >
             <div className="relative w-4 h-4">
-              <Image src="/svg/reset.svg" alt="reset" fill priority />
+              <Image
+                src="/svg/reset.svg"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                alt="reset"
+                fill
+                priority
+              />
             </div>
             <p>초기화</p>
           </button>
@@ -65,6 +71,7 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
             <Image
               src="/svg/close.svg"
               alt="close"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="absolute right-4 top-4 cursor-pointer"
               aria-label="Close"
               width={25}

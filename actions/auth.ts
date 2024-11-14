@@ -80,18 +80,41 @@ export const useSignOut = (
 // =========================================
 // ============== get user data
 // =========================================
-const getUserData = async (): Promise<User | null> => {
+const getUserData = async (): Promise<User | null | undefined> => {
   const supabase = createBrowserSupabaseClient();
-  const { data }: any = await supabase.auth.getUser();
 
-  return data.user;
+  try {
+    const { data, error } = await supabase.auth.getUser();
+
+    if (error) {
+      console.error('Failed to fetch user:', error.message);
+      return undefined;
+    }
+
+    if (!data.user) {
+      const refreshResponse = await supabase.auth.refreshSession();
+      if (refreshResponse.error) {
+        console.error(
+          'Failed to refresh session:',
+          refreshResponse.error.message
+        );
+        return null; // 로그인이 필요한 상태로 처리
+      }
+      return refreshResponse.data.session?.user ?? null;
+    }
+
+    return data.user;
+  } catch (err) {
+    console.error('Unexpected error in getUserData:', err);
+    return undefined;
+  }
 };
 
 export const useGetUserData = () => {
-  return useQuery<User | null, Error>({
+  return useQuery({
     queryKey: ['userData'],
     queryFn: getUserData,
-    retry: 4,
+    retry: 3,
     // staleTime: 1000 * 60 * 5,
     // refetchOnMount: false,
     // refetchOnWindowFocus: false,
