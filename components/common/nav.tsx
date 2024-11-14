@@ -32,12 +32,25 @@ const Nav = () => {
   }, []);
 
   useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!isLoading && data === null) {
       router.push('/auth');
     }
   }, [data, isLoading, router]);
-
-  console.log(data);
 
   if (isLoading) return <GlobalSpinner />;
 
@@ -57,7 +70,7 @@ const Nav = () => {
             <div className="relative w-10 h-10 ">
               <Image
                 className="rounded-full"
-                src="/logo.svg"
+                src="/svg/logo.svg"
                 alt="logo"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 fill
@@ -130,12 +143,26 @@ const Nav = () => {
 
         {/* mobile */}
         <div className="flex md:hidden items-center">
-          <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <Image src="/menu.svg" alt="menu" width={35} height={35} />
-          </button>
+          {!isMobileMenuOpen && (
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <Image src="/svg/menu.svg" alt="menu" width={35} height={35} />
+            </button>
+          )}
+
+          {isMobileMenuOpen && (
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+              <Image src="/svg/close.svg" alt="close" width={35} height={35} />
+            </button>
+          )}
         </div>
 
-        {isMobileMenuOpen && <MobileNav />}
+        <div
+          className={`fixed inset-0 px-6 top-24 bg-white z-40 transition-all duration-300 ${
+            isMobileMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
+          }`}
+        >
+          <MobileNav />
+        </div>
       </div>
     </nav>
   );

@@ -98,7 +98,7 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
               >
                 <div className="relative w-10 h-10 mx-auto mb-4">
                   <Image
-                    src={x.images.length !== 0 ? x.images[0] : '/logo.svg'}
+                    src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
                     alt={`image ${x.id}`}
                     fill
                     priority

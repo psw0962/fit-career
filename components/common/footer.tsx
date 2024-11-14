@@ -14,7 +14,7 @@ const Footer = () => {
         >
           <div className="relative w-10 h-10">
             <Image
-              src="/logo.svg"
+              src="/svg/logo.svg"
               alt="logo"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               fill
