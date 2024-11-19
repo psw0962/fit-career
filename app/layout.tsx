@@ -10,11 +10,11 @@ export const metadata: Metadata = {
   icons: '/favicon.ico',
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <ReactQueryClientProvider>
       <html lang="en">
@@ -32,4 +32,6 @@ export default function RootLayout({
       </html>
     </ReactQueryClientProvider>
   );
-}
+};
+
+export default RootLayout;

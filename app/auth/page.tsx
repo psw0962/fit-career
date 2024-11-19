@@ -9,8 +9,8 @@ import GlobalSpinner from '@/components/common/global-spinner';
 
 const Auth = () => {
   const router = useRouter();
-  const { mutate } = useSignInWithKakao();
 
+  const { mutate } = useSignInWithKakao();
   const { data, isLoading } = useGetUserData();
 
   useEffect(() => {

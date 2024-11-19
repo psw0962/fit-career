@@ -1,4 +1,3 @@
-import { createServerSupabaseClient } from '../utils/supabase/server';
 import { createBrowserSupabaseClient } from '../utils/supabase/client';
 import {
   useQuery,
@@ -21,7 +20,7 @@ const signInWithKakao = async (): Promise<SignInResponse> => {
     options: {
       redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
         ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/auth/callback`
-        : 'http://127.0.0.1:3000/auth/callback',
+        : 'http://localhost:3000/auth/callback',
     },
   });
 
@@ -38,7 +37,7 @@ export const useSignInWithKakao = (
   return useMutation<SignInResponse, Error, void, void>({
     mutationFn: signInWithKakao,
     onSuccess: (data) => {
-      // console.log(data);
+      console.log(data);
     },
     onError: (error: Error) => {
       console.error('로그인 중 에러 발생:', error.message);
@@ -80,33 +79,33 @@ export const useSignOut = (
 // =========================================
 // ============== get user data
 // =========================================
-const getUserData = async (): Promise<User | null | undefined> => {
+export const getUserData = async (): Promise<User | null> => {
   const supabase = createBrowserSupabaseClient();
 
   try {
     const { data, error } = await supabase.auth.getUser();
 
-    if (error) {
-      console.error('Failed to fetch user:', error.message);
-      return undefined;
-    }
+    // if (error) {
+    //   console.error('Failed to fetch user:', error.message);
+    //   return null;
+    // }
 
-    if (!data.user) {
-      const refreshResponse = await supabase.auth.refreshSession();
-      if (refreshResponse.error) {
-        console.error(
-          'Failed to refresh session:',
-          refreshResponse.error.message
-        );
-        return null; // 로그인이 필요한 상태로 처리
-      }
-      return refreshResponse.data.session?.user ?? null;
-    }
+    // if (!data.user) {
+    //   const refreshResponse = await supabase.auth.refreshSession();
+    //   if (refreshResponse.error) {
+    //     console.error(
+    //       'Failed to refresh session:',
+    //       refreshResponse.error.message
+    //     );
+    //     return null;
+    //   }
+    //   return refreshResponse.data.session?.user ?? null;
+    // }
 
     return data.user;
   } catch (err) {
     console.error('Unexpected error in getUserData:', err);
-    return undefined;
+    return null;
   }
 };
 
@@ -115,10 +114,10 @@ export const useGetUserData = () => {
     queryKey: ['userData'],
     queryFn: getUserData,
     retry: 3,
+    throwOnError: true,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
     // staleTime: 1000 * 60 * 5,
-    // refetchOnMount: false,
-    // refetchOnWindowFocus: false,
-    // refetchOnReconnect: false,
-    // throwOnError: true,
   });
 };

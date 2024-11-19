@@ -1,10 +1,33 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      'cgrwvmaglmelswmojclc.supabase.co',
-      'http://127.0.0.1:3000',
-      'k.kakaocdn.net',
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'fit-career.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '3000',
+        pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: 'k.kakaocdn.net',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'k.kakaocdn.net',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cgrwvmaglmelswmojclc.supabase.co',
+        pathname: '/**',
+      },
     ],
     disableStaticImages: true,
   },

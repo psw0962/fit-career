@@ -3,6 +3,7 @@
 import Profile from '@/components/my-page/profile';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useRef, useState } from 'react';
+import withAuth from '@/hoc/withAuth';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState<string>('profile');
@@ -98,4 +99,4 @@ const MyPage = () => {
   );
 };
 
-export default MyPage;
+export default withAuth(MyPage);
