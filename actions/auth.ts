@@ -85,22 +85,22 @@ export const getUserData = async (): Promise<User | null> => {
   try {
     const { data, error } = await supabase.auth.getUser();
 
-    // if (error) {
-    //   console.error('Failed to fetch user:', error.message);
-    //   return null;
-    // }
+    if (error) {
+      console.error('Failed to fetch user:', error.message);
+      return null;
+    }
 
-    // if (!data.user) {
-    //   const refreshResponse = await supabase.auth.refreshSession();
-    //   if (refreshResponse.error) {
-    //     console.error(
-    //       'Failed to refresh session:',
-    //       refreshResponse.error.message
-    //     );
-    //     return null;
-    //   }
-    //   return refreshResponse.data.session?.user ?? null;
-    // }
+    if (!data.user) {
+      const refreshResponse = await supabase.auth.refreshSession();
+      if (refreshResponse.error) {
+        console.error(
+          'Failed to refresh session:',
+          refreshResponse.error.message
+        );
+        return null;
+      }
+      return refreshResponse.data.session?.user ?? null;
+    }
 
     return data.user;
   } catch (err) {

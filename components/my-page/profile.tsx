@@ -4,7 +4,7 @@ import { useGetUserData } from '@/actions/auth';
 import Image from 'next/image';
 import GlobalSpinner from '@/components/common/global-spinner';
 
-const Profile = () => {
+const Profile = (): React.ReactElement => {
   const { data, isLoading } = useGetUserData();
 
   if (isLoading || !data) {

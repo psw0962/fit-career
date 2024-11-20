@@ -4,6 +4,7 @@ import Profile from '@/components/my-page/profile';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useRef, useState } from 'react';
 import withAuth from '@/hoc/withAuth';
+import EnterpriseProfile from '@/components/my-page/enterprise-profile';
 
 const MyPage = () => {
   const [activeTab, setActiveTab] = useState<string>('profile');
@@ -48,22 +49,22 @@ const MyPage = () => {
 
           <Tabs.Trigger
             ref={(el) => {
-              tabRefs.current['resume'] = el;
-            }}
-            className={getClassName('resume')}
-            value="resume"
-          >
-            이력서
-          </Tabs.Trigger>
-
-          <Tabs.Trigger
-            ref={(el) => {
               tabRefs.current['enterprise'] = el;
             }}
             className={getClassName('enterprise')}
             value="enterprise"
           >
             기업 프로필
+          </Tabs.Trigger>
+
+          <Tabs.Trigger
+            ref={(el) => {
+              tabRefs.current['resume'] = el;
+            }}
+            className={getClassName('resume')}
+            value="resume"
+          >
+            내 이력서
           </Tabs.Trigger>
 
           <Tabs.Trigger
@@ -82,12 +83,12 @@ const MyPage = () => {
             <Profile />
           </Tabs.Content>
 
-          <Tabs.Content value="resume">
-            <p>이력서</p>
+          <Tabs.Content value="enterprise">
+            <EnterpriseProfile />
           </Tabs.Content>
 
-          <Tabs.Content value="enterprise">
-            <p>기업 프로필</p>
+          <Tabs.Content value="resume">
+            <p>내 이력서</p>
           </Tabs.Content>
 
           <Tabs.Content value="employment">

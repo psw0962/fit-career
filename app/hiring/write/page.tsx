@@ -4,15 +4,15 @@ import { usePostHiring } from '@/actions/hiring';
 import * as Slider from '@radix-ui/react-slider';
 import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import 'froala-editor/css/froala_editor.pkgd.min.css';
-import 'froala-editor/css/froala_style.min.css';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import DaumPostcode, { Address } from 'react-daum-postcode';
 import withAuth from '@/hoc/withAuth';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+import 'froala-editor/css/froala_style.min.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -121,13 +121,13 @@ const HiringWrite = () => {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
-      setImages([...images, ...Array.from(files)]);
+    if (files && files.length > 0) {
+      setImages([files[0]]);
     }
   };
 
-  const removeImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
+  const removeImage = () => {
+    setImages([]);
   };
 
   const onSubmit = () => {
@@ -428,7 +428,7 @@ const HiringWrite = () => {
             />
 
             <button
-              onClick={() => removeImage(index)}
+              onClick={() => removeImage()}
               className="absolute top-1 right-1 bg-[#4C71C0] text-white rounded px-1"
             >
               &times;
