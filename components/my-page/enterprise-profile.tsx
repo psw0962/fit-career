@@ -1,11 +1,17 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import DaumPostcode, { Address } from 'react-daum-postcode';
+import Spinner from '@/components/common/spinner';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
+import {
+  useGetEnterpriseProfile,
+  usePatchEnterpriseProfile,
+  usePostEnterpriseProfile,
+} from '@/actions/auth';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -16,7 +22,7 @@ const FroalaEditor = dynamic(
     return values[0];
   },
   {
-    loading: () => <p>LOADING</p>,
+    loading: () => <Spinner />,
     ssr: false,
   }
 );
@@ -50,7 +56,7 @@ const DAUMPOSTCODESTYLE = {
 
 const EnterpriseProfile = (): React.ReactElement => {
   const [name, setName] = useState<string>('');
-  const [establishment, setEstablishment] = useState<number>(1);
+  const [establishment, setEstablishment] = useState<string>('1');
   const [address, setAddress] = useState({
     findAddressModal: false,
     zoneCode: '',
@@ -68,6 +74,10 @@ const EnterpriseProfile = (): React.ReactElement => {
       findAddressModal: false,
     });
   };
+
+  const { mutate: postMutate } = usePostEnterpriseProfile();
+  const { mutate: patchMutate } = usePatchEnterpriseProfile();
+  const { data: enterpriseProfile } = useGetEnterpriseProfile();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -96,7 +106,7 @@ const EnterpriseProfile = (): React.ReactElement => {
       return;
     }
 
-    if (establishment === 0) {
+    if (establishment === '0') {
       alert('업력을 입력해주세요.');
       return;
     }
@@ -105,9 +115,36 @@ const EnterpriseProfile = (): React.ReactElement => {
       alert('회사 소개를 입력해주세요.');
       return;
     }
-
-    console.log(name, establishment, address, description, logo);
+    establishment;
+    if (enterpriseProfile?.length === 0) {
+      return postMutate({ name, establishment, address, description, logo });
+    } else {
+      return patchMutate({ name, establishment, address, description, logo });
+    }
   };
+
+  useEffect(() => {
+    if (
+      enterpriseProfile?.length !== 0 &&
+      enterpriseProfile !== undefined &&
+      enterpriseProfile !== null
+    ) {
+      const logoUrl = enterpriseProfile[0].logo[0];
+      const [zoneCode, ...zoneAddress] =
+        enterpriseProfile[0].address.split(' ');
+
+      setLogo([logoUrl]);
+      setName(enterpriseProfile[0].name);
+      setAddress({
+        ...address,
+        zoneCode: zoneCode,
+        zoneAddress: zoneAddress.slice(0, -1).join(' '),
+        detailAddress: zoneAddress.pop(),
+      });
+      setEstablishment(enterpriseProfile[0].establishment);
+      setDescription(enterpriseProfile[0].description);
+    }
+  }, [enterpriseProfile]);
 
   return (
     <div>
@@ -117,54 +154,60 @@ const EnterpriseProfile = (): React.ReactElement => {
           회사 로고
         </label>
 
-        {logo.length > 0 ? (
-          <div className="relative w-28 h-20 border-gray-300">
-            <div className="relative w-20 h-20">
-              <Image
-                src={URL.createObjectURL(logo[0])}
-                alt="enterprise logo"
-                fill
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-              />
-            </div>
-
-            <button
-              onClick={() => removeImage(0)}
-              className="absolute top-2 right-2 bg-[#4C71C0] text-white rounded px-1"
-            >
-              &times;
-            </button>
-          </div>
-        ) : (
-          <div className="relative flex items-center justify-center w-36 h-36 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all">
-            <input
-              type="file"
-              id="file-upload"
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              accept="image/*"
-              onChange={handleImageUpload}
-            />
-            <div className="flex flex-col items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-12 w-12 text-gray-400 mb-2"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 16V12M7 8h.01M16 12V8m0 8h.01M16 12h.01m0 0L12 16l-4-4"
+        <div>
+          {logo.length > 0 ? (
+            <div className="relative w-28 h-20 border-gray-300">
+              <div className="relative w-20 h-20">
+                <Image
+                  src={
+                    typeof logo[0] === 'string'
+                      ? logo[0]
+                      : URL.createObjectURL(logo[0] as Blob)
+                  }
+                  alt="enterprise logo"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                 />
-              </svg>
-              <span className="text-gray-600">이미지 업로드</span>
+              </div>
+
+              <button
+                onClick={() => removeImage(0)}
+                className="absolute top-2 right-2 bg-[#4C71C0] text-white rounded px-1"
+              >
+                &times;
+              </button>
             </div>
-          </div>
-        )}
+          ) : (
+            <div className="relative flex items-center justify-center w-36 h-36 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all">
+              <input
+                type="file"
+                id="file-upload"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                accept="image/*"
+                onChange={handleImageUpload}
+              />
+              <div className="flex flex-col items-center">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-12 w-12 text-gray-400 mb-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M7 16V12M7 8h.01M16 12V8m0 8h.01M16 12h.01m0 0L12 16l-4-4"
+                  />
+                </svg>
+                <span className="text-gray-600">이미지 업로드</span>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* name */}
@@ -174,6 +217,7 @@ const EnterpriseProfile = (): React.ReactElement => {
           className="border p-2 mb-4 rounded"
           type="text"
           placeholder="회사 이름을 입력해 주세요"
+          defaultValue={name}
           onChange={(e) => {
             setName(e.target.value);
           }}
@@ -247,9 +291,9 @@ const EnterpriseProfile = (): React.ReactElement => {
             className="border p-2 mb-4 rounded w-24"
             type="number"
             placeholder="업력을 입력해 주세요"
-            defaultValue={establishment}
+            value={establishment}
             onChange={(e) => {
-              setEstablishment(Number(e.target.value));
+              setEstablishment(e.target.value);
             }}
           />
 

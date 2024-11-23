@@ -13,6 +13,7 @@ import withAuth from '@/hoc/withAuth';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
+import Spinner from '@/components/common/spinner';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -23,7 +24,7 @@ const FroalaEditor = dynamic(
     return values[0];
   },
   {
-    loading: () => <p>LOADING</p>,
+    loading: () => <Spinner />,
     ssr: false,
   }
 );

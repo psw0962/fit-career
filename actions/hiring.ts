@@ -9,7 +9,24 @@ import { createBrowserSupabaseClient } from '../utils/supabase/client';
 // =========================================
 // ============== post hiring
 // =========================================
-const postHiring = async (data: any) => {
+type HiringData = {
+  address: {
+    zoneCode: string;
+    zoneAddress: string;
+    detailAddress: string;
+  };
+  position: {
+    job: string;
+    etc?: string;
+  };
+  periodValue: number[];
+  title: string;
+  content: string;
+  deadLine: string;
+  images: File[];
+};
+
+const postHiring = async (data: HiringData) => {
   const supabase = createBrowserSupabaseClient();
 
   const imageUrls: string[] = [];
@@ -20,7 +37,7 @@ const postHiring = async (data: any) => {
       .upload(`hiring/${Date.now()}-${image.name}`, image);
 
     if (error) {
-      throw new Error(`이미지 업로드 실패: ${error.message}`);
+      throw new Error(`${error.message}`);
     }
 
     const url = supabase.storage.from('hiring').getPublicUrl(data.path);
@@ -53,35 +70,9 @@ const postHiring = async (data: any) => {
 };
 
 export const usePostHiring = (
-  options?: UseMutationOptions<
-    void,
-    Error,
-    {
-      address: object;
-      position: object;
-      periodValue: number[];
-      title: string;
-      content: string;
-      deadLine: string;
-      images: File[];
-    },
-    void
-  >
+  options?: UseMutationOptions<void, Error, HiringData, void>
 ) => {
-  return useMutation<
-    void,
-    Error,
-    {
-      address: object;
-      position: object;
-      periodValue: number[];
-      title: string;
-      content: string;
-      deadLine: string;
-      images: File[];
-    },
-    void
-  >({
+  return useMutation<void, Error, HiringData, void>({
     mutationFn: postHiring,
     onSuccess: () => {
       alert('채용 공고가 성공적으로 등록되었습니다.');
