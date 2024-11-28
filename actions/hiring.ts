@@ -32,7 +32,7 @@ const postHiring = async (data: HiringData) => {
   const imageUrls: string[] = [];
 
   for (const image of data.images) {
-    const { data, error } = await supabase.storage
+    const { data: uploadData, error } = await supabase.storage
       .from('hiring')
       .upload(`hiring/${Date.now()}-${image.name}`, image);
 
@@ -40,7 +40,7 @@ const postHiring = async (data: HiringData) => {
       throw new Error(`${error.message}`);
     }
 
-    const url = supabase.storage.from('hiring').getPublicUrl(data.path);
+    const url = supabase.storage.from('hiring').getPublicUrl(uploadData.path);
     imageUrls.push(url.data.publicUrl);
   }
 

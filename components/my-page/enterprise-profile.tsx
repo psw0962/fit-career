@@ -64,7 +64,9 @@ const EnterpriseProfile = (): React.ReactElement => {
     detailAddress: '',
   });
   const [description, setDescription] = useState<string>('');
-  const [logo, setLogo] = useState<File[]>([]);
+  const [settingLogo, setSettingLogo] = useState<File[]>([]);
+  const [currentLogo, setCurrentLogo] = useState<string>('');
+  useState<string>('');
 
   const daumPostCodeHandler = (data: Address) => {
     setAddress({
@@ -75,27 +77,23 @@ const EnterpriseProfile = (): React.ReactElement => {
     });
   };
 
-  const { mutate: postMutate } = usePostEnterpriseProfile();
-  const { mutate: patchMutate } = usePatchEnterpriseProfile();
+  const { mutate: postMutate, isIdle: postIdle } = usePostEnterpriseProfile();
+  const { mutate: patchMutate, isIdle: patchIdle } =
+    usePatchEnterpriseProfile();
   const { data: enterpriseProfile } = useGetEnterpriseProfile();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      setLogo([...logo, ...Array.from(files)]);
+      setSettingLogo([...settingLogo, ...Array.from(files)]);
     }
   };
 
   const removeImage = (index: number) => {
-    setLogo(logo.filter((_, i) => i !== index));
+    setSettingLogo(settingLogo.filter((_, i) => i !== index));
   };
 
   const onSubmit = () => {
-    if (logo.length === 0) {
-      alert('회사 로고를 업로드해주세요.');
-      return;
-    }
-
     if (!name.trim()) {
       alert('회사 이름을 입력해주세요.');
       return;
@@ -115,11 +113,24 @@ const EnterpriseProfile = (): React.ReactElement => {
       alert('회사 소개를 입력해주세요.');
       return;
     }
-    establishment;
+
     if (enterpriseProfile?.length === 0) {
-      return postMutate({ name, establishment, address, description, logo });
+      return postMutate({
+        name,
+        establishment,
+        address,
+        description,
+        settingLogo,
+      });
     } else {
-      return patchMutate({ name, establishment, address, description, logo });
+      return patchMutate({
+        name,
+        establishment,
+        address,
+        description,
+        settingLogo,
+        currentLogo,
+      });
     }
   };
 
@@ -129,11 +140,10 @@ const EnterpriseProfile = (): React.ReactElement => {
       enterpriseProfile !== undefined &&
       enterpriseProfile !== null
     ) {
-      const logoUrl = enterpriseProfile[0].logo[0];
       const [zoneCode, ...zoneAddress] =
         enterpriseProfile[0].address.split(' ');
 
-      setLogo([logoUrl]);
+      setCurrentLogo(enterpriseProfile[0].logo[0]);
       setName(enterpriseProfile[0].name);
       setAddress({
         ...address,
@@ -146,6 +156,10 @@ const EnterpriseProfile = (): React.ReactElement => {
     }
   }, [enterpriseProfile]);
 
+  if (!postIdle || !patchIdle) {
+    return <Spinner />;
+  }
+
   return (
     <div>
       {/* logo */}
@@ -155,31 +169,8 @@ const EnterpriseProfile = (): React.ReactElement => {
         </label>
 
         <div>
-          {logo.length > 0 ? (
-            <div className="relative w-28 h-20 border-gray-300">
-              <div className="relative w-20 h-20">
-                <Image
-                  src={
-                    typeof logo[0] === 'string'
-                      ? logo[0]
-                      : URL.createObjectURL(logo[0] as Blob)
-                  }
-                  alt="enterprise logo"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                />
-              </div>
-
-              <button
-                onClick={() => removeImage(0)}
-                className="absolute top-2 right-2 bg-[#4C71C0] text-white rounded px-1"
-              >
-                &times;
-              </button>
-            </div>
-          ) : (
+          {/*  이미지가 업로드 되기 전 */}
+          {!currentLogo && settingLogo.length === 0 && (
             <div className="relative flex items-center justify-center w-36 h-36 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all">
               <input
                 type="file"
@@ -207,6 +198,54 @@ const EnterpriseProfile = (): React.ReactElement => {
               </div>
             </div>
           )}
+
+          {/* 현재 상태 로고가 업로드 된 경우 */}
+          {settingLogo.length > 0 && (
+            <div className="relative w-28 h-20 border-gray-300">
+              <div className="relative w-20 h-20">
+                <Image
+                  src={URL.createObjectURL(settingLogo[0])}
+                  alt="enterprise logo"
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                />
+              </div>
+
+              <button
+                onClick={() => removeImage(0)}
+                className="absolute top-2 right-2 bg-[#4C71C0] text-white rounded px-1"
+              >
+                &times;
+              </button>
+            </div>
+          )}
+
+          {/* 이미 업로드된 로고를 가져오는 경우 */}
+          {enterpriseProfile &&
+            enterpriseProfile[0]?.logo[0]?.length > 0 &&
+            currentLogo !== '' && (
+              <div className="relative w-28 h-20 border-gray-300">
+                <div className="relative w-20 h-20">
+                  <Image
+                    src={currentLogo}
+                    alt="enterprise logo"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                  />
+                </div>
+
+                <button
+                  onClick={() => setCurrentLogo('')}
+                  className="absolute top-2 right-2 bg-[#4C71C0] text-white rounded px-1"
+                >
+                  &times;
+                </button>
+              </div>
+            )}
         </div>
       </div>
 
