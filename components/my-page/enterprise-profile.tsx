@@ -66,7 +66,6 @@ const EnterpriseProfile = (): React.ReactElement => {
   const [description, setDescription] = useState<string>('');
   const [settingLogo, setSettingLogo] = useState<File[]>([]);
   const [currentLogo, setCurrentLogo] = useState<string>('');
-  useState<string>('');
 
   const daumPostCodeHandler = (data: Address) => {
     setAddress({

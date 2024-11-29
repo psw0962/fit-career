@@ -124,12 +124,15 @@ const Nav = (): React.ReactElement => {
           </ul>
 
           <div className="border-t-2 p-4 flex justify-end">
-            <NavAuth isMobile={true} />
+            <NavAuth
+              isMobile={true}
+              setIsMobileMenuOpen={setIsMobileMenuOpen}
+            />
           </div>
         </div>
 
         {/* auth */}
-        <NavAuth isMobile={false} />
+        <NavAuth isMobile={false} setIsMobileMenuOpen={setIsMobileMenuOpen} />
       </div>
     </nav>
   );

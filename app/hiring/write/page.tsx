@@ -2,6 +2,7 @@
 
 import { usePostHiring } from '@/actions/hiring';
 import * as Slider from '@radix-ui/react-slider';
+import Image from 'next/image';
 import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import dynamic from 'next/dynamic';
@@ -14,6 +15,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import Spinner from '@/components/common/spinner';
+import { useGetEnterpriseProfile } from '@/actions/auth';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -85,6 +87,8 @@ const HiringWrite = () => {
   const [images, setImages] = useState<File[]>([]);
 
   const postHring = usePostHiring();
+  const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
+    useGetEnterpriseProfile();
 
   const daumPostCodeHandler = (data: Address) => {
     setAddress({
@@ -184,9 +188,56 @@ const HiringWrite = () => {
         채용공고 등록
       </p>
 
+      {/* enterprise profile */}
+      <div className="flex flex-col mt-10">
+        <div className="flex flex-col md:flex-row gap-2 text-2xl font-bold mb-2 md:items-end">
+          <p className="text-2xl font-bold">기업 프로필</p>
+
+          <p className="text-xs font-bold">
+            * 기업 프로필은 마이페이지에서 변경 가능합니다.
+          </p>
+        </div>
+
+        {enterpriseProfile && (
+          <div>
+            {enterpriseProfileLoading ? (
+              <Spinner />
+            ) : (
+              <div className="flex flex-col">
+                <div className="mt-2 flex gap-2 items-center">
+                  <div className="relative w-10 h-10">
+                    <Image
+                      src={enterpriseProfile[0]?.logo[0]}
+                      alt="enterprise logo"
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                    />
+                  </div>
+
+                  <p>
+                    {enterpriseProfile[0]?.name} /{' '}
+                    {enterpriseProfile[0]?.establishment}년차
+                  </p>
+                </div>
+
+                <div className="mt-2 text-[#707173]">
+                  <p>{enterpriseProfile[0]?.description}</p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      <div className="border-t border-gray-300 my-7"></div>
+
       {/* address */}
-      <div className="flex flex-col mb-4 mt-10">
-        <label className="text-2xl font-bold mb-2">지역</label>
+      <div className="flex flex-col">
+        <label htmlFor="address" className="text-2xl font-bold mb-2">
+          지역
+        </label>
 
         <button
           className="py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2"
@@ -199,6 +250,7 @@ const HiringWrite = () => {
           <>
             <input
               type="text"
+              id="address"
               value={
                 address.zoneCode && address.zoneAddress
                   ? `[${address.zoneCode}] ${address.zoneAddress}`
@@ -210,6 +262,7 @@ const HiringWrite = () => {
 
             <input
               type="text"
+              id="address"
               onChange={(e) =>
                 setAddress({ ...address, detailAddress: e.target.value })
               }
@@ -305,6 +358,7 @@ const HiringWrite = () => {
         {formatPeriod(periodValue)}
 
         <Slider.Root
+          id="employment-period"
           className="relative flex h-5 w-[300px] mt-2 touch-none select-none items-center"
           value={periodValue}
           onValueChange={periodValueHandleChange}
@@ -329,8 +383,11 @@ const HiringWrite = () => {
 
       {/* title */}
       <div className="flex flex-col mb-4 mt-10">
-        <label className="text-2xl font-bold mb-2">채용공고 제목</label>
+        <label htmlFor="title" className="text-2xl font-bold mb-2">
+          채용공고 제목
+        </label>
         <input
+          id="title"
           className="border p-2 mb-4 rounded"
           type="text"
           placeholder="채용 글 제목을 입력해 주세요"
@@ -342,7 +399,9 @@ const HiringWrite = () => {
 
       {/* content */}
       <div className="flex flex-col mb-4 mt-10">
-        <label className="text-2xl font-bold mb-2">채용공고 내용</label>
+        <label htmlFor="content" className="text-2xl font-bold mb-2">
+          채용공고 내용
+        </label>
 
         <FroalaEditor
           tag="textarea"
@@ -363,7 +422,9 @@ const HiringWrite = () => {
 
       {/* deadline */}
       <div className="flex flex-col mb-4 mt-10">
-        <label className="text-2xl font-bold mb-2">마감일</label>
+        <label htmlFor="deadline" className="text-2xl font-bold mb-2">
+          마감일
+        </label>
 
         <DatePicker
           className="px-2 py-2 border rounded"
@@ -382,7 +443,7 @@ const HiringWrite = () => {
 
       {/* images */}
       <div className="flex flex-col mb-4 mt-10">
-        <label className="text-2xl font-bold mb-2 text-gray-800">
+        <label htmlFor="file-upload" className="text-2xl font-bold mb-2">
           센터 이미지
         </label>
 
