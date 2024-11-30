@@ -58,7 +58,10 @@ const Nav = (): React.ReactElement => {
         <div className="flex gap-24">
           <div
             className="flex gap-2 items-center cursor-pointer"
-            onClick={() => router.push('/')}
+            onClick={() => {
+              router.push('/');
+              setIsMobileMenuOpen(false);
+            }}
           >
             <div className="relative w-10 h-10 ">
               <Image
@@ -104,7 +107,9 @@ const Nav = (): React.ReactElement => {
         </div>
 
         <div
-          className={`fixed inset-0 px-6 top-24 bg-white z-40 transition-all duration-300 ${
+          className={`fixed inset-0 px-6 ${
+            isScrolled ? 'top-16' : 'top-24'
+          } bg-white z-40 transition-all duration-300 ${
             isMobileMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
           }`}
         >

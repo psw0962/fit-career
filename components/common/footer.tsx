@@ -8,10 +8,7 @@ const Footer = () => {
   return (
     <div className="max-w-full border">
       <div className="max-w-7xl mx-auto px-10 py-10">
-        <div
-          className="flex gap-2 items-center my-5 cursor-pointer"
-          onClick={() => router.push('/')}
-        >
+        <div className="flex gap-2 items-center my-5">
           <div className="relative w-10 h-10">
             <Image
               src="/svg/logo.svg"

@@ -7,7 +7,7 @@ import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import DaumPostcode, { Address } from 'react-daum-postcode';
 import withAuth from '@/hoc/withAuth';
@@ -179,8 +179,18 @@ const HiringWrite = () => {
       content,
       deadLine,
       images,
+      enterprise_name: enterpriseProfile?.[0]?.name ?? '',
+      enterprise_logo: enterpriseProfile?.[0]?.logo?.[0] ?? '',
+      enterprise_establishment: enterpriseProfile?.[0]?.establishment ?? '',
+      enterprise_description: enterpriseProfile?.[0]?.description ?? '',
     });
   };
+
+  if (enterpriseProfile?.length === 0) {
+    alert('기업 프로필을 먼저 등록해주세요.');
+    router.push('/auth/my-page');
+    return;
+  }
 
   return (
     <div className="flex flex-col">
@@ -191,9 +201,9 @@ const HiringWrite = () => {
       {/* enterprise profile */}
       <div className="flex flex-col mt-10">
         <div className="flex flex-col md:flex-row gap-2 text-2xl font-bold mb-2 md:items-end">
-          <p className="text-2xl font-bold">기업 프로필</p>
+          <p className="text-2xl font-bold leading-none">기업 프로필</p>
 
-          <p className="text-xs font-bold">
+          <p className="text-xs font-bold leading-none">
             * 기업 프로필은 마이페이지에서 변경 가능합니다.
           </p>
         </div>
@@ -205,9 +215,13 @@ const HiringWrite = () => {
             ) : (
               <div className="flex flex-col">
                 <div className="mt-2 flex gap-2 items-center">
-                  <div className="relative w-10 h-10">
+                  <div className="relative w-8 h-8">
                     <Image
-                      src={enterpriseProfile[0]?.logo[0]}
+                      src={
+                        enterpriseProfile[0]?.logo?.length !== 0
+                          ? enterpriseProfile[0]?.logo[0]
+                          : '/svg/logo.svg'
+                      }
                       alt="enterprise logo"
                       fill
                       priority
@@ -223,7 +237,11 @@ const HiringWrite = () => {
                 </div>
 
                 <div className="mt-2 text-[#707173]">
-                  <p>{enterpriseProfile[0]?.description}</p>
+                  <div
+                    dangerouslySetInnerHTML={{
+                      __html: enterpriseProfile[0]?.description,
+                    }}
+                  />
                 </div>
               </div>
             )}
@@ -234,9 +252,9 @@ const HiringWrite = () => {
       <div className="border-t border-gray-300 my-7"></div>
 
       {/* address */}
-      <div className="flex flex-col">
+      <div className="flex flex-col mb-20">
         <label htmlFor="address" className="text-2xl font-bold mb-2">
-          지역
+          근무 지역
         </label>
 
         <button
@@ -257,6 +275,7 @@ const HiringWrite = () => {
                   : ''
               }
               readOnly
+              disabled
               className="border p-2 mb-2"
             />
 
@@ -296,9 +315,9 @@ const HiringWrite = () => {
       </div>
 
       {/* job position */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-20">
         <label htmlFor="job-position" className="text-2xl font-bold mb-2">
-          직무
+          채용 직무
         </label>
 
         <select
@@ -350,7 +369,7 @@ const HiringWrite = () => {
       </div>
 
       {/* employment period */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-20">
         <label htmlFor="employment-period" className="text-2xl font-bold mb-2">
           필요 경력
         </label>
@@ -382,7 +401,7 @@ const HiringWrite = () => {
       </div>
 
       {/* title */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-20">
         <label htmlFor="title" className="text-2xl font-bold mb-2">
           채용공고 제목
         </label>
@@ -398,7 +417,7 @@ const HiringWrite = () => {
       </div>
 
       {/* content */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-20">
         <label htmlFor="content" className="text-2xl font-bold mb-2">
           채용공고 내용
         </label>
@@ -421,7 +440,7 @@ const HiringWrite = () => {
       </div>
 
       {/* deadline */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-20">
         <label htmlFor="deadline" className="text-2xl font-bold mb-2">
           마감일
         </label>
@@ -442,7 +461,7 @@ const HiringWrite = () => {
       </div>
 
       {/* images */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-4">
         <label htmlFor="file-upload" className="text-2xl font-bold mb-2">
           센터 이미지
         </label>
@@ -500,7 +519,7 @@ const HiringWrite = () => {
       </div>
 
       <button
-        className="mx-auto mt-20 px-4 py-2 bg-[#4C71C0] text-white rounded w-fit"
+        className="mx-auto mt-8 px-4 py-2 bg-[#4C71C0] text-white rounded w-fit"
         onClick={() => onSubmit()}
       >
         등록하기

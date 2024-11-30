@@ -162,7 +162,7 @@ const EnterpriseProfile = (): React.ReactElement => {
   return (
     <div>
       {/* logo */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-20 mt-10">
         <label className="text-2xl font-bold mb-2 text-gray-800">
           회사 로고
         </label>
@@ -249,10 +249,10 @@ const EnterpriseProfile = (): React.ReactElement => {
       </div>
 
       {/* name */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-20">
         <label className="text-2xl font-bold mb-2">회사 이름</label>
         <input
-          className="border p-2 mb-4 rounded"
+          className="border p-2 rounded"
           type="text"
           placeholder="회사 이름을 입력해 주세요"
           defaultValue={name}
@@ -263,8 +263,8 @@ const EnterpriseProfile = (): React.ReactElement => {
       </div>
 
       {/* address */}
-      <div className="flex flex-col mb-4 mt-10">
-        <label className="text-2xl font-bold mb-2">지역</label>
+      <div className="flex flex-col mb-20">
+        <label className="text-2xl font-bold mb-2">주소</label>
 
         <button
           className="py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2"
@@ -283,6 +283,7 @@ const EnterpriseProfile = (): React.ReactElement => {
                   : ''
               }
               readOnly
+              disabled
               className="border p-2 mb-2"
             />
 
@@ -321,7 +322,7 @@ const EnterpriseProfile = (): React.ReactElement => {
       </div>
 
       {/* establishment */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-20">
         <label className="text-2xl font-bold mb-2">업력</label>
 
         <div className="flex gap-2 items-center">
@@ -340,7 +341,7 @@ const EnterpriseProfile = (): React.ReactElement => {
       </div>
 
       {/* description */}
-      <div className="flex flex-col mb-4 mt-10">
+      <div className="flex flex-col mb-4">
         <label className="text-2xl font-bold mb-2">회사 소개</label>
 
         <FroalaEditor

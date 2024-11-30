@@ -24,6 +24,10 @@ type HiringData = {
   content: string;
   deadLine: string;
   images: File[];
+  enterprise_name: string;
+  enterprise_logo: string;
+  enterprise_establishment: string;
+  enterprise_description: string;
 };
 
 const postHiring = async (data: HiringData) => {
@@ -61,6 +65,10 @@ const postHiring = async (data: HiringData) => {
       dead_line: data.deadLine,
       images: imageUrls,
       short_address: shortAddres,
+      enterprise_name: data.enterprise_name,
+      enterprise_logo: data.enterprise_logo,
+      enterprise_establishment: data.enterprise_establishment,
+      enterprise_description: data.enterprise_description,
     },
   ]);
 
