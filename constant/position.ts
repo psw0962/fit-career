@@ -1,4 +1,4 @@
-export const positions = [
+export const POSITIONS = [
   { id: 1, position: '퍼스널 트레이너(PT)' },
   { id: 2, position: '필라테스' },
   { id: 3, position: '요가' },

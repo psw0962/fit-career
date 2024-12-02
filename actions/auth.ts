@@ -125,6 +125,10 @@ export const useGetUserData = () => {
 // =========================================
 type EnterpriseProfile = {
   name: string;
+  industry: {
+    job: string;
+    etc?: string;
+  };
   establishment: string;
   address: {
     zoneCode: string;
@@ -159,6 +163,9 @@ const enterpriseProfile = async (data: EnterpriseProfile) => {
   const { error } = await supabase.from('enterprise_profile').insert([
     {
       name: data.name,
+      industry:
+        data.industry.job === '기타' ? data.industry.etc : data.industry.job,
+      industry_etc: data.industry.job === '기타' ? true : false,
       establishment: data.establishment,
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
       description: data.description,
@@ -253,6 +260,9 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
     .from('enterprise_profile')
     .update({
       name: data.name,
+      industry:
+        data.industry.job === '기타' ? data.industry.etc : data.industry.job,
+      industry_etc: data.industry.job === '기타' ? true : false,
       establishment: data.establishment,
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
       description: data.description,

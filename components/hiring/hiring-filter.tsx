@@ -36,7 +36,7 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
       return;
     }
 
-    // 1. regionFilter 적용
+    // regionFilter 적용
     let data =
       regionFilter.selectedCounties.length === 0
         ? hiringData
@@ -46,13 +46,17 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
             return regionFilter.selectedCounties.includes(addressParts);
           });
 
-    // 2. positionFilter 적용
+    // positionFilter 적용
     data =
       positionFilter.length === 0
         ? data
-        : data.filter((data) => positionFilter.includes(data.position));
+        : data.filter(
+            (data) =>
+              positionFilter.includes(data.position) ||
+              (positionFilter.includes('기타') && data.position_etc === true)
+          );
 
-    // 3. periodFilter 적용
+    // periodFilter 적용
     data =
       periodValueFilter[0] === 0 && periodValueFilter[1] === 10
         ? data

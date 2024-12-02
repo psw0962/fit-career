@@ -1,6 +1,6 @@
 'use client';
 
-import { regions } from '@/constant/regions';
+import { REGIONS } from '@/constant/regions';
 import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
 import { City, RegionsFilterProps } from '@/types/hiring/filter-type';
@@ -117,7 +117,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
           <div className="flex w-full mt-3">
             <div className="border p-4 w-full max-h-72 overflow-auto rounded">
               <ul>
-                {regions.map((region) => (
+                {REGIONS.map((region) => (
                   <li key={region.id} className="flex items-center">
                     <input
                       type="radio"

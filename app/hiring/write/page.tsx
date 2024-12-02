@@ -7,7 +7,7 @@ import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import DaumPostcode, { Address } from 'react-daum-postcode';
 import withAuth from '@/hoc/withAuth';
@@ -16,6 +16,7 @@ import 'froala-editor/css/froala_style.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import Spinner from '@/components/common/spinner';
 import { useGetEnterpriseProfile } from '@/actions/auth';
+import { POSITIONS } from '@/constant/position';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -334,23 +335,12 @@ const HiringWrite = () => {
           <option value="" className="text-gray-400">
             직무를 선택해 주세요
           </option>
-          <option value="퍼스널 트레이너(PT)">퍼스널 트레이너(PT)</option>
-          <option value="필라테스">필라테스</option>
-          <option value="요가">요가</option>
-          <option value="골프">골프</option>
-          <option value="GX(댄스/스피닝/에어로빅/그룹운동)">
-            GX(댄스/스피닝/에어로빅/그룹운동)
-          </option>
-          <option value="체조/발레/무용">체조/발레/무용</option>
-          <option value="점핑/트램폴린">점핑/트램폴린</option>
-          <option value="구기종목(축구/농구/배구/테니스/스쿼시)">
-            구기종목(축구/농구/배구/테니스/스쿼시)
-          </option>
-          <option value="인포메이션(FC)">인포메이션(FC)</option>
-          <option value="지점 관리자">지점 관리자</option>
-          <option value="학교 체육/방과후 강사">학교 체육/방과후 강사</option>
-          <option value="경호/행사/이벤트">경호/행사/이벤트</option>
-          <option value="기타">기타</option>
+
+          {POSITIONS.map((x) => (
+            <option key={x.id} value={x.position}>
+              {x.position}
+            </option>
+          ))}
         </select>
 
         {position.job === '기타' && (

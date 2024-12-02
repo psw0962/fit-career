@@ -1,4 +1,4 @@
-export const regions = [
+export const REGIONS = [
   {
     id: 1,
     city: '서울',

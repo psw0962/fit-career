@@ -59,6 +59,7 @@ const postHiring = async (data: HiringData) => {
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
       position:
         data.position.job === '기타' ? data.position.etc : data.position.job,
+      position_etc: data.position.job === '기타' ? true : false,
       period: data.periodValue,
       title: data.title,
       content: data.content,

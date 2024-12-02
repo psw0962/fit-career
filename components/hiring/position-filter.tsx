@@ -3,7 +3,7 @@
 import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
 import { PositionFilterProps } from '@/types/hiring/filter-type';
-import { positions } from '@/constant/position';
+import { POSITIONS } from '@/constant/position';
 
 const PositionFilter: React.FC<PositionFilterProps> = ({
   positionFilter,
@@ -55,7 +55,7 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
           </button>
 
           <div className="flex flex-wrap gap-2 mt-4 border rounded p-4">
-            {positions.map((position) => (
+            {POSITIONS.map((position) => (
               <label key={position.id} className="flex items-center gap-2">
                 <input
                   type="checkbox"

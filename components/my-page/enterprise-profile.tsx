@@ -12,6 +12,7 @@ import {
   usePatchEnterpriseProfile,
   usePostEnterpriseProfile,
 } from '@/actions/auth';
+import { POSITIONS } from '@/constant/position';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -56,6 +57,10 @@ const DAUMPOSTCODESTYLE = {
 
 const EnterpriseProfile = (): React.ReactElement => {
   const [name, setName] = useState<string>('');
+  const [industry, setIndustry] = useState({
+    job: '',
+    etc: '',
+  });
   const [establishment, setEstablishment] = useState<string>('1');
   const [address, setAddress] = useState({
     findAddressModal: false,
@@ -98,6 +103,16 @@ const EnterpriseProfile = (): React.ReactElement => {
       return;
     }
 
+    if (!industry.job) {
+      alert('업종을 선택해주세요.');
+      return;
+    }
+
+    if (industry.job === '기타' && !industry.etc) {
+      alert('기타 업종을 입력해주세요.');
+      return;
+    }
+
     if (!address.zoneAddress || !address.detailAddress) {
       alert('주소를 모두 입력해주세요.');
       return;
@@ -116,6 +131,7 @@ const EnterpriseProfile = (): React.ReactElement => {
     if (enterpriseProfile?.length === 0) {
       return postMutate({
         name,
+        industry,
         establishment,
         address,
         description,
@@ -124,6 +140,7 @@ const EnterpriseProfile = (): React.ReactElement => {
     } else {
       return patchMutate({
         name,
+        industry,
         establishment,
         address,
         description,
@@ -144,6 +161,14 @@ const EnterpriseProfile = (): React.ReactElement => {
 
       setCurrentLogo(enterpriseProfile[0].logo[0]);
       setName(enterpriseProfile[0].name);
+      setIndustry({
+        job: enterpriseProfile[0].industry_etc
+          ? '기타'
+          : enterpriseProfile[0].industry,
+        etc: enterpriseProfile[0].industry_etc
+          ? enterpriseProfile[0].industry
+          : '',
+      });
       setAddress({
         ...address,
         zoneCode: zoneCode,
@@ -260,6 +285,50 @@ const EnterpriseProfile = (): React.ReactElement => {
             setName(e.target.value);
           }}
         />
+      </div>
+
+      {/* insudtry */}
+      <div className="flex flex-col mb-20">
+        <label htmlFor="industry" className="text-2xl font-bold mb-2">
+          업종
+        </label>
+
+        <select
+          name="industry"
+          id="industry"
+          className={`appearance-none border py-3 px-2 mb-4 rounded ${
+            industry.job === '' ? 'text-gray-400' : 'text-black'
+          }`}
+          value={industry.job}
+          onChange={(e) => {
+            setIndustry({ ...industry, job: e.target.value });
+          }}
+        >
+          <option value="" className="text-gray-400">
+            업종을 선택해 주세요
+          </option>
+
+          {POSITIONS.map((x) => (
+            <option key={x.id} value={x.position}>
+              {x.position}
+            </option>
+          ))}
+        </select>
+
+        {industry.job === '기타' && (
+          <input
+            type="text"
+            className="appearance-none border py-3 px-2 mb-4 rounded"
+            placeholder="업종을 입력해 주세요"
+            value={industry.etc}
+            onChange={(e) => {
+              setIndustry({
+                ...industry,
+                etc: e.target.value,
+              });
+            }}
+          />
+        )}
       </div>
 
       {/* address */}
