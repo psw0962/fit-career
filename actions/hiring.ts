@@ -98,21 +98,47 @@ export const usePostHiring = (
 // =========================================
 // ============== get hiring
 // =========================================
-const getHiring = async () => {
+type HiringDataProps = {
+  id: string;
+  address: string;
+  position: string;
+  position_etc: boolean;
+  period: number[];
+  title: string;
+  content: string;
+  dead_line: string;
+  images: string[];
+  short_address: string;
+  enterprise_name: string;
+  enterprise_logo: string;
+  enterprise_establishment: string;
+  enterprise_description: string;
+};
+
+const getHiring = async (id?: string): Promise<HiringDataProps[]> => {
   const supabase = createBrowserSupabaseClient();
-  const { data, error } = await supabase.from('hiring').select('*');
+  const query = supabase.from('hiring').select('*');
+
+  if (id) {
+    query.eq('id', id);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     throw new Error(`${error.message}`);
   }
 
-  return data;
+  return data as HiringDataProps[];
 };
 
-export const useGetHiring = (options?: UseQueryOptions<any[], Error>) => {
-  return useQuery<any[], Error>({
-    queryKey: ['hiringList'],
-    queryFn: getHiring,
+export const useGetHiring = (
+  id?: string,
+  options?: UseQueryOptions<HiringDataProps[], Error>
+) => {
+  return useQuery<HiringDataProps[], Error>({
+    queryKey: ['hiringList', id],
+    queryFn: () => getHiring(id),
     ...options,
   });
 };

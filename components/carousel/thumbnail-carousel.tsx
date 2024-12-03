@@ -42,7 +42,7 @@ const ThumbnailCarousel: React.FC<PropType> = (props) => {
       <div className="overflow-hidden" ref={emblaMainRef}>
         <div className="flex -ml-4">
           {slides.map((index) => (
-            <div className="flex-shrink-0 w-full min-w-0 pl-4" key={index}>
+            <div key={index} className="flex-shrink-0 w-full min-w-0 pl-4">
               <div className="shadow-inset border rounded text-4xl font-semibold flex items-center justify-center h-96 select-none">
                 {index + 1}
               </div>
@@ -56,14 +56,15 @@ const ThumbnailCarousel: React.FC<PropType> = (props) => {
           <div className="flex gap-5">
             {slides.map((index) => (
               <div
+                key={index}
                 className={
                   index === selectedIndex
-                    ? 'flex border rounded px-20 py-10 bg-gray-300'
-                    : 'flex border rounded px-20 py-10'
+                    ? 'flex border rounded px-20 py-10 bg-gray-300 cursor-pointer'
+                    : 'flex border rounded px-20 py-10 cursor-pointer'
                 }
+                onClick={() => onThumbClick(index)}
               >
                 <button
-                  onClick={() => onThumbClick(index)}
                   type="button"
                   className="w-full flex items-center justify-center text-xl font-semibold"
                 >

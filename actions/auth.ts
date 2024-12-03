@@ -86,7 +86,7 @@ export const getUserData = async (): Promise<User | null> => {
     const { data, error } = await supabase.auth.getUser();
 
     if (error) {
-      console.error(error.message);
+      console.error('Error fetching user:', error.message);
       return null;
     }
 
@@ -94,16 +94,24 @@ export const getUserData = async (): Promise<User | null> => {
       const refreshResponse = await supabase.auth.refreshSession();
 
       if (refreshResponse.error) {
-        console.error(refreshResponse.error.message);
+        console.error(
+          'Error refreshing session:',
+          refreshResponse.error.message
+        );
         return null;
       }
 
-      return refreshResponse.data.session?.user ?? null;
+      if (!refreshResponse.data.session?.user) {
+        console.error('No user found after session refresh');
+        return null;
+      }
+
+      return refreshResponse.data.session.user;
     }
 
     return data.user;
   } catch (error) {
-    console.error(error);
+    console.error('Unexpected error:', error);
     return null;
   }
 };
