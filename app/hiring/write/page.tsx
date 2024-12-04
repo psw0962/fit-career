@@ -233,6 +233,7 @@ const HiringWrite = () => {
 
                   <p>
                     {enterpriseProfile[0]?.name} /{' '}
+                    {enterpriseProfile[0]?.industry} /{' '}
                     {enterpriseProfile[0]?.establishment}년차
                   </p>
                 </div>
