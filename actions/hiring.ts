@@ -100,6 +100,7 @@ export const usePostHiring = (
 // =========================================
 type HiringDataProps = {
   id: string;
+  created_at: string;
   address: string;
   position: string;
   position_etc: boolean;

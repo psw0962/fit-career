@@ -15,6 +15,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import Spinner from '@/components/common/spinner';
+import GlobalSpinner from '@/components/common/global-spinner';
 import { useGetEnterpriseProfile } from '@/actions/auth';
 import { POSITIONS } from '@/constant/position';
 
@@ -87,6 +88,8 @@ const HiringWrite = () => {
   );
   const [images, setImages] = useState<File[]>([]);
 
+  console.log(images);
+
   const postHring = usePostHiring();
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
     useGetEnterpriseProfile();
@@ -127,13 +130,13 @@ const HiringWrite = () => {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files && files.length > 0) {
-      setImages([files[0]]);
+    if (files) {
+      setImages((prev) => [...prev, ...Array.from(files)]);
     }
   };
 
-  const removeImage = () => {
-    setImages([]);
+  const removeImage = (index: number) => {
+    setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
   const onSubmit = () => {
@@ -193,6 +196,10 @@ const HiringWrite = () => {
     return;
   }
 
+  if (postHring.isPending || enterpriseProfileLoading) {
+    return <GlobalSpinner />;
+  }
+
   return (
     <div className="flex flex-col">
       <p className="text-3xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]">
@@ -211,42 +218,39 @@ const HiringWrite = () => {
 
         {enterpriseProfile && (
           <div>
-            {enterpriseProfileLoading ? (
-              <Spinner />
-            ) : (
-              <div className="flex flex-col">
-                <div className="mt-2 flex gap-2 items-center">
-                  <div className="relative w-8 h-8">
-                    <Image
-                      src={
-                        enterpriseProfile[0]?.logo?.length !== 0
-                          ? enterpriseProfile[0]?.logo[0]
-                          : '/svg/logo.svg'
-                      }
-                      alt="enterprise logo"
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                    />
-                  </div>
-
-                  <p>
-                    {enterpriseProfile[0]?.name} /{' '}
-                    {enterpriseProfile[0]?.industry} /{' '}
-                    {enterpriseProfile[0]?.establishment}년차
-                  </p>
-                </div>
-
-                <div className="mt-2 text-[#707173]">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: enterpriseProfile[0]?.description,
-                    }}
+            <div className="flex flex-col">
+              <div className="mt-2 flex gap-2 items-center">
+                <div className="relative w-8 h-8">
+                  <Image
+                    src={
+                      enterpriseProfile[0]?.logo?.length !== 0
+                        ? enterpriseProfile[0]?.logo[0]
+                        : '/svg/logo.svg'
+                    }
+                    alt="enterprise logo"
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                   />
                 </div>
+
+                <p>
+                  {enterpriseProfile[0]?.name} /{' '}
+                  {enterpriseProfile[0]?.industry} /{' '}
+                  {enterpriseProfile[0]?.establishment}년차
+                </p>
               </div>
-            )}
+
+              <div className="mt-2 text-[#707173]">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: enterpriseProfile[0]?.description,
+                  }}
+                />
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -498,9 +502,8 @@ const HiringWrite = () => {
               alt={`uploaded ${index}`}
               className="w-full h-full object-cover rounded"
             />
-
             <button
-              onClick={() => removeImage()}
+              onClick={() => removeImage(index)}
               className="absolute top-1 right-1 bg-[#4C71C0] text-white rounded px-1"
             >
               &times;

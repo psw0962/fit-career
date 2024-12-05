@@ -8,16 +8,19 @@ import { useState, useEffect } from 'react';
 
 type HiringData = {
   id: string;
-  created_at: string;
   address: string;
   position: string;
-  period: string;
+  position_etc: boolean;
+  period: number[];
   title: string;
   content: string;
   dead_line: string;
   images: string[];
-  user_id: string;
   short_address: string;
+  enterprise_name: string;
+  enterprise_logo: string;
+  enterprise_establishment: string;
+  enterprise_description: string;
 };
 
 const HiringFIlter: React.FC<HiringFilterProps> = ({
@@ -80,7 +83,12 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
               );
             });
 
-    setFilteredData(data);
+    const sortedData = [...data].sort((a, b) => {
+      return (
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+    });
+    setFilteredData(sortedData as HiringData[]);
   };
 
   useEffect(() => {
@@ -105,6 +113,7 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
                     src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
                     alt={`image ${x.id}`}
                     fill
+                    style={{ objectFit: 'cover' }}
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
