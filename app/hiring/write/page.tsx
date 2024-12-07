@@ -88,8 +88,6 @@ const HiringWrite = () => {
   );
   const [images, setImages] = useState<File[]>([]);
 
-  console.log(images);
-
   const postHring = usePostHiring();
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
     useGetEnterpriseProfile();

@@ -13,8 +13,6 @@ const HiringDetail = ({
 }): React.ReactElement => {
   const { data: hiringData } = useGetHiring(params.id);
 
-  console.log(hiringData);
-
   if (!hiringData || hiringData.length === 0) {
     return <></>;
   }
@@ -34,13 +32,19 @@ const HiringDetail = ({
         <div>∙</div>
         <p>{hiringData[0].short_address}</p>
         <div>∙</div>
-        <p>경력 1년 ~ 3년</p>
+        <p>
+          경력 {hiringData[0].period[0]}년 ~ {hiringData[0].period[1]}년
+        </p>
       </div>
 
-      <div className="my-5 border"></div>
+      <div className="my-4 border"></div>
 
       <div>
-        <p>채용 내용</p>
+        <p
+          dangerouslySetInnerHTML={{
+            __html: hiringData[0].content,
+          }}
+        />
       </div>
 
       <div className="mt-10">카카오맵</div>
