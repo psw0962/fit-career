@@ -72,7 +72,7 @@ const HiringDetail = ({
         />
       </div>
 
-      <div className="mt-16">
+      <div className="mt-10">
         <Map
           center={{
             lat: 33.450701,

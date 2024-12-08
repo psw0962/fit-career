@@ -45,13 +45,13 @@ const ThumbnailCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
           {slides &&
             slides.map((imageUrl, index) => (
               <div key={index} className="flex-shrink-0 w-full min-w-0 pl-4">
-                <div className="relative w-full aspect-[16/9] mb-4">
+                <div className="relative w-full aspect-[16/9] mb-4  border-[2px] rounded">
                   <Image
                     src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
                     className="rounded"
                     alt={`image ${index}`}
                     fill
-                    style={{ objectFit: 'cover' }}
+                    style={{ objectFit: 'contain' }}
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
@@ -62,31 +62,29 @@ const ThumbnailCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
         </div>
       </div>
 
-      <div className="mt-3">
-        <div className="overflow-hidden" ref={emblaThumbsRef}>
-          <div className="flex gap-5 justify-center">
-            {slides &&
-              slides.map((imageUrl, index) => (
-                <div
-                  key={index}
-                  className={`relative w-48 h-32 mb-4 flex border rounded px-20 py-10 cursor-pointer ${
-                    index === selectedIndex ? 'bg-gray-300 ' : ''
-                  }`}
-                  onClick={() => onThumbClick(index)}
-                >
-                  <Image
-                    src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
-                    className="rounded"
-                    alt={`image ${index}`}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                  />
-                </div>
-              ))}
-          </div>
+      <div className="overflow-hidden" ref={emblaThumbsRef}>
+        <div className="flex gap-2">
+          {slides &&
+            slides.map((imageUrl, index) => (
+              <div
+                key={index}
+                className={`relative w-48 h-32 mb-4 flex border-[2px] rounded px-20 py-10 cursor-pointer ${
+                  index === selectedIndex ? 'border-[#4C71C0] ' : ''
+                }`}
+                onClick={() => onThumbClick(index)}
+              >
+                <Image
+                  src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
+                  className="rounded"
+                  alt={`image ${index}`}
+                  fill
+                  style={{ objectFit: 'contain' }}
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                />
+              </div>
+            ))}
         </div>
       </div>
     </div>
