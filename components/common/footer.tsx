@@ -1,10 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
-const Footer = () => {
-  const router = useRouter();
+const Footer = (): React.ReactElement => {
   return (
     <div className="max-w-full border">
       <div className="max-w-7xl mx-auto px-10 py-10">

@@ -45,7 +45,7 @@ const ThumbnailCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
           {slides &&
             slides.map((imageUrl, index) => (
               <div key={index} className="flex-shrink-0 w-full min-w-0 pl-4">
-                <div className="relative w-full aspect-[16/9] mb-4  border-[2px] rounded">
+                <div className="relative w-full aspect-[16/9] mb-6">
                   <Image
                     src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
                     className="rounded"
@@ -68,14 +68,14 @@ const ThumbnailCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
             slides.map((imageUrl, index) => (
               <div
                 key={index}
-                className={`relative w-48 h-32 mb-4 flex border-[2px] rounded px-20 py-10 cursor-pointer ${
+                className={`relative w-full h-28 mb-4 flex border-[2px] rounded px-20 py-10 cursor-pointer ${
                   index === selectedIndex ? 'border-[#4C71C0] ' : ''
                 }`}
                 onClick={() => onThumbClick(index)}
               >
                 <Image
                   src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
-                  className="rounded"
+                  className="rounded-xl p-2"
                   alt={`image ${index}`}
                   fill
                   style={{ objectFit: 'contain' }}

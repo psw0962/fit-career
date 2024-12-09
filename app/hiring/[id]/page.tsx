@@ -6,6 +6,7 @@ import { useGetHiring } from '@/actions/hiring';
 import Image from 'next/image';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 import useKakaoLoader from '@/hooks/useKakaoLoader';
+import CustomMapMaker from '@/components/common/custom-map-maker';
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -84,11 +85,8 @@ const HiringDetail = ({
           }}
           level={4}
         >
-          <MapMarker
-            position={{
-              lat: 33.450701,
-              lng: 126.570667,
-            }}
+          <CustomMapMaker
+            address={hiringData[0].address.split(' ').slice(1).join(' ')}
           />
         </Map>
       </div>
