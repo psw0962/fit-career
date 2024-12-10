@@ -110,6 +110,7 @@ type HiringDataProps = {
   dead_line: string;
   images: string[];
   short_address: string;
+  user_id: string;
   enterprise_name: string;
   enterprise_logo: string;
   enterprise_establishment: string;

@@ -1,5 +1,5 @@
 export const POSITIONS = [
-  { id: 1, position: '퍼스널 트레이너(PT)' },
+  { id: 1, position: '헬스장/퍼스널 트레이너(PT)' },
   { id: 2, position: '필라테스' },
   { id: 3, position: '요가' },
   { id: 4, position: '골프' },

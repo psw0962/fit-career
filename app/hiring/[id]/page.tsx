@@ -4,9 +4,10 @@ import { EmblaOptionsType } from 'embla-carousel';
 import ThumbnailCarousel from '@/components/carousel/thumbnail-carousel';
 import { useGetHiring } from '@/actions/hiring';
 import Image from 'next/image';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
+import { Map } from 'react-kakao-maps-sdk';
 import useKakaoLoader from '@/hooks/useKakaoLoader';
-import CustomMapMaker from '@/components/common/custom-map-maker';
+import CustomMapMaker from '@/components/common/kakao-map/custom-map-maker';
+import { useRouter } from 'next/navigation';
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -16,8 +17,21 @@ const HiringDetail = ({
   params: { id: string };
 }): React.ReactElement => {
   useKakaoLoader();
+  const router = useRouter();
 
   const { data: hiringData } = useGetHiring(params.id);
+
+  const handleNavigate = () => {
+    if (!hiringData || hiringData.length === 0) return;
+
+    const params = {
+      user_id: hiringData[0]?.user_id,
+      hiring_id: hiringData[0]?.id,
+    };
+    const query = new URLSearchParams(params).toString();
+
+    router.push(`/company?${query}`);
+  };
 
   if (!hiringData || hiringData.length === 0) {
     return <></>;
@@ -33,8 +47,11 @@ const HiringDetail = ({
         </div>
       )}
 
-      <div className="mt-10 flex gap-5 items-center">
-        <div className="flex items-center gap-2">
+      <div className="mt-10 flex gap-2 items-center">
+        <div
+          className="flex items-center gap-2 cursor-pointer"
+          onClick={handleNavigate}
+        >
           <div className="relative w-8 h-8">
             <Image
               src={
@@ -73,8 +90,9 @@ const HiringDetail = ({
         />
       </div>
 
-      <div className="mt-10">
+      <div className="mt-10 border border-gray-300 rounded">
         <Map
+          className="rounded-t"
           center={{
             lat: 33.450701,
             lng: 126.570667,
@@ -89,6 +107,10 @@ const HiringDetail = ({
             address={hiringData[0].address.split(' ').slice(1).join(' ')}
           />
         </Map>
+
+        <div className="p-4 border-t border-gray-300">
+          {hiringData[0].address.split(' ').slice(1).join(' ')}
+        </div>
       </div>
     </div>
   );

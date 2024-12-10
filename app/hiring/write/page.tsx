@@ -137,6 +137,12 @@ const HiringWrite = () => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const calculateYearsInBusiness = (data: { establishment: string }) => {
+    const establishmentYear = parseInt(data?.establishment.split('-')[0], 10);
+    const currentYear = new Date().getFullYear();
+    return Math.max(currentYear - establishmentYear, 0);
+  };
+
   const onSubmit = () => {
     if (!address.zoneAddress || !address.detailAddress) {
       alert('주소를 모두 입력해주세요.');
@@ -237,7 +243,12 @@ const HiringWrite = () => {
                 <p>
                   {enterpriseProfile[0]?.name} /{' '}
                   {enterpriseProfile[0]?.industry} /{' '}
-                  {enterpriseProfile[0]?.establishment}년차
+                  {calculateYearsInBusiness(enterpriseProfile[0])}년차 (
+                  {parseInt(
+                    enterpriseProfile[0]?.establishment.split('-')[0],
+                    10
+                  )}
+                  )
                 </p>
               </div>
 

@@ -12,6 +12,10 @@ import {
   usePatchEnterpriseProfile,
   usePostEnterpriseProfile,
 } from '@/actions/auth';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { ko } from 'date-fns/locale';
+import { format, parse } from 'date-fns';
 import { POSITIONS } from '@/constant/position';
 
 const FroalaEditor = dynamic(
@@ -61,7 +65,7 @@ const EnterpriseProfile = (): React.ReactElement => {
     job: '',
     etc: '',
   });
-  const [establishment, setEstablishment] = useState<string>('1');
+  const [establishment, setEstablishment] = useState<string>('');
   const [address, setAddress] = useState({
     findAddressModal: false,
     zoneCode: '',
@@ -119,7 +123,7 @@ const EnterpriseProfile = (): React.ReactElement => {
     }
 
     if (establishment === '0') {
-      alert('업력을 입력해주세요.');
+      alert('설립일을 선택해주세요.');
       return;
     }
 
@@ -394,21 +398,25 @@ const EnterpriseProfile = (): React.ReactElement => {
 
       {/* establishment */}
       <div className="flex flex-col mb-20">
-        <label className="text-2xl font-bold mb-2">업력</label>
+        <label className="text-2xl font-bold mb-2">설립일</label>
 
-        <div className="flex gap-2 items-center">
-          <input
-            className="border p-2 mb-4 rounded w-24"
-            type="number"
-            placeholder="업력을 입력해 주세요"
-            value={establishment}
-            onChange={(e) => {
-              setEstablishment(e.target.value);
-            }}
-          />
-
-          <p className="text-xl">년차</p>
-        </div>
+        <DatePicker
+          className="px-2 py-2 border rounded"
+          selected={
+            establishment && /^\d{4}-\d{2}-\d{2}$/.test(establishment)
+              ? parse(establishment, 'yyyy-MM-dd', new Date())
+              : null
+          }
+          onChange={(date: Date | null) => {
+            if (date) {
+              setEstablishment(format(date, 'yyyy-MM-dd'));
+            }
+          }}
+          locale={ko}
+          dateFormat="yyyy년"
+          showYearPicker
+          placeholderText="설립일을 선택하세요"
+        />
       </div>
 
       {/* description */}
