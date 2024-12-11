@@ -117,12 +117,17 @@ type HiringDataProps = {
   enterprise_description: string;
 };
 
-const getHiring = async (id?: string): Promise<HiringDataProps[]> => {
+const getHiring = async (params: {
+  id?: string;
+  user_id?: string;
+}): Promise<HiringDataProps[]> => {
   const supabase = createBrowserSupabaseClient();
   const query = supabase.from('hiring').select('*');
 
-  if (id) {
-    query.eq('id', id);
+  if (params.user_id) {
+    query.eq('user_id', params.user_id);
+  } else if (params.id) {
+    query.eq('id', params.id);
   }
 
   const { data, error } = await query;
@@ -135,12 +140,12 @@ const getHiring = async (id?: string): Promise<HiringDataProps[]> => {
 };
 
 export const useGetHiring = (
-  id?: string,
+  params: { id?: string; user_id?: string },
   options?: UseQueryOptions<HiringDataProps[], Error>
 ) => {
   return useQuery<HiringDataProps[], Error>({
-    queryKey: ['hiringList', id],
-    queryFn: () => getHiring(id),
+    queryKey: ['hiringList', params.id, params.user_id],
+    queryFn: () => getHiring(params),
     ...options,
   });
 };

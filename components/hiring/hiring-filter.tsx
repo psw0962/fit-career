@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { HiringFilterProps } from '@/types/hiring/filter-type';
 import { useState, useEffect } from 'react';
+import { formatPeriod } from '@/functions/formatPeriod';
 
 type HiringData = {
   id: string;
@@ -30,7 +31,7 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
 }) => {
   const router = useRouter();
 
-  const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring();
+  const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({});
   const [filteredData, setFilteredData] = useState<HiringData[]>([]);
 
   const filterData = () => {
@@ -97,13 +98,13 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
 
   return (
     <>
-      <div className="grid grid-cols-5 gap-3">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {filteredData !== undefined &&
-          filteredData.map((x: any) => {
+          filteredData.map((x: HiringData) => {
             return (
               <div
                 key={x.id}
-                className="flex flex-col gap-2 p-10 border rounded cursor-pointer"
+                className="flex flex-col gap-2 p-5 border rounded cursor-pointer"
                 onClick={() => {
                   router.push(`/hiring/${x.id}`);
                 }}
@@ -120,7 +121,14 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
                   />
                 </div>
 
-                <p>{x.title}</p>
+                <div className="w-full flex flex-col gap-0">
+                  <p className="break-all line-clamp-2">{x.title}</p>
+                  <p>{x.enterprise_name}</p>
+                  <p className="text-sm text-gray-500">{x.short_address}</p>
+                  <p className="text-sm text-gray-500">
+                    경력 {formatPeriod(x.period)}
+                  </p>
+                </div>
               </div>
             );
           })}

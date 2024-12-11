@@ -19,7 +19,7 @@ const HiringDetail = ({
   useKakaoLoader();
   const router = useRouter();
 
-  const { data: hiringData } = useGetHiring(params.id);
+  const { data: hiringData } = useGetHiring({ id: params.id });
 
   const handleNavigate = () => {
     if (!hiringData || hiringData.length === 0) return;
@@ -47,7 +47,7 @@ const HiringDetail = ({
         </div>
       )}
 
-      <div className="mt-10 flex gap-2 items-center">
+      <div className="mt-10 flex gap-1 items-center">
         <div
           className="flex items-center gap-2 cursor-pointer"
           onClick={handleNavigate}
