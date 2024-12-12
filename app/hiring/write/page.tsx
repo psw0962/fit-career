@@ -318,7 +318,7 @@ const HiringWrite = () => {
         <select
           name="job-position"
           id="job-position"
-          className={`appearance-none border py-3 px-2 mb-4 rounded ${
+          className={`appearance-none border p-2 mb-4 rounded ${
             position.job === '' ? 'text-gray-400' : 'text-black'
           }`}
           value={position.job}

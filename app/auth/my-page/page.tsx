@@ -5,9 +5,10 @@ import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useRef, useState } from 'react';
 import withAuth from '@/hoc/withAuth';
 import EnterpriseProfile from '@/components/my-page/enterprise-profile';
+import Resume from '@/components/my-page/resume';
 
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState<string>('profile');
+  const [activeTab, setActiveTab] = useState<string>('resume');
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   const getClassName = (value: string) => {
@@ -21,7 +22,11 @@ const MyPage = () => {
   useEffect(() => {
     const activeTabRef = tabRefs.current[activeTab];
     if (activeTabRef) {
-      activeTabRef.scrollIntoView({ behavior: 'smooth', inline: 'center' });
+      activeTabRef.scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+        block: 'nearest',
+      });
     }
   }, [activeTab]);
 
@@ -33,7 +38,7 @@ const MyPage = () => {
 
       <Tabs.Root
         className="pt-4"
-        defaultValue="profile"
+        defaultValue="resume"
         onValueChange={(value) => setActiveTab(value)}
       >
         <Tabs.List className="flex border-b whitespace-nowrap overflow-auto">
@@ -88,7 +93,7 @@ const MyPage = () => {
           </Tabs.Content>
 
           <Tabs.Content value="resume">
-            <p>내 이력서</p>
+            <Resume />
           </Tabs.Content>
 
           <Tabs.Content value="employment">

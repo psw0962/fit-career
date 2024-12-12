@@ -302,7 +302,7 @@ const EnterpriseProfile = (): React.ReactElement => {
         <select
           name="industry"
           id="industry"
-          className={`appearance-none border py-3 px-2 mb-4 rounded ${
+          className={`appearance-none border p-2 mb-4 rounded ${
             industry.job === '' ? 'text-gray-400' : 'text-black'
           }`}
           value={industry.job}
@@ -324,7 +324,7 @@ const EnterpriseProfile = (): React.ReactElement => {
         {industry.job === '기타' && (
           <input
             type="text"
-            className="appearance-none border py-3 px-2 mb-4 rounded"
+            className="appearance-none border p-2 mb-4 rounded"
             placeholder="업종을 입력해 주세요"
             value={industry.etc}
             onChange={(e) => {
@@ -359,7 +359,7 @@ const EnterpriseProfile = (): React.ReactElement => {
               }
               readOnly
               disabled
-              className="border p-2 mb-2"
+              className="border p-2 mb-2 rounded"
             />
 
             <input
@@ -369,14 +369,14 @@ const EnterpriseProfile = (): React.ReactElement => {
               }
               value={address.detailAddress}
               placeholder="상세 주소 입력"
-              className="border p-2"
+              className="border p-2 rounded"
             />
           </>
         )}
 
         {address.findAddressModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="flex flex-col bg-white p-4 rounded shadow-lg">
+            <div className="flex flex-col bg-white p-2 rounded shadow-lg">
               <DaumPostcode
                 theme={THEMEOBJ}
                 style={DAUMPOSTCODESTYLE}
