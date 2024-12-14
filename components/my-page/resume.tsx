@@ -20,10 +20,10 @@ const Resume = () => {
       url: '',
     },
   ]);
-  const [education, setEducation] = useState(['']);
-  const [experience, setExperience] = useState(['']);
-  const [certificates, setCertificates] = useState(['']);
-  const [awards, setAwards] = useState(['']);
+  // const [education, setEducation] = useState(['']);
+  // const [experience, setExperience] = useState(['']);
+  // const [certificates, setCertificates] = useState(['']);
+  // const [awards, setAwards] = useState(['']);
 
   const addField = <T,>(
     setter: React.Dispatch<React.SetStateAction<T[]>>,
