@@ -192,9 +192,7 @@ const EnterpriseProfile = (): React.ReactElement => {
     <div>
       {/* logo */}
       <div className="flex flex-col mb-20 mt-10">
-        <label className="text-2xl font-bold mb-2 text-gray-800">
-          회사 로고
-        </label>
+        <label className="text-2xl font-bold mb-2">회사 로고</label>
 
         <div>
           {/*  이미지가 업로드 되기 전 */}
