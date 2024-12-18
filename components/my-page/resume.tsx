@@ -49,12 +49,12 @@ const Resume = () => {
 <p>- 운동의 효과를 극대화하기 위해 각 개인의 신체적 특성과 목표에 맞는 맞춤형 프로그램을 설계합니다.</p>
 <p>- 운동뿐만 아니라 영양 상담과 라이프스타일 코칭을 통해 고객의 전반적인 삶의 질 향상을 목표로 합니다.</p>
 <p>- 최신 트렌드와 연구를 반영하여 항상 발전하는 트레이너가 되기 위해 노력합니다.</p>
-  `);
+`);
 
-  // const [education, setEducation] = useState(['']);
-  // const [experience, setExperience] = useState(['']);
-  // const [certificates, setCertificates] = useState(['']);
-  // const [awards, setAwards] = useState(['']);
+  const [education, setEducation] = useState(['']);
+  const [experience, setExperience] = useState(['']);
+  const [certificates, setCertificates] = useState(['']);
+  const [awards, setAwards] = useState(['']);
   const [links, setLinks] = useState<LinkData[]>([
     {
       title: '',
