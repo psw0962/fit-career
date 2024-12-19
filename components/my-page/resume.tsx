@@ -5,11 +5,23 @@ import { useState } from 'react';
 import { validateInput } from '@/functions/validateInput';
 import dynamic from 'next/dynamic';
 import Spinner from '@/components/common/spinner';
+import { v4 as uuidv4 } from 'uuid';
+import React from 'react';
 
-interface LinkData {
+type LinkData = {
+  id: string;
   title: string;
   url: string;
-}
+};
+
+type Education = {
+  id: string;
+  startDate: string;
+  endDate: string;
+  isCurrentlyEnrolled: string;
+  schoolName: string;
+  majorAndDegree: string;
+};
 
 const FroalaEditor = dynamic(
   async () => {
@@ -51,12 +63,22 @@ const Resume = () => {
 <p>- 최신 트렌드와 연구를 반영하여 항상 발전하는 트레이너가 되기 위해 노력합니다.</p>
 `);
 
-  const [education, setEducation] = useState(['']);
+  const [education, setEducation] = useState<Education[]>([
+    {
+      id: uuidv4(),
+      startDate: '',
+      endDate: '',
+      isCurrentlyEnrolled: '',
+      schoolName: '',
+      majorAndDegree: '',
+    },
+  ]);
   const [experience, setExperience] = useState(['']);
   const [certificates, setCertificates] = useState(['']);
   const [awards, setAwards] = useState(['']);
   const [links, setLinks] = useState<LinkData[]>([
     {
+      id: uuidv4(),
       title: '',
       url: '',
     },
@@ -90,7 +112,7 @@ const Resume = () => {
   const updateField = <T,>(
     index: number,
     field: keyof T,
-    value: string,
+    value: string | boolean,
     setter: React.Dispatch<React.SetStateAction<T[]>>
   ) => {
     setter((prev) =>
@@ -133,7 +155,7 @@ const Resume = () => {
       <div className="flex flex-col mb-20">
         <p className="text-2xl font-bold mb-2">이력서 사진</p>
 
-        <div className="text-xs mb-7 sm:mb-2 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>• 가장 많이 쓰는 이력서 사진 파일의 해상도는 300x400입니다.</p>
           <p>
             • 증명사진의 형태가 전문성 있는 이미지와 신뢰도를 높일 수 있어요.
@@ -305,7 +327,7 @@ const Resume = () => {
       <div className="flex flex-col mb-20">
         <p className="text-2xl font-bold mb-2">간단 소개</p>
 
-        <div className="text-xs mb-7 sm:mb-2 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>
             • 본인의 업무 경험을 기반으로 핵심 역량과 업무 스킬을 간단히 작성해
             주세요.
@@ -335,21 +357,215 @@ const Resume = () => {
           <p className="text-2xl font-bold">학력</p>
 
           <button
-            onClick={() => {}}
+            onClick={() =>
+              addField(setEducation, {
+                id: uuidv4(),
+                startDate: '',
+                endDate: '',
+                isCurrentlyEnrolled: '',
+                schoolName: '',
+                majorAndDegree: '',
+              })
+            }
             className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
           >
             + 학력 추가
           </button>
         </div>
 
-        <div className="text-xs mb-7 sm:mb-2 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className="text-xs p-2 mb-7 bg-[#EAEAEC] rounded break-keep">
           <p>
             • 최신순으로 작성해 주세요.
             <br />• 최대 10개까지 등록할 수 있어요.
           </p>
         </div>
 
-        <input type="text" />
+        {education.map((edu, index) => (
+          <React.Fragment key={edu.id}>
+            <div className={`flex items-center`}>
+              <div className="relative w-full flex flex-col gap-2 [@media(min-width:1150px)]:flex-row">
+                <div className="w-full [@media(min-width:1150px)]:w-[20%] flex flex-col gap-2">
+                  <div className="w-full flex gap-1 items-center">
+                    <input
+                      type="text"
+                      placeholder="YYYY.MM"
+                      value={edu.startDate}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+
+                        if (value.length > 6) {
+                          return;
+                        }
+
+                        let formattedValue = value;
+                        if (value.length > 4) {
+                          formattedValue =
+                            value.slice(0, 4) + '.' + value.slice(4, 6);
+                        }
+
+                        updateField<Education>(
+                          index,
+                          'startDate',
+                          formattedValue,
+                          setEducation
+                        );
+                      }}
+                      className="w-full h-10 p-2 border rounded"
+                    />
+
+                    <p>~</p>
+
+                    <input
+                      type="text"
+                      placeholder="YYYY.MM"
+                      value={edu.endDate}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+
+                        if (value.length > 6) {
+                          return;
+                        }
+
+                        let formattedValue = value;
+                        if (value.length > 4) {
+                          formattedValue =
+                            value.slice(0, 4) + '.' + value.slice(4, 6);
+                        }
+
+                        updateField<Education>(
+                          index,
+                          'endDate',
+                          formattedValue,
+                          setEducation
+                        );
+                      }}
+                      className="w-full h-10 p-2 border rounded"
+                    />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center gap-1">
+                      <input
+                        id={`currentlyEnrolled-${edu.id}`}
+                        type="radio"
+                        checked={
+                          edu.isCurrentlyEnrolled === 'currentlyEnrolled'
+                        }
+                        onChange={() => {
+                          updateField<Education>(
+                            index,
+                            'isCurrentlyEnrolled',
+                            'currentlyEnrolled',
+                            setEducation
+                          );
+                        }}
+                      />
+                      <label
+                        htmlFor={`currentlyEnrolled-${edu.id}`}
+                        className="mr-2 text-sm text-gray-500"
+                      >
+                        현재 재학중
+                      </label>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <input
+                        id={`graduated-${edu.id}`}
+                        type="radio"
+                        checked={edu.isCurrentlyEnrolled === 'graduated'}
+                        onChange={() => {
+                          updateField<Education>(
+                            index,
+                            'isCurrentlyEnrolled',
+                            'graduated',
+                            setEducation
+                          );
+                        }}
+                      />
+                      <label
+                        htmlFor={`graduated-${edu.id}`}
+                        className="mr-2 text-sm text-gray-500"
+                      >
+                        졸업
+                      </label>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <input
+                        id={`etc-${edu.id}`}
+                        type="radio"
+                        checked={edu.isCurrentlyEnrolled === 'etc'}
+                        onChange={() => {
+                          updateField<Education>(
+                            index,
+                            'isCurrentlyEnrolled',
+                            'etc',
+                            setEducation
+                          );
+                        }}
+                      />
+                      <label
+                        htmlFor={`etc-${edu.id}`}
+                        className="mr-2 text-sm text-gray-500"
+                      >
+                        그 외(졸업예정, 휴학, 자퇴 등)
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  className={`flex flex-col gap-2 ${education.length > 1 ? 'w-[75%]' : 'w-[80%]'} [@media(max-width:1150px)]:w-full`}
+                >
+                  <input
+                    type="text"
+                    placeholder="학교명"
+                    value={edu.schoolName}
+                    onChange={(e) =>
+                      updateField<Education>(
+                        index,
+                        'schoolName',
+                        e.target.value,
+                        setEducation
+                      )
+                    }
+                    className="w-full h-10 p-2 border rounded"
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="전공 및 학위"
+                    value={edu.majorAndDegree}
+                    onChange={(e) =>
+                      updateField<Education>(
+                        index,
+                        'majorAndDegree',
+                        e.target.value,
+                        setEducation
+                      )
+                    }
+                    className="w-full h-10 p-2 border rounded"
+                  />
+                </div>
+
+                {education.length > 1 && (
+                  <Image
+                    src="/svg/close.svg"
+                    alt="close"
+                    width={15}
+                    height={15}
+                    className="w-auto h-4 cursor-pointer absolute right-0 top-[-20px] [@media(min-width:1150px)]:right-[10px] [@media(min-width:1150px)]:top-[35px]"
+                    onClick={() => removeField(index, setEducation)}
+                  />
+                )}
+              </div>
+            </div>
+
+            {education.length > 1 && (
+              <div className="border border-gray-300 my-11 [@media(min-width:1150px)]:my-10"></div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
 
       <div className="flex flex-col mb-20">
@@ -364,7 +580,7 @@ const Resume = () => {
           </button>
         </div>
 
-        <div className="text-xs mb-7 sm:mb-2 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>• 최신순으로 작성해 주세요.</p>
           <p>
             • 신입의 경우 지원하는 직무를 준비하는 과정에서 어떤 노력을 했고
@@ -393,7 +609,7 @@ const Resume = () => {
           </button>
         </div>
 
-        <div className="text-xs mb-7 sm:mb-2 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>
             • 최신순으로 작성해 주세요.
             <br />• 최대 10개까지 등록할 수 있어요.
@@ -415,7 +631,7 @@ const Resume = () => {
           </button>
         </div>
 
-        <div className="text-xs mb-7 sm:mb-2 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>
             • 최신순으로 작성해 주세요.
             <br />• 최대 10개까지 등록할 수 있어요.
@@ -430,14 +646,20 @@ const Resume = () => {
           <p className="text-2xl font-bold">링크</p>
 
           <button
-            onClick={() => addField(setLinks, { title: '', url: '' })}
+            onClick={() =>
+              addField(setLinks, {
+                id: uuidv4(),
+                title: '',
+                url: '',
+              })
+            }
             className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
           >
             + 링크 추가
           </button>
         </div>
 
-        <div className="text-xs mb-7 sm:mb-2 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>
             • 자신을 어필할 수 있는 포트폴리오가 있다면 링크도 첨부해 주세요.
             ex)인스타그램, 블로그, 비포애프터 자료 등
@@ -446,7 +668,10 @@ const Resume = () => {
         </div>
 
         {links.map((link, index) => (
-          <div key={index} className="flex items-center mb-10 relative sm:mb-2">
+          <div
+            key={link.id}
+            className="flex items-center mb-10 relative sm:mb-2"
+          >
             <div className="w-full flex flex-col items-center gap-2 sm:flex-row">
               <input
                 type="text"
