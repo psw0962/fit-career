@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { validateInput } from '@/functions/validateInput';
 import dynamic from 'next/dynamic';
 import Spinner from '@/components/common/spinner';
 import { v4 as uuidv4 } from 'uuid';
 import React from 'react';
-import { usePostResume } from '@/actions/auth';
+import { useGetResume, usePatchResume, usePostResume } from '@/actions/auth';
 
 type LinkData = {
   id: string;
@@ -129,8 +129,9 @@ const Resume = () => {
     },
   ]);
 
-  const { mutate: postResume, isIdle: postIdle } = usePostResume();
-
+  const { data: resumeData } = useGetResume();
+  const { mutate: postResumeMutate, isIdle: postIdle } = usePostResume();
+  const { mutate: patchResumeMutate, isIdle: patchIdle } = usePatchResume();
   const handleResumeImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -178,20 +179,6 @@ const Resume = () => {
   };
 
   const onSubmit = () => {
-    console.log({
-      resumeImage,
-      currentResumeImage,
-      name,
-      phone,
-      email,
-      introduction,
-      education,
-      experience,
-      certificates,
-      awards,
-      links,
-    });
-
     if (!name.trim()) {
       alert('이름은 필수 입력항목입니다.');
       return;
@@ -207,19 +194,64 @@ const Resume = () => {
       return;
     }
 
-    return postResume({
-      resumeImage,
-      name,
-      phone: `${phone.part1}-${phone.part2}-${phone.part3}`,
-      email,
-      introduction,
-      education,
-      experience,
-      certificates,
-      awards,
-      links,
-    });
+    if (resumeData?.length === 0) {
+      return postResumeMutate({
+        resumeImage,
+        name,
+        phone: `${phone.part1}-${phone.part2}-${phone.part3}`,
+        email,
+        introduction,
+        education,
+        experience,
+        certificates,
+        awards,
+        links,
+      });
+    } else {
+      return patchResumeMutate({
+        resumeImage,
+        currentResumeImage,
+        name,
+        phone: `${phone.part1}-${phone.part2}-${phone.part3}`,
+        email,
+        introduction,
+        education,
+        experience,
+        certificates,
+        awards,
+        links,
+      });
+    }
   };
+
+  useEffect(() => {
+    if (
+      resumeData?.length !== 0 &&
+      resumeData !== undefined &&
+      resumeData !== null
+    ) {
+      setCurrentResumeImage(resumeData?.[0]?.resume_image[0] || '');
+      setName(resumeData?.[0]?.name || '');
+      setPhone({
+        part1: resumeData?.[0]?.phone?.split('-')[0] || '',
+        part2: resumeData?.[0]?.phone?.split('-')[1] || '',
+        part3: resumeData?.[0]?.phone?.split('-')[2] || '',
+      });
+      setEmail(resumeData?.[0]?.email || '');
+      setIntroduction(resumeData?.[0]?.introduction || '');
+      setEducation(resumeData?.[0]?.education || []);
+      setExperience(resumeData?.[0]?.experience || []);
+      setCertificates(resumeData?.[0]?.certificates || []);
+      setAwards(resumeData?.[0]?.awards || []);
+      setLinks(resumeData?.[0]?.links || []);
+    }
+  }, [resumeData]);
+
+  console.log(resumeData);
+
+  if (!postIdle || !patchIdle) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex flex-col mb-20 mt-10">
@@ -309,8 +341,8 @@ const Resume = () => {
           )}
 
           {/* 이미 업로드된 로고를 가져오는 경우 */}
-          {/* {enterpriseProfile &&
-            resumeImage[0]?.length > 0 &&
+          {resumeData &&
+            resumeData?.[0]?.resume_image[0]?.length > 0 &&
             currentResumeImage !== '' && (
               <div className="relative w-28 h-20 border-gray-300">
                 <div className="relative w-20 h-20">
@@ -332,7 +364,7 @@ const Resume = () => {
                   &times;
                 </button>
               </div>
-            )} */}
+            )}
         </div>
       </div>
 

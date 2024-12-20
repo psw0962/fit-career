@@ -148,7 +148,7 @@ type EnterpriseProfile = {
   currentLogo?: string;
 };
 
-const enterpriseProfile = async (data: EnterpriseProfile) => {
+const postEnterpriseProfile = async (data: EnterpriseProfile) => {
   const supabase = createBrowserSupabaseClient();
 
   const imageUrls: string[] = [];
@@ -190,7 +190,7 @@ export const usePostEnterpriseProfile = (
   options?: UseMutationOptions<void, Error, EnterpriseProfile, void>
 ) => {
   return useMutation<void, Error, EnterpriseProfile, void>({
-    mutationFn: enterpriseProfile,
+    mutationFn: postEnterpriseProfile,
     onSuccess: () => {
       alert('기업 프로필이 저장 되었습니다.');
       window.location.replace('/auth/my-page');
@@ -351,6 +351,7 @@ export const useGetEnterpriseProfile = (userId?: string) => {
 // =========================================
 type ResumeData = {
   resumeImage: File[];
+  currentResumeImage?: string;
   name: string;
   phone: string;
   email: string;
@@ -439,6 +440,142 @@ export const usePostResume = (
     onError: (error: Error) => {
       console.error(error.message);
       alert('이력서 등록에 실패했습니다. 다시 시도해주세요.');
+    },
+    ...options,
+  });
+};
+
+// =========================================
+// ============== get resume
+// =========================================
+const getResume = async () => {
+  const supabase = createBrowserSupabaseClient();
+
+  try {
+    const { data: userData, error: userDataError } =
+      await supabase.auth.getUser();
+
+    if (userData) {
+      const { data: resumeData, error: resumeError } = await supabase
+        .from('resume')
+        .select('*')
+        .eq('user_id', userData?.user?.id);
+
+      return resumeData;
+    }
+
+    return null;
+  } catch (error) {
+    console.log(error);
+    return null;
+  }
+};
+
+export const useGetResume = () => {
+  return useQuery({
+    queryKey: ['resume'],
+    queryFn: () => getResume(),
+    throwOnError: true,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    // staleTime: 1000 * 60 * 5,
+  });
+};
+
+// =========================================
+// ============== patch resume
+// =========================================
+const patchResume = async (data: ResumeData) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const { data: userData, error: userDataError } =
+    await supabase.auth.getUser();
+
+  if (userDataError) {
+    throw new Error('User data not found');
+  }
+
+  const { data: resumeData, error: resumeError } = await supabase
+    .from('resume')
+    .select('*')
+    .eq('user_id', userData?.user?.id)
+    .single();
+
+  if (resumeError) {
+    throw new Error(resumeError.message);
+  }
+
+  const currentImages: string[] = resumeData?.resume_image || [];
+  const newImages: string[] = [];
+
+  for (const image of data?.resumeImage || []) {
+    const { data: uploadData, error: uploadError } = await supabase.storage
+      .from('resume')
+      .upload(`resume/${Date.now()}-${image.name}`, image);
+
+    if (uploadError) {
+      throw new Error(`${uploadError.message}`);
+    }
+
+    const url = supabase.storage.from('resume').getPublicUrl(uploadData.path);
+    newImages.push(url.data.publicUrl);
+  }
+
+  const imagesChanged =
+    (newImages.length > 0 && !data.currentResumeImage) ||
+    !data.currentResumeImage;
+
+  if (imagesChanged) {
+    const imagesToDelete = currentImages.filter(
+      (currentImage) => !newImages.includes(currentImage)
+    );
+
+    for (const imageUrl of imagesToDelete) {
+      const path = imageUrl.split('/').slice(-1)[0];
+      const { error: deleteError } = await supabase.storage
+        .from('resume')
+        .remove([`resume/${path}`]);
+
+      if (deleteError) {
+        console.error(`Failed to delete image: ${deleteError.message}`);
+      }
+    }
+  }
+
+  const { error } = await supabase
+    .from('resume')
+    .update({
+      resume_image: imagesChanged ? newImages : currentImages,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      introduction: data.introduction,
+      education: data.education,
+      experience: data.experience,
+      certificates: data.certificates,
+      awards: data.awards,
+      links: data.links,
+    })
+    .eq('user_id', userData?.user?.id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const usePatchResume = (
+  options?: UseMutationOptions<void, Error, ResumeData, void>
+) => {
+  return useMutation<void, Error, ResumeData, void>({
+    mutationFn: patchResume,
+    onSuccess: () => {
+      alert('이력서가 수정 되었습니다.');
+      window.location.replace('/auth/my-page');
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
+      alert('이력서 수정에 실패했습니다. 다시 시도해주세요.');
     },
     ...options,
   });
