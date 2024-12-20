@@ -345,3 +345,101 @@ export const useGetEnterpriseProfile = (userId?: string) => {
     // staleTime: 1000 * 60 * 5,
   });
 };
+
+// =========================================
+// ============== post resume
+// =========================================
+type ResumeData = {
+  resumeImage: File[];
+  name: string;
+  phone: string;
+  email: string;
+  introduction: string;
+  education: {
+    id: string;
+    startDate: string;
+    endDate: string;
+    isCurrentlyEnrolled: string;
+    schoolName: string;
+    majorAndDegree: string;
+  }[];
+  experience: {
+    id: string;
+    startDate: string;
+    endDate: string;
+    isCurrentlyEmployed: boolean;
+    companyName: string;
+    jobTitle: string;
+    description: string;
+  }[];
+  certificates: {
+    id: string;
+    date: string;
+    certificateName: string;
+  }[];
+  awards: {
+    id: string;
+    date: string;
+    awardName: string;
+  }[];
+  links: {
+    id: string;
+    title: string;
+    url: string;
+  }[];
+};
+
+const postResume = async (data: ResumeData) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const imageUrls: string[] = [];
+
+  for (const image of data.resumeImage) {
+    const { data: uploadData, error } = await supabase.storage
+      .from('resume')
+      .upload(`resume/${Date.now()}-${image.name}`, image);
+
+    if (error) {
+      throw new Error(`${error.message}`);
+    }
+
+    const url = supabase.storage.from('resume').getPublicUrl(uploadData.path);
+    imageUrls.push(url.data.publicUrl);
+  }
+
+  const { error: insertError } = await supabase.from('resume').insert([
+    {
+      resume_image: imageUrls,
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      introduction: data.introduction,
+      education: data.education,
+      experience: data.experience,
+      certificates: data.certificates,
+      awards: data.awards,
+      links: data.links,
+    },
+  ]);
+
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
+};
+
+export const usePostResume = (
+  options?: UseMutationOptions<void, Error, ResumeData, void>
+) => {
+  return useMutation<void, Error, ResumeData, void>({
+    mutationFn: postResume,
+    onSuccess: () => {
+      alert('이력서가 저장 되었습니다.');
+      window.location.reload();
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
+      alert('이력서 등록에 실패했습니다. 다시 시도해주세요.');
+    },
+    ...options,
+  });
+};

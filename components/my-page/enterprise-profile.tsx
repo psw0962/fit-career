@@ -85,10 +85,10 @@ const EnterpriseProfile = (): React.ReactElement => {
     });
   };
 
+  const { data: enterpriseProfile } = useGetEnterpriseProfile();
   const { mutate: postMutate, isIdle: postIdle } = usePostEnterpriseProfile();
   const { mutate: patchMutate, isIdle: patchIdle } =
     usePatchEnterpriseProfile();
-  const { data: enterpriseProfile } = useGetEnterpriseProfile();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;

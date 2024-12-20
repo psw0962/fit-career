@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import Spinner from '@/components/common/spinner';
 import { v4 as uuidv4 } from 'uuid';
 import React from 'react';
+import { usePostResume } from '@/actions/auth';
 
 type LinkData = {
   id: string;
@@ -21,6 +22,28 @@ type Education = {
   isCurrentlyEnrolled: string;
   schoolName: string;
   majorAndDegree: string;
+};
+
+type Experience = {
+  id: string;
+  startDate: string;
+  endDate: string;
+  isCurrentlyEmployed: boolean;
+  companyName: string;
+  jobTitle: string;
+  description: string;
+};
+
+type Certificate = {
+  id: string;
+  date: string;
+  certificateName: string;
+};
+
+type Award = {
+  id: string;
+  date: string;
+  awardName: string;
 };
 
 const FroalaEditor = dynamic(
@@ -73,9 +96,31 @@ const Resume = () => {
       majorAndDegree: '',
     },
   ]);
-  const [experience, setExperience] = useState(['']);
-  const [certificates, setCertificates] = useState(['']);
-  const [awards, setAwards] = useState(['']);
+  const [experience, setExperience] = useState<Experience[]>([
+    {
+      id: uuidv4(),
+      startDate: '',
+      endDate: '',
+      isCurrentlyEmployed: false,
+      companyName: '',
+      jobTitle: '',
+      description: '',
+    },
+  ]);
+  const [certificates, setCertificates] = useState<Certificate[]>([
+    {
+      id: uuidv4(),
+      date: '',
+      certificateName: '',
+    },
+  ]);
+  const [awards, setAwards] = useState<Award[]>([
+    {
+      id: uuidv4(),
+      date: '',
+      awardName: '',
+    },
+  ]);
   const [links, setLinks] = useState<LinkData[]>([
     {
       id: uuidv4(),
@@ -83,6 +128,8 @@ const Resume = () => {
       url: '',
     },
   ]);
+
+  const { mutate: postResume, isIdle: postIdle } = usePostResume();
 
   const handleResumeImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -127,6 +174,50 @@ const Resume = () => {
     setter((prev) => {
       if (prev.length <= 1) return prev;
       return prev.filter((_, i) => i !== index);
+    });
+  };
+
+  const onSubmit = () => {
+    console.log({
+      resumeImage,
+      currentResumeImage,
+      name,
+      phone,
+      email,
+      introduction,
+      education,
+      experience,
+      certificates,
+      awards,
+      links,
+    });
+
+    if (!name.trim()) {
+      alert('이름은 필수 입력항목입니다.');
+      return;
+    }
+
+    if (!phone.part1 || !phone.part2 || !phone.part3) {
+      alert('연락처는 필수 입력항목입니다.');
+      return;
+    }
+
+    if (!email.trim()) {
+      alert('이메일은 필수 입력항목입니다.');
+      return;
+    }
+
+    return postResume({
+      resumeImage,
+      name,
+      phone: `${phone.part1}-${phone.part2}-${phone.part3}`,
+      email,
+      introduction,
+      education,
+      experience,
+      certificates,
+      awards,
+      links,
     });
   };
 
@@ -246,7 +337,9 @@ const Resume = () => {
       </div>
 
       <div className="flex flex-col mb-20">
-        <p className="text-2xl font-bold mb-2">이름</p>
+        <p className="text-2xl font-bold mb-2">
+          이름 <span className="text-sm text-red-500 align-top">*</span>
+        </p>
 
         <input
           type="text"
@@ -258,7 +351,9 @@ const Resume = () => {
       </div>
 
       <div className="flex flex-col mb-20">
-        <p className="text-2xl font-bold mb-2">전화번호</p>
+        <p className="text-2xl font-bold mb-2">
+          연락처 <span className="text-sm text-red-500 align-top">*</span>
+        </p>
 
         <div className="flex gap-2">
           <input
@@ -303,7 +398,9 @@ const Resume = () => {
       </div>
 
       <div className="flex flex-col mb-20">
-        <p className="text-2xl font-bold mb-2">이메일</p>
+        <p className="text-2xl font-bold mb-2">
+          이메일 <span className="text-sm text-red-500 align-top">*</span>
+        </p>
 
         <input
           type="text"
@@ -534,7 +631,7 @@ const Resume = () => {
 
                   <input
                     type="text"
-                    placeholder="전공 및 학위"
+                    placeholder="전공 및 학위 ex) 체육학 학사"
                     value={edu.majorAndDegree}
                     onChange={(e) =>
                       updateField<Education>(
@@ -573,7 +670,17 @@ const Resume = () => {
           <p className="text-2xl font-bold">경력</p>
 
           <button
-            onClick={() => {}}
+            onClick={() =>
+              addField(setExperience, {
+                id: uuidv4(),
+                startDate: '',
+                endDate: '',
+                isCurrentlyEmployed: false,
+                companyName: '',
+                jobTitle: '',
+                description: '',
+              })
+            }
             className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
           >
             + 경력 추가
@@ -594,18 +701,165 @@ const Resume = () => {
           <p>• 최대 10개까지 등록할 수 있어요.</p>
         </div>
 
-        <input type="text" />
+        {experience.map((exp, index) => (
+          <React.Fragment key={index}>
+            <div className={`flex items-center`}>
+              <div className="relative w-full flex flex-col gap-2 [@media(min-width:1150px)]:flex-row">
+                <div className="w-full [@media(min-width:1150px)]:w-[20%] flex flex-col gap-2">
+                  <div className="w-full flex gap-1 items-center">
+                    <input
+                      type="text"
+                      placeholder="YYYY.MM"
+                      value={exp.startDate}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        if (value.length > 6) return;
+                        let formattedValue = value;
+                        if (value.length > 4) {
+                          formattedValue =
+                            value.slice(0, 4) + '.' + value.slice(4, 6);
+                        }
+                        updateField<Experience>(
+                          index,
+                          'startDate',
+                          formattedValue,
+                          setExperience
+                        );
+                      }}
+                      className="w-full h-10 p-2 border rounded"
+                    />
+
+                    <p>~</p>
+
+                    <input
+                      type="text"
+                      placeholder="YYYY.MM"
+                      value={exp.endDate}
+                      onChange={(e) => {
+                        const value = e.target.value.replace(/[^0-9]/g, '');
+                        if (value.length > 6) return;
+                        let formattedValue = value;
+                        if (value.length > 4) {
+                          formattedValue =
+                            value.slice(0, 4) + '.' + value.slice(4, 6);
+                        }
+                        updateField<Experience>(
+                          index,
+                          'endDate',
+                          formattedValue,
+                          setExperience
+                        );
+                      }}
+                      className="w-full h-10 p-2 border rounded"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-1">
+                    <input
+                      id={`currentlyEmployed-${exp.id}`}
+                      type="checkbox"
+                      checked={exp.isCurrentlyEmployed}
+                      onChange={() => {
+                        updateField<Experience>(
+                          index,
+                          'isCurrentlyEmployed',
+                          !exp.isCurrentlyEmployed,
+                          setExperience
+                        );
+                      }}
+                    />
+                    <label
+                      htmlFor={`currentlyEmployed-${exp.id}`}
+                      className="mr-2 text-sm text-gray-500"
+                    >
+                      현재 재직중
+                    </label>
+                  </div>
+                </div>
+
+                <div
+                  className={`flex flex-col gap-2 ${experience.length > 1 ? 'w-[75%]' : 'w-[80%]'} [@media(max-width:1150px)]:w-full`}
+                >
+                  <input
+                    type="text"
+                    placeholder="회사명"
+                    value={exp.companyName}
+                    onChange={(e) =>
+                      updateField<Experience>(
+                        index,
+                        'companyName',
+                        e.target.value,
+                        setExperience
+                      )
+                    }
+                    className="w-full h-10 p-2 border rounded"
+                  />
+
+                  <input
+                    type="text"
+                    placeholder="직무"
+                    value={exp.jobTitle}
+                    onChange={(e) =>
+                      updateField<Experience>(
+                        index,
+                        'jobTitle',
+                        e.target.value,
+                        setExperience
+                      )
+                    }
+                    className="w-full h-10 p-2 border rounded"
+                  />
+
+                  <textarea
+                    placeholder="주요 성과"
+                    value={exp.description}
+                    className="w-full h-32 p-2 border rounded"
+                    onChange={(e) =>
+                      updateField<Experience>(
+                        index,
+                        'description',
+                        e.target.value,
+                        setExperience
+                      )
+                    }
+                  />
+                </div>
+
+                {experience.length > 1 && (
+                  <Image
+                    src="/svg/close.svg"
+                    alt="close"
+                    width={15}
+                    height={15}
+                    className="w-auto h-4 cursor-pointer absolute right-0 top-[-20px] [@media(min-width:1150px)]:right-[15px] [@media(min-width:1150px)]:top-[0px]"
+                    onClick={() => removeField(index, setExperience)}
+                  />
+                )}
+              </div>
+            </div>
+
+            {experience.length > 1 && (
+              <div className="border border-gray-300 my-11 [@media(min-width:1150px)]:my-10"></div>
+            )}
+          </React.Fragment>
+        ))}
       </div>
 
       <div className="flex flex-col mb-20">
         <div className="flex gap-3 items-center mb-2">
-          <p className="text-2xl font-bold">자격증</p>
+          <p className="text-2xl font-bold">자격사항</p>
 
           <button
-            onClick={() => {}}
+            onClick={() =>
+              addField(setCertificates, {
+                id: uuidv4(),
+                date: '',
+                certificateName: '',
+              })
+            }
             className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
           >
-            + 자격증 추가
+            + 자격사항 추가
           </button>
         </div>
 
@@ -616,7 +870,67 @@ const Resume = () => {
           </p>
         </div>
 
-        <input type="text" />
+        {certificates.map((cert, index) => (
+          <div
+            key={cert.id}
+            className="flex items-center mb-10 relative sm:mb-2"
+          >
+            <div className="w-full flex flex-col items-center gap-2 sm:flex-row">
+              <input
+                type="text"
+                placeholder="YYYY.MM"
+                value={cert.date}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, '');
+
+                  if (value.length > 6) {
+                    return;
+                  }
+
+                  let formattedValue = value;
+                  if (value.length > 4) {
+                    formattedValue =
+                      value.slice(0, 4) + '.' + value.slice(4, 6);
+                  }
+
+                  updateField<Certificate>(
+                    index,
+                    'date',
+                    formattedValue,
+                    setCertificates
+                  );
+                }}
+                className="w-full h-10 sm:w-[20%] p-2 border rounded"
+              />
+
+              <input
+                type="text"
+                placeholder="자격명"
+                value={cert.certificateName}
+                onChange={(e) =>
+                  updateField<Certificate>(
+                    index,
+                    'certificateName',
+                    e.target.value,
+                    setCertificates
+                  )
+                }
+                className="w-full h-10 sm:w-[80%] p-2 border rounded"
+              />
+
+              {certificates.length > 1 && (
+                <Image
+                  src="/svg/close.svg"
+                  alt="close"
+                  width={15}
+                  height={15}
+                  className="w-auto h-4 cursor-pointer absolute right-0 top-[-20px] sm:static"
+                  onClick={() => removeField(index, setCertificates)}
+                />
+              )}
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="flex flex-col mb-20">
@@ -624,7 +938,13 @@ const Resume = () => {
           <p className="text-2xl font-bold">수상 경력 및 활동</p>
 
           <button
-            onClick={() => {}}
+            onClick={() =>
+              addField(setAwards, {
+                id: uuidv4(),
+                date: '',
+                awardName: '',
+              })
+            }
             className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
           >
             + 추가
@@ -638,7 +958,62 @@ const Resume = () => {
           </p>
         </div>
 
-        <input type="text" />
+        {awards.map((award, index) => (
+          <div
+            key={award.id}
+            className="flex items-center mb-10 relative sm:mb-2"
+          >
+            <div className="w-full flex flex-col items-center gap-2 sm:flex-row">
+              <input
+                type="text"
+                placeholder="YYYY.MM"
+                value={award.date}
+                onChange={(e) => {
+                  const value = e.target.value.replace(/[^0-9]/g, '');
+
+                  if (value.length > 6) {
+                    return;
+                  }
+
+                  let formattedValue = value;
+                  if (value.length > 4) {
+                    formattedValue =
+                      value.slice(0, 4) + '.' + value.slice(4, 6);
+                  }
+
+                  updateField<Award>(index, 'date', formattedValue, setAwards);
+                }}
+                className="w-full h-10 sm:w-[20%] p-2 border rounded"
+              />
+
+              <input
+                type="text"
+                placeholder="수상 경력 및 활동 내용"
+                value={award.awardName}
+                onChange={(e) =>
+                  updateField<Award>(
+                    index,
+                    'awardName',
+                    e.target.value,
+                    setAwards
+                  )
+                }
+                className="w-full h-10 sm:w-[80%] p-2 border rounded"
+              />
+
+              {awards.length > 1 && (
+                <Image
+                  src="/svg/close.svg"
+                  alt="close"
+                  width={15}
+                  height={15}
+                  className="w-auto h-4 cursor-pointer absolute right-0 top-[-20px] sm:static"
+                  onClick={() => removeField(index, setAwards)}
+                />
+              )}
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="flex flex-col">
@@ -712,6 +1087,13 @@ const Resume = () => {
           </div>
         ))}
       </div>
+
+      <button
+        className="bg-[#4C71C0] text-white text-base px-6 py-2 rounded w-fit mx-auto mt-16"
+        onClick={() => onSubmit()}
+      >
+        저장하기
+      </button>
     </div>
   );
 };
