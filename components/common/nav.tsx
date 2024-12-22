@@ -48,10 +48,12 @@ const Nav = (): React.ReactElement => {
   }, []);
 
   return (
-    <nav className="fixed top-0 w-full shadow bg-white z-10 transition-all duration-300">
+    <nav
+      className={`overflow-x-auto fixed top-0 w-full shadow bg-white z-10 transition-all duration-300`}
+    >
       {/* desktop */}
       <div
-        className={`flex justify-between max-w-7xl mx-auto px-10 ${
+        className={`min-w-[350px] flex justify-between max-w-7xl mx-auto px-10 ${
           isScrolled ? 'py-3' : 'py-7'
         } transition-all duration-300`}
       >
@@ -108,32 +110,34 @@ const Nav = (): React.ReactElement => {
         </div>
 
         <div
-          className={`fixed inset-0 px-6 ${
+          className={`overflow-x-auto fixed inset-0 px-6 ${
             isScrolled ? 'top-16' : 'top-24'
           } bg-white z-40 transition-all duration-300 ${
             isMobileMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
           }`}
         >
-          <ul className="md:flex gap-10">
-            {MENU_LIST.map((menu) => (
-              <li
-                key={menu.id}
-                className="p-4 text-lg font-bold cursor-pointer"
-                onClick={() => {
-                  router.push(`${menu.path}`);
-                  setIsMobileMenuOpen(false);
-                }}
-              >
-                {menu.name}
-              </li>
-            ))}
-          </ul>
+          <div className="min-w-[350px]">
+            <ul className="md:flex gap-10">
+              {MENU_LIST.map((menu) => (
+                <li
+                  key={menu.id}
+                  className="p-4 text-lg font-bold cursor-pointer"
+                  onClick={() => {
+                    router.push(`${menu.path}`);
+                    setIsMobileMenuOpen(false);
+                  }}
+                >
+                  {menu.name}
+                </li>
+              ))}
+            </ul>
 
-          <div className="border-t-2 p-4 flex justify-end">
-            <NavAuth
-              isMobile={true}
-              setIsMobileMenuOpen={setIsMobileMenuOpen}
-            />
+            <div className="border-t-2 p-4 flex justify-end">
+              <NavAuth
+                isMobile={true}
+                setIsMobileMenuOpen={setIsMobileMenuOpen}
+              />
+            </div>
           </div>
         </div>
 

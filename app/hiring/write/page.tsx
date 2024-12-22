@@ -19,6 +19,7 @@ import GlobalSpinner from '@/components/common/global-spinner';
 import { useGetEnterpriseProfile } from '@/actions/auth';
 import { POSITIONS } from '@/constant/position';
 import { formatPeriod } from '@/functions/formatPeriod';
+import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -115,12 +116,6 @@ const HiringWrite = () => {
 
   const removeImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const calculateYearsInBusiness = (data: { establishment: string }) => {
-    const establishmentYear = parseInt(data?.establishment.split('-')[0], 10);
-    const currentYear = new Date().getFullYear();
-    return Math.max(currentYear - establishmentYear, 0);
   };
 
   const onSubmit = () => {
@@ -223,7 +218,10 @@ const HiringWrite = () => {
                 <p>
                   {enterpriseProfile[0]?.name} /{' '}
                   {enterpriseProfile[0]?.industry} /{' '}
-                  {calculateYearsInBusiness(enterpriseProfile[0])}년차 (
+                  {calculateYearsInBusiness(
+                    enterpriseProfile[0]?.establishment
+                  )}
+                  년차 (
                   {parseInt(
                     enterpriseProfile[0]?.establishment.split('-')[0],
                     10

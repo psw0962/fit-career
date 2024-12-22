@@ -9,6 +9,7 @@ import { Map } from 'react-kakao-maps-sdk';
 import CustomMapMaker from '@/components/common/kakao-map/custom-map-maker';
 import { formatPeriod } from '@/functions/formatPeriod';
 import useKakaoLoader from '@/hooks/useKakaoLoader';
+import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 
 const Company = (): React.ReactElement => {
   useKakaoLoader();
@@ -20,12 +21,6 @@ const Company = (): React.ReactElement => {
   const { data: enterpriseProfileData } = useGetEnterpriseProfile(userId);
   const { data: hiringData } = useGetHiring({ id: hiringId });
   const { data: hiringDataByUserId } = useGetHiring({ user_id: userId });
-
-  const calculateYearsInBusiness = (data: { establishment: string }) => {
-    const establishmentYear = parseInt(data?.establishment.split('-')[0], 10);
-    const currentYear = new Date().getFullYear();
-    return Math.max(currentYear - establishmentYear, 0);
-  };
 
   if (!hiringData || hiringData.length === 0) {
     return <></>;
@@ -83,7 +78,8 @@ const Company = (): React.ReactElement => {
         </p>
         <div>∙</div>
         <p>
-          {calculateYearsInBusiness(enterpriseProfileData[0])}년차 (
+          {calculateYearsInBusiness(enterpriseProfileData[0]?.establishment)}
+          년차 (
           {parseInt(enterpriseProfileData[0]?.establishment.split('-')[0], 10)})
         </p>
       </div>
@@ -96,7 +92,7 @@ const Company = (): React.ReactElement => {
         />
       </div>
 
-      <p className="mt-14 text-xl font-bold">채용중인 포지션</p>
+      <p className="mt-14 mb-4 text-xl font-bold">채용중인 포지션</p>
 
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {hiringDataByUserId.map((data) => (

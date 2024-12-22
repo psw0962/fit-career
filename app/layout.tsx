@@ -20,14 +20,16 @@ const RootLayout = ({
       <html lang="en">
         <head></head>
 
-        <body>
-          <Nav />
+        <body className="overflow-x-auto">
+          <div className="min-w-[350px]">
+            <Nav />
 
-          <div className="max-w-7xl mx-auto px-10 py-32">
-            <div className="">{children}</div>
+            <div className="max-w-7xl mx-auto px-10 py-32">
+              <div className="">{children}</div>
+            </div>
+
+            <Footer />
           </div>
-
-          <Footer />
         </body>
       </html>
     </ReactQueryClientProvider>
