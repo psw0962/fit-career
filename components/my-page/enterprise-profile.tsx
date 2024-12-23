@@ -5,6 +5,7 @@ import GlobalSpinner from '../common/global-spinner';
 import { useGetEnterpriseProfile } from '@/actions/auth';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const EnterpriseProfile = () => {
   const router = useRouter();
@@ -32,14 +33,11 @@ const EnterpriseProfile = () => {
         <div className="flex flex-col">
           <p className="text-xl">
             {data?.[0]?.name}
-            <span
-              className="text-sm ml-2 font-bold text-[#C3C4C5] underline underline-offset-4 decoration-[#C3C4C5] cursor-pointer"
-              onClick={() =>
-                router.push('/auth/my-page/enterprise-profile-edit')
-              }
-            >
-              {`수정하기`}
-            </span>
+            <Link href="/auth/my-page/enterprise-profile-edit" passHref>
+              <span className="text-sm ml-2 font-bold text-[#C3C4C5] underline underline-offset-4 decoration-[#C3C4C5] cursor-pointer">
+                {`수정하기`}
+              </span>
+            </Link>
           </p>
 
           <div className="flex gap-1 mt-2">

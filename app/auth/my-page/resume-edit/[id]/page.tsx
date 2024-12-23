@@ -7,44 +7,16 @@ import dynamic from 'next/dynamic';
 import Spinner from '@/components/common/spinner';
 import { v4 as uuidv4 } from 'uuid';
 import React from 'react';
-import { useGetResume, usePatchResume, usePostResume } from '@/actions/auth';
-
-type LinkData = {
-  id: string;
-  title: string;
-  url: string;
-};
-
-type Education = {
-  id: string;
-  startDate: string;
-  endDate: string;
-  isCurrentlyEnrolled: string;
-  schoolName: string;
-  majorAndDegree: string;
-};
-
-type Experience = {
-  id: string;
-  startDate: string;
-  endDate: string;
-  isCurrentlyEmployed: boolean;
-  companyName: string;
-  jobTitle: string;
-  description: string;
-};
-
-type Certificate = {
-  id: string;
-  date: string;
-  certificateName: string;
-};
-
-type Award = {
-  id: string;
-  date: string;
-  awardName: string;
-};
+import { useGetResume, usePatchResume } from '@/actions/resume';
+import {
+  Education,
+  Experience,
+  Certificate,
+  Award,
+  LinkData,
+} from '@/types/resume/resume';
+import 'froala-editor/css/froala_editor.pkgd.min.css';
+import 'froala-editor/css/froala_style.min.css';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -68,18 +40,23 @@ const FroalaEditorView = dynamic(
   }
 );
 
-const ResumeEdit = () => {
+const ResumeEdit = ({ params }: { params: { id: string } }) => {
+  const [title, setTitle] = useState<string>('');
   const [resumeImage, setResumeImage] = useState<File[]>([]);
   const [currentResumeImage, setCurrentResumeImage] = useState<string>('');
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState({
+  const [name, setName] = useState<string>('');
+  const [phone, setPhone] = useState<{
+    part1: string;
+    part2: string;
+    part3: string;
+  }>({
     part1: '',
     part2: '',
     part3: '',
   });
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
-  const [introduction, setIntroduction] = useState(`
+  const [introduction, setIntroduction] = useState<string>(`
 <p>- 진심으로 고객이 변하길 바라는 마음으로 목표를 향해 나아갈 수 있도록 긍정적인 피드백과 격려를 아끼지 않습니다.</p>
 <p>- 운동의 효과를 극대화하기 위해 각 개인의 신체적 특성과 목표에 맞는 맞춤형 프로그램을 설계합니다.</p>
 <p>- 운동뿐만 아니라 영양 상담과 라이프스타일 코칭을 통해 고객의 전반적인 삶의 질 향상을 목표로 합니다.</p>
@@ -129,9 +106,8 @@ const ResumeEdit = () => {
     },
   ]);
 
-  const { data: resumeData } = useGetResume();
-  const { mutate: postResumeMutate, isIdle: postIdle } = usePostResume();
-  const { mutate: patchResumeMutate, isIdle: patchIdle } = usePatchResume();
+  const { data: resumeData } = useGetResume(params && params.id);
+  const { mutate: patchResumeMutate, status: patchStatus } = usePatchResume();
   const handleResumeImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -194,21 +170,9 @@ const ResumeEdit = () => {
       return;
     }
 
-    if (resumeData?.length === 0) {
-      return postResumeMutate({
-        resumeImage,
-        name,
-        phone: `${phone.part1}-${phone.part2}-${phone.part3}`,
-        email,
-        introduction,
-        education,
-        experience,
-        certificates,
-        awards,
-        links,
-      });
-    } else {
-      return patchResumeMutate({
+    patchResumeMutate({
+      resumeData: {
+        title,
         resumeImage,
         currentResumeImage,
         name,
@@ -220,8 +184,9 @@ const ResumeEdit = () => {
         certificates,
         awards,
         links,
-      });
-    }
+      },
+      resumeId: params.id,
+    });
   };
 
   useEffect(() => {
@@ -230,6 +195,7 @@ const ResumeEdit = () => {
       resumeData !== undefined &&
       resumeData !== null
     ) {
+      setTitle(resumeData?.[0]?.title || '');
       setCurrentResumeImage(resumeData?.[0]?.resume_image[0] || '');
       setName(resumeData?.[0]?.name || '');
       setPhone({
@@ -247,9 +213,7 @@ const ResumeEdit = () => {
     }
   }, [resumeData]);
 
-  console.log(resumeData);
-
-  if (!postIdle || !patchIdle) {
+  if (patchStatus === 'pending') {
     return <Spinner />;
   }
 
@@ -273,6 +237,20 @@ const ResumeEdit = () => {
             부분을 위주로 작성하는게 좋아요.
           </p>
         </div>
+      </div>
+
+      <div className="flex flex-col mb-20">
+        <p className="text-2xl font-bold mb-2">
+          이력서 제목 <span className="text-sm text-red-500 align-top">*</span>
+        </p>
+
+        <input
+          type="text"
+          onChange={(e) => setTitle(e.target.value)}
+          value={title}
+          placeholder="홍길동_이력서_퍼스널트레이너"
+          className="border p-2 rounded"
+        />
       </div>
 
       <div className="flex flex-col mb-20">

@@ -6,11 +6,11 @@ import {
   UseMutationOptions,
 } from '@tanstack/react-query';
 import { User, Provider } from '@supabase/supabase-js';
+import { EnterpriseProfile, SignInResponse } from '@/types/auth/auth';
 
 // =========================================
 // ============== post sign in
 // =========================================
-type SignInResponse = { provider: Provider; url: string };
 
 const signInWithKakao = async (): Promise<SignInResponse> => {
   const supabase = createBrowserSupabaseClient();
@@ -36,9 +36,7 @@ export const useSignInWithKakao = (
 ) => {
   return useMutation<SignInResponse, Error, void, void>({
     mutationFn: signInWithKakao,
-    onSuccess: (data) => {
-      // console.log(data);
-    },
+    onSuccess: (data) => {},
     onError: (error: Error) => {
       console.error('로그인 중 에러 발생:', error.message);
     },
@@ -131,22 +129,6 @@ export const useGetUserData = () => {
 // =========================================
 // ============== post enterprise profile
 // =========================================
-type EnterpriseProfile = {
-  name: string;
-  industry: {
-    job: string;
-    etc?: string;
-  };
-  establishment: string;
-  address: {
-    zoneCode: string;
-    zoneAddress: string;
-    detailAddress: string;
-  };
-  description: string;
-  settingLogo?: File[];
-  currentLogo?: string;
-};
 
 const postEnterpriseProfile = async (data: EnterpriseProfile) => {
   const supabase = createBrowserSupabaseClient();
@@ -155,16 +137,14 @@ const postEnterpriseProfile = async (data: EnterpriseProfile) => {
 
   for (const image of data?.settingLogo || []) {
     const { data: uploadData, error } = await supabase.storage
-      .from('enterprise_profile')
-      .upload(`enterprise_profile/${Date.now()}-${image.name}`, image);
+      .from('profile')
+      .upload(`profile/enterprise_profile/${Date.now()}-${image.name}`, image);
 
     if (error) {
       throw new Error(`${error.message}`);
     }
 
-    const url = supabase.storage
-      .from('enterprise_profile')
-      .getPublicUrl(uploadData.path);
+    const url = supabase.storage.from('profile').getPublicUrl(uploadData.path);
     imageUrls.push(url.data.publicUrl);
   }
 
@@ -231,16 +211,14 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
 
   for (const image of data?.settingLogo || []) {
     const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('enterprise_profile')
-      .upload(`enterprise_profile/${Date.now()}-${image.name}`, image);
+      .from('profile')
+      .upload(`profile/enterprise_profile/${Date.now()}-${image.name}`, image);
 
     if (uploadError) {
       throw new Error(`${uploadError.message}`);
     }
 
-    const url = supabase.storage
-      .from('enterprise_profile')
-      .getPublicUrl(uploadData.path);
+    const url = supabase.storage.from('profile').getPublicUrl(uploadData.path);
     newLogos.push(url.data.publicUrl);
   }
 
@@ -255,8 +233,8 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
     for (const logoUrl of logosToDelete) {
       const path = logoUrl.split('/').slice(-1)[0];
       const { error: deleteError } = await supabase.storage
-        .from('enterprise_profile')
-        .remove([`enterprise_profile/${path}`]);
+        .from('profile')
+        .remove([`profile/enterprise_profile/${path}`]);
 
       if (deleteError) {
         console.error(`Failed to delete image: ${deleteError.message}`);
@@ -343,240 +321,5 @@ export const useGetEnterpriseProfile = (userId?: string) => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     // staleTime: 1000 * 60 * 5,
-  });
-};
-
-// =========================================
-// ============== post resume
-// =========================================
-type ResumeData = {
-  resumeImage: File[];
-  currentResumeImage?: string;
-  name: string;
-  phone: string;
-  email: string;
-  introduction: string;
-  education: {
-    id: string;
-    startDate: string;
-    endDate: string;
-    isCurrentlyEnrolled: string;
-    schoolName: string;
-    majorAndDegree: string;
-  }[];
-  experience: {
-    id: string;
-    startDate: string;
-    endDate: string;
-    isCurrentlyEmployed: boolean;
-    companyName: string;
-    jobTitle: string;
-    description: string;
-  }[];
-  certificates: {
-    id: string;
-    date: string;
-    certificateName: string;
-  }[];
-  awards: {
-    id: string;
-    date: string;
-    awardName: string;
-  }[];
-  links: {
-    id: string;
-    title: string;
-    url: string;
-  }[];
-};
-
-const postResume = async (data: ResumeData) => {
-  const supabase = createBrowserSupabaseClient();
-
-  const imageUrls: string[] = [];
-
-  for (const image of data.resumeImage) {
-    const { data: uploadData, error } = await supabase.storage
-      .from('resume')
-      .upload(`resume/${Date.now()}-${image.name}`, image);
-
-    if (error) {
-      throw new Error(`${error.message}`);
-    }
-
-    const url = supabase.storage.from('resume').getPublicUrl(uploadData.path);
-    imageUrls.push(url.data.publicUrl);
-  }
-
-  const { error: insertError } = await supabase.from('resume').insert([
-    {
-      resume_image: imageUrls,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      introduction: data.introduction,
-      education: data.education,
-      experience: data.experience,
-      certificates: data.certificates,
-      awards: data.awards,
-      links: data.links,
-    },
-  ]);
-
-  if (insertError) {
-    throw new Error(insertError.message);
-  }
-};
-
-export const usePostResume = (
-  options?: UseMutationOptions<void, Error, ResumeData, void>
-) => {
-  return useMutation<void, Error, ResumeData, void>({
-    mutationFn: postResume,
-    onSuccess: () => {
-      alert('이력서가 저장 되었습니다.');
-      window.location.reload();
-    },
-    onError: (error: Error) => {
-      console.error(error.message);
-      alert('이력서 등록에 실패했습니다. 다시 시도해주세요.');
-    },
-    ...options,
-  });
-};
-
-// =========================================
-// ============== get resume
-// =========================================
-const getResume = async () => {
-  const supabase = createBrowserSupabaseClient();
-
-  try {
-    const { data: userData, error: userDataError } =
-      await supabase.auth.getUser();
-
-    if (userData) {
-      const { data: resumeData, error: resumeError } = await supabase
-        .from('resume')
-        .select('*')
-        .eq('user_id', userData?.user?.id);
-
-      return resumeData;
-    }
-
-    return null;
-  } catch (error) {
-    console.log(error);
-    return null;
-  }
-};
-
-export const useGetResume = () => {
-  return useQuery({
-    queryKey: ['resume'],
-    queryFn: () => getResume(),
-    throwOnError: true,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    // staleTime: 1000 * 60 * 5,
-  });
-};
-
-// =========================================
-// ============== patch resume
-// =========================================
-const patchResume = async (data: ResumeData) => {
-  const supabase = createBrowserSupabaseClient();
-
-  const { data: userData, error: userDataError } =
-    await supabase.auth.getUser();
-
-  if (userDataError) {
-    throw new Error('User data not found');
-  }
-
-  const { data: resumeData, error: resumeError } = await supabase
-    .from('resume')
-    .select('*')
-    .eq('user_id', userData?.user?.id)
-    .single();
-
-  if (resumeError) {
-    throw new Error(resumeError.message);
-  }
-
-  const currentImages: string[] = resumeData?.resume_image || [];
-  const newImages: string[] = [];
-
-  for (const image of data?.resumeImage || []) {
-    const { data: uploadData, error: uploadError } = await supabase.storage
-      .from('resume')
-      .upload(`resume/${Date.now()}-${image.name}`, image);
-
-    if (uploadError) {
-      throw new Error(`${uploadError.message}`);
-    }
-
-    const url = supabase.storage.from('resume').getPublicUrl(uploadData.path);
-    newImages.push(url.data.publicUrl);
-  }
-
-  const imagesChanged =
-    (newImages.length > 0 && !data.currentResumeImage) ||
-    !data.currentResumeImage;
-
-  if (imagesChanged) {
-    const imagesToDelete = currentImages.filter(
-      (currentImage) => !newImages.includes(currentImage)
-    );
-
-    for (const imageUrl of imagesToDelete) {
-      const path = imageUrl.split('/').slice(-1)[0];
-      const { error: deleteError } = await supabase.storage
-        .from('resume')
-        .remove([`resume/${path}`]);
-
-      if (deleteError) {
-        console.error(`Failed to delete image: ${deleteError.message}`);
-      }
-    }
-  }
-
-  const { error } = await supabase
-    .from('resume')
-    .update({
-      resume_image: imagesChanged ? newImages : currentImages,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      introduction: data.introduction,
-      education: data.education,
-      experience: data.experience,
-      certificates: data.certificates,
-      awards: data.awards,
-      links: data.links,
-    })
-    .eq('user_id', userData?.user?.id);
-
-  if (error) {
-    throw new Error(error.message);
-  }
-};
-
-export const usePatchResume = (
-  options?: UseMutationOptions<void, Error, ResumeData, void>
-) => {
-  return useMutation<void, Error, ResumeData, void>({
-    mutationFn: patchResume,
-    onSuccess: () => {
-      alert('이력서가 수정 되었습니다.');
-      window.location.replace('/auth/my-page');
-    },
-    onError: (error: Error) => {
-      console.error(error.message);
-      alert('이력서 수정에 실패했습니다. 다시 시도해주세요.');
-    },
-    ...options,
   });
 };

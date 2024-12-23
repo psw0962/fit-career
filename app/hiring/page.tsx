@@ -7,6 +7,8 @@ import PositionFilter from '@/components/hiring/position-filter';
 import PeriodFilter from '@/components/hiring/period-filter';
 import HiringFilter from '@/components/hiring/hiring-filter';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 
 const Hiring = () => {
   const router = useRouter();
@@ -19,6 +21,16 @@ const Hiring = () => {
   const [positionFilter, setPositionFilter] = useState<string[]>([]);
   const [periodValueFilter, setPeriodValueFilter] = useState<number[]>([0, 10]);
 
+  const resetFilters = () => {
+    setRegionFilter({
+      selectedCity: null,
+      allSelectedCities: [],
+      selectedCounties: [],
+    });
+    setPositionFilter([]);
+    setPeriodValueFilter([0, 10]);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center">
@@ -26,15 +38,31 @@ const Hiring = () => {
           채용정보
         </p>
 
-        <p
-          className="w-fit bg-[#4C71C0] rounded px-4 py-2 text-white cursor-pointer"
-          onClick={() => router.push('/hiring/write')}
-        >
-          채용공고 등록
-        </p>
+        <Link href="/hiring/write" passHref>
+          <p className="w-fit bg-[#4C71C0] rounded px-4 py-2 text-white cursor-pointer">
+            채용공고 등록
+          </p>
+        </Link>
       </div>
 
       <div className="flex gap-1 mt-4 overflow-x-auto scrollbar-hide whitespace-nowrap">
+        <button
+          className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
+          onClick={() => resetFilters()}
+        >
+          <div className="relative w-4 h-4">
+            <Image
+              src="/svg/reset.svg"
+              alt="reset"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              fill
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          </div>
+          <p>전체 초기화</p>
+        </button>
+
         <RegionsFilter
           regionFilter={regionFilter}
           setRegionFilter={setRegionFilter}

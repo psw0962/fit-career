@@ -20,7 +20,7 @@ const RootLayout = ({
       <html lang="en">
         <head></head>
 
-        <body className="overflow-x-auto">
+        <body className="overflow-x-auto" suppressHydrationWarning={true}>
           <div className="min-w-[350px]">
             <Nav />
 

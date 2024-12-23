@@ -1,14 +1,15 @@
 'use client';
 
-import Profile from '@/components/my-page/profile';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useRef, useState } from 'react';
 import withAuth from '@/hoc/withAuth';
+import Profile from '@/components/my-page/profile';
 import EnterpriseProfile from '@/components/my-page/enterprise-profile';
 import Resume from '@/components/my-page/resume';
+import HiringPost from '@/components/my-page/hiring-post';
 
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState<string>('profile');
+  const [activeTab, setActiveTab] = useState<string>('resume');
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   const getClassName = (value: string) => {
@@ -38,7 +39,7 @@ const MyPage = () => {
 
       <Tabs.Root
         className="pt-4"
-        defaultValue="profile"
+        defaultValue="resume"
         onValueChange={(value) => setActiveTab(value)}
       >
         <Tabs.List className="flex border-b whitespace-nowrap overflow-auto">
@@ -97,7 +98,7 @@ const MyPage = () => {
           </Tabs.Content>
 
           <Tabs.Content value="employment">
-            <p>내가 등록한 채용공고</p>
+            <HiringPost />
           </Tabs.Content>
         </div>
       </Tabs.Root>

@@ -86,8 +86,8 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
   };
 
   const { data: enterpriseProfile } = useGetEnterpriseProfile();
-  const { mutate: postMutate, isIdle: postIdle } = usePostEnterpriseProfile();
-  const { mutate: patchMutate, isIdle: patchIdle } =
+  const { mutate: postMutate, status: postStatus } = usePostEnterpriseProfile();
+  const { mutate: patchMutate, status: patchStatus } =
     usePatchEnterpriseProfile();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -184,7 +184,7 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
     }
   }, [enterpriseProfile]);
 
-  if (!postIdle || !patchIdle) {
+  if (postStatus === 'pending' || patchStatus === 'pending') {
     return <Spinner />;
   }
 

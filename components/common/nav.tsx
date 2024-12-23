@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import NavAuth from './nav-auth';
+import Link from 'next/link';
 
 const MENU_LIST = [
   { id: 1, name: '채용정보', path: '/hiring' },
@@ -58,37 +59,34 @@ const Nav = (): React.ReactElement => {
         } transition-all duration-300`}
       >
         <div className="flex gap-24">
-          <div
-            className="flex gap-2 items-center cursor-pointer"
-            onClick={() => {
-              router.push('/');
-              setIsMobileMenuOpen(false);
-            }}
-          >
-            <div className="relative w-10 h-10 ">
-              <Image
-                className=""
-                src="/svg/logo.svg"
-                alt="logo"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                fill
-                style={{ objectFit: 'cover' }}
-                priority
-                blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-              />
-            </div>
+          <Link href="/" passHref>
+            <div
+              className="flex gap-2 items-center cursor-pointer"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <div className="relative w-10 h-10 ">
+                <Image
+                  className=""
+                  src="/svg/logo.svg"
+                  alt="logo"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority
+                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                />
+              </div>
 
-            <p className="text-2xl font-bold">FIT Career</p>
-          </div>
+              <p className="text-2xl font-bold">FIT Career</p>
+            </div>
+          </Link>
 
           <ul className="hidden md:flex gap-10 items-center">
             {MENU_LIST.map((menu) => (
-              <li
-                key={menu.id}
-                className="text-lg font-bold cursor-pointer"
-                onClick={() => router.push(`${menu.path}`)}
-              >
-                {menu.name}
+              <li key={menu.id} className="text-lg font-bold">
+                <Link href={menu.path} passHref>
+                  <span className="cursor-pointer">{menu.name}</span>
+                </Link>
               </li>
             ))}
           </ul>
@@ -119,15 +117,15 @@ const Nav = (): React.ReactElement => {
           <div className="min-w-[350px]">
             <ul className="md:flex gap-10">
               {MENU_LIST.map((menu) => (
-                <li
-                  key={menu.id}
-                  className="p-4 text-lg font-bold cursor-pointer"
-                  onClick={() => {
-                    router.push(`${menu.path}`);
-                    setIsMobileMenuOpen(false);
-                  }}
-                >
-                  {menu.name}
+                <li key={menu.id} className="p-4 text-lg font-bold">
+                  <Link href={menu.path} passHref>
+                    <span
+                      className="cursor-pointer"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {menu.name}
+                    </span>
+                  </Link>
                 </li>
               ))}
             </ul>

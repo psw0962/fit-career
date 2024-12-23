@@ -5,30 +5,11 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 import { createBrowserSupabaseClient } from '../utils/supabase/client';
+import { HiringData, HiringDataProps } from '@/types/hiring/hiring';
 
 // =========================================
 // ============== post hiring
 // =========================================
-type HiringData = {
-  address: {
-    zoneCode: string;
-    zoneAddress: string;
-    detailAddress: string;
-  };
-  position: {
-    job: string;
-    etc?: string;
-  };
-  periodValue: number[];
-  title: string;
-  content: string;
-  deadLine: string;
-  images: File[];
-  enterprise_name: string;
-  enterprise_logo: string;
-  enterprise_establishment: string;
-  enterprise_description: string;
-};
 
 const postHiring = async (data: HiringData) => {
   const supabase = createBrowserSupabaseClient();
@@ -98,24 +79,6 @@ export const usePostHiring = (
 // =========================================
 // ============== get hiring
 // =========================================
-type HiringDataProps = {
-  id: string;
-  created_at: string;
-  address: string;
-  position: string;
-  position_etc: boolean;
-  period: number[];
-  title: string;
-  content: string;
-  dead_line: string;
-  images: string[];
-  short_address: string;
-  user_id: string;
-  enterprise_name: string;
-  enterprise_logo: string;
-  enterprise_establishment: string;
-  enterprise_description: string;
-};
 
 const getHiring = async (params: {
   id?: string;

@@ -10,6 +10,7 @@ import CustomMapMaker from '@/components/common/kakao-map/custom-map-maker';
 import { formatPeriod } from '@/functions/formatPeriod';
 import useKakaoLoader from '@/hooks/useKakaoLoader';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
+import Link from 'next/link';
 
 const Company = (): React.ReactElement => {
   useKakaoLoader();
@@ -96,36 +97,35 @@ const Company = (): React.ReactElement => {
 
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {hiringDataByUserId.map((data) => (
-          <div
-            key={data.id}
-            className="flex flex-col gap-2 p-5 border rounded cursor-pointer"
-            onClick={() => {
-              router.push(`/hiring/${data.id}`);
-            }}
-          >
-            <div className="relative w-10 h-10 mx-auto mb-4">
-              <Image
-                src={
-                  data.images.length !== 0 ? data.images[0] : '/svg/logo.svg'
-                }
-                alt={`image ${data.id}`}
-                fill
-                style={{ objectFit: 'cover' }}
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-              />
-            </div>
+          <Link href={`/hiring/${data.id}`} passHref>
+            <div
+              key={data.id}
+              className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer"
+            >
+              <div className="relative w-10 h-10 mx-auto mb-4">
+                <Image
+                  src={
+                    data.images.length !== 0 ? data.images[0] : '/svg/logo.svg'
+                  }
+                  alt={`image ${data.id}`}
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                />
+              </div>
 
-            <div className="w-full flex flex-col gap-0">
-              <p className="break-all line-clamp-2">{data.title}</p>
-              <p>{data.enterprise_name}</p>
-              <p className="text-sm text-gray-500">{data.short_address}</p>
-              <p className="text-sm text-gray-500">
-                경력 {formatPeriod(data.period)}
-              </p>
+              <div className="w-full flex flex-col gap-0">
+                <p className="break-all line-clamp-2">{data.title}</p>
+                <p>{data.enterprise_name}</p>
+                <p className="text-sm text-gray-500">{data.short_address}</p>
+                <p className="text-sm text-gray-500">
+                  경력 {formatPeriod(data.period)}
+                </p>
+              </div>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
 

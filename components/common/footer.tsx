@@ -32,7 +32,7 @@ const Footer = (): React.ReactElement => {
         </div>
 
         <p className="text-base text-stone-400">
-          © 2024 FIT Career. All rights reserved.
+          © 2024-2025 FIT Career. All rights reserved.
         </p>
       </div>
     </div>

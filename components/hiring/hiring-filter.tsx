@@ -2,10 +2,10 @@
 
 import { useGetHiring } from '@/actions/hiring';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { HiringFilterProps } from '@/types/hiring/filter-type';
 import { useState, useEffect } from 'react';
 import { formatPeriod } from '@/functions/formatPeriod';
+import Link from 'next/link';
 
 type HiringData = {
   id: string;
@@ -24,13 +24,11 @@ type HiringData = {
   enterprise_description: string;
 };
 
-const HiringFIlter: React.FC<HiringFilterProps> = ({
+const HiringFilter: React.FC<HiringFilterProps> = ({
   regionFilter,
   positionFilter,
   periodValueFilter,
 }) => {
-  const router = useRouter();
-
   const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({});
   const [filteredData, setFilteredData] = useState<HiringData[]>([]);
 
@@ -102,34 +100,32 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
         {filteredData !== undefined &&
           filteredData.map((x: HiringData) => {
             return (
-              <div
-                key={x.id}
-                className="flex flex-col gap-2 p-5 border rounded cursor-pointer"
-                onClick={() => {
-                  router.push(`/hiring/${x.id}`);
-                }}
-              >
-                <div className="relative w-10 h-10 mx-auto mb-4">
-                  <Image
-                    src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
-                    alt={`image ${x.id}`}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                  />
-                </div>
+              <Link key={x.id} href={`/hiring/${x.id}`} passHref>
+                <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
+                  <div className="relative w-10 h-10 mx-auto mb-4">
+                    <Image
+                      src={
+                        x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
+                      }
+                      alt={`image ${x.id}`}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                    />
+                  </div>
 
-                <div className="w-full flex flex-col gap-0">
-                  <p className="break-all line-clamp-2">{x.title}</p>
-                  <p>{x.enterprise_name}</p>
-                  <p className="text-sm text-gray-500">{x.short_address}</p>
-                  <p className="text-sm text-gray-500">
-                    경력 {formatPeriod(x.period)}
-                  </p>
+                  <div className="w-full flex flex-col gap-0">
+                    <p className="break-all line-clamp-2">{x.title}</p>
+                    <p>{x.enterprise_name}</p>
+                    <p className="text-sm text-gray-500">{x.short_address}</p>
+                    <p className="text-sm text-gray-500">
+                      경력 {formatPeriod(x.period)}
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             );
           })}
       </div>
@@ -137,4 +133,4 @@ const HiringFIlter: React.FC<HiringFilterProps> = ({
   );
 };
 
-export default HiringFIlter;
+export default HiringFilter;
