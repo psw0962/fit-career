@@ -6,6 +6,7 @@ import {
   UseMutationOptions,
 } from '@tanstack/react-query';
 import { ResumeData } from '@/types/resume/resume';
+import { v4 as uuidv4 } from 'uuid';
 
 // =========================================
 // ============== get resume
@@ -192,7 +193,7 @@ const postNewResume = async () => {
 
   const { error: insertError } = await supabase.from('resume').insert([
     {
-      title: '',
+      title: '새 이력서',
       resume_image: [],
       name: '',
       email: '',
@@ -257,6 +258,20 @@ const deleteResume = async (resumeId: string) => {
     throw new Error(deleteError.message);
   }
 
+  if (resumeData.upload_resume) {
+    const uploadPath = resumeData.upload_resume.split('/').slice(-1)[0];
+
+    const { error: storageDeleteError } = await supabase.storage
+      .from('resume')
+      .remove([`resume/resume-file/${uploadPath}`]);
+
+    if (storageDeleteError) {
+      console.error(
+        `Failed to delete uploaded file: ${storageDeleteError.message}`
+      );
+    }
+  }
+
   for (const imageUrl of currentImages) {
     const path = imageUrl.split('/').slice(-1)[0];
     const { error: storageDeleteError } = await supabase.storage
@@ -278,7 +293,6 @@ export const useDeleteResume = (
     mutationFn: deleteResume,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['resume'] });
-      alert('이력서가 삭제되었습니다.');
     },
     onError: (error: Error) => {
       console.error(error.message);
@@ -292,20 +306,12 @@ export const useDeleteResume = (
 // ============== upload resume
 // =========================================
 const uploadResume = async (file: File): Promise<string | null> => {
-  // const sanitizedFilename = file.name.replace(/[^a-zA-Z0-9]/g, '_');
+  const supabase = createBrowserSupabaseClient();
 
   const encodeBase64Unicode = (str: string): string => {
     return btoa(encodeURIComponent(str));
   };
-
-  const decodeBase64Unicode = (str: string): string => {
-    return decodeURIComponent(atob(str));
-  };
-
-  console.log(encodeBase64Unicode(file.name));
-  console.log(decodeBase64Unicode(encodeBase64Unicode(file.name)));
-
-  const supabase = createBrowserSupabaseClient();
+  const fileName = `${uuidv4()}-${encodeBase64Unicode(file.name)}`;
 
   // 파일 처리
   const allowedExtensions = ['pdf', 'hwp', 'xlsx', 'xls', 'docx', 'pptx'];
@@ -316,66 +322,63 @@ const uploadResume = async (file: File): Promise<string | null> => {
     return null;
   }
 
-  // const { error: uploadError } = await supabase.storage
-  //   .from('resume')
-  //   .upload(`resume/resume-file/${Date.now()}-${encodedFilename}`, file);
+  const { error: uploadError } = await supabase.storage
+    .from('resume')
+    .upload(`resume/resume-file/${fileName}`, file);
 
-  // if (uploadError) {
-  //   throw new Error(uploadError.message);
-  // }
+  if (uploadError) {
+    throw new Error(uploadError.message);
+  }
 
-  // const url = supabase.storage
-  //   .from('resume')
-  //   .getPublicUrl(`resume/resume-file/${Date.now()}-${encodedFilename}`)
-  //   .data.publicUrl;
+  const url = supabase.storage
+    .from('resume')
+    .getPublicUrl(`resume/resume-file/${fileName}`).data.publicUrl;
 
-  // // resume 생성
-  // const { data: userData, error: userDataError } =
-  //   await supabase.auth.getUser();
+  // resume 생성
+  const { data: userData, error: userDataError } =
+    await supabase.auth.getUser();
 
-  // if (userDataError) {
-  //   throw new Error(userDataError.message);
-  // }
+  if (userDataError) {
+    throw new Error(userDataError.message);
+  }
 
-  // const { data: resumeCountData, error: countError } = await supabase
-  //   .from('resume')
-  //   .select('*', { count: 'exact' })
-  //   .eq('user_id', userData.user.id);
+  const { data: resumeCountData, error: countError } = await supabase
+    .from('resume')
+    .select('*', { count: 'exact' })
+    .eq('user_id', userData.user.id);
 
-  // if (countError) {
-  //   throw new Error(countError.message);
-  // }
+  if (countError) {
+    throw new Error(countError.message);
+  }
 
-  // if (resumeCountData.length >= 4) {
-  //   alert('이력서는 최대 4개까지 등록할 수 있습니다.');
-  //   return null;
-  // }
+  if (resumeCountData.length >= 4) {
+    alert('이력서는 최대 4개까지 등록할 수 있습니다.');
+    return null;
+  }
 
-  // const { error: insertError } = await supabase.from('resume').insert([
-  //   {
-  //     title: encodedFilename,
-  //     resume_image: [],
-  //     name: '',
-  //     email: '',
-  //     phone: '',
-  //     introduction: '',
-  //     education: [],
-  //     experience: [],
-  //     certificates: [],
-  //     awards: [],
-  //     links: [],
-  //     upload_resume: url,
-  //     is_fitcareer_resume: false,
-  //   },
-  // ]);
+  const { error: insertError } = await supabase.from('resume').insert([
+    {
+      title: encodeBase64Unicode(file.name),
+      resume_image: [],
+      name: '',
+      email: '',
+      phone: '',
+      introduction: '',
+      education: [],
+      experience: [],
+      certificates: [],
+      awards: [],
+      links: [],
+      upload_resume: url,
+      is_fitcareer_resume: false,
+    },
+  ]);
 
-  // if (insertError) {
-  //   throw new Error(insertError.message);
-  // }
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
 
-  // return url;
-
-  return '';
+  return url;
 };
 
 export const useUploadResume = (

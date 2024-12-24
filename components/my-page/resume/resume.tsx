@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import { useGetUserData } from '@/actions/auth';
 import GlobalSpinner from '@/components/common/global-spinner';
@@ -12,8 +11,6 @@ import {
 import ResumeCard from '@/components/my-page/resume/resume-card';
 
 const Resume = (): React.ReactElement => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
   const { data: resumeListData } = useGetResume();
   const { mutate: postNewResumeMutate } = usePostNewResume();
@@ -22,9 +19,7 @@ const Resume = (): React.ReactElement => {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
       uploadResumeMutate(file);
-      setSelectedFile(null);
     }
   };
 
@@ -81,7 +76,7 @@ const Resume = (): React.ReactElement => {
         </p>
       </div>
 
-      <div className="flex grid-cols-4 gap-3">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {resumeListData
           ?.sort((a, b) => a.id.localeCompare(b.id))
           .map((data) => {
