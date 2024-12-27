@@ -56,58 +56,17 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
   });
   const [email, setEmail] = useState<string>('');
   const [emailError, setEmailError] = useState<string>('');
-  const [introduction, setIntroduction] = useState<string>(`
-<p>- 진심으로 고객이 변하길 바라는 마음으로 목표를 향해 나아갈 수 있도록 긍정적인 피드백과 격려를 아끼지 않습니다.</p>
-<p>- 운동의 효과를 극대화하기 위해 각 개인의 신체적 특성과 목표에 맞는 맞춤형 프로그램을 설계합니다.</p>
-<p>- 운동뿐만 아니라 영양 상담과 라이프스타일 코칭을 통해 고객의 전반적인 삶의 질 향상을 목표로 합니다.</p>
-<p>- 최신 트렌드와 연구를 반영하여 항상 발전하는 트레이너가 되기 위해 노력합니다.</p>
-`);
+  const [introduction, setIntroduction] = useState<string>('');
 
-  const [education, setEducation] = useState<Education[]>([
-    {
-      id: uuidv4(),
-      startDate: '',
-      endDate: '',
-      isCurrentlyEnrolled: '',
-      schoolName: '',
-      majorAndDegree: '',
-    },
-  ]);
-  const [experience, setExperience] = useState<Experience[]>([
-    {
-      id: uuidv4(),
-      startDate: '',
-      endDate: '',
-      isCurrentlyEmployed: false,
-      companyName: '',
-      jobTitle: '',
-      description: '',
-    },
-  ]);
-  const [certificates, setCertificates] = useState<Certificate[]>([
-    {
-      id: uuidv4(),
-      date: '',
-      certificateName: '',
-    },
-  ]);
-  const [awards, setAwards] = useState<Award[]>([
-    {
-      id: uuidv4(),
-      date: '',
-      awardName: '',
-    },
-  ]);
-  const [links, setLinks] = useState<LinkData[]>([
-    {
-      id: uuidv4(),
-      title: '',
-      url: '',
-    },
-  ]);
+  const [education, setEducation] = useState<Education[]>([]);
+  const [experience, setExperience] = useState<Experience[]>([]);
+  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [awards, setAwards] = useState<Award[]>([]);
+  const [links, setLinks] = useState<LinkData[]>([]);
 
   const { data: resumeData } = useGetResume(params && params.id);
   const { mutate: patchResumeMutate, status: patchStatus } = usePatchResume();
+
   const handleResumeImageUpload = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -205,15 +164,87 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
       });
       setEmail(resumeData?.[0]?.email || '');
       setIntroduction(resumeData?.[0]?.introduction || '');
-      setEducation(resumeData?.[0]?.education || []);
-      setExperience(resumeData?.[0]?.experience || []);
-      setCertificates(resumeData?.[0]?.certificates || []);
-      setAwards(resumeData?.[0]?.awards || []);
-      setLinks(resumeData?.[0]?.links || []);
+
+      setEducation(
+        resumeData?.[0]?.education?.length > 0
+          ? resumeData[0].education
+          : [
+              {
+                id: uuidv4(),
+                startDate: '',
+                endDate: '',
+                isCurrentlyEnrolled: '',
+                schoolName: '',
+                majorAndDegree: '',
+              },
+            ]
+      );
+
+      setExperience(
+        resumeData?.[0]?.experience?.length > 0
+          ? resumeData[0].experience
+          : [
+              {
+                id: uuidv4(),
+                startDate: '',
+                endDate: '',
+                isCurrentlyEmployed: false,
+                companyName: '',
+                jobTitle: '',
+                description: '',
+              },
+            ]
+      );
+
+      setCertificates(
+        resumeData?.[0]?.certificates?.length > 0
+          ? resumeData[0].certificates
+          : [
+              {
+                id: uuidv4(),
+                date: '',
+                certificateName: '',
+              },
+            ]
+      );
+
+      setAwards(
+        resumeData?.[0]?.awards?.length > 0
+          ? resumeData[0].awards
+          : [
+              {
+                id: uuidv4(),
+                date: '',
+                awardName: '',
+              },
+            ]
+      );
+
+      setLinks(
+        resumeData?.[0]?.links?.length > 0
+          ? resumeData[0].links
+          : [
+              {
+                id: uuidv4(),
+                title: '',
+                url: '',
+              },
+            ]
+      );
     }
   }, [resumeData]);
 
   if (patchStatus === 'pending') {
+    return <Spinner />;
+  }
+
+  if (
+    education.length === 0 ||
+    experience.length === 0 ||
+    certificates.length === 0 ||
+    awards.length === 0 ||
+    links.length === 0
+  ) {
     return <Spinner />;
   }
 
@@ -258,6 +289,10 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
 
         <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>• 가장 많이 쓰는 이력서 사진 파일의 해상도는 300x400입니다.</p>
+          <p>
+            • 이력서 파일에서 지원하는 이미지 파일 확장자는 .jpg, .jpeg, .png
+            입니다.
+          </p>
           <p>
             • 증명사진의 형태가 전문성 있는 이미지와 신뢰도를 높일 수 있어요.
           </p>

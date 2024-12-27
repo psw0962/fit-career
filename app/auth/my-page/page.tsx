@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import withAuth from '@/hoc/withAuth';
 import Profile from '@/components/my-page/profile';
 import EnterpriseProfile from '@/components/my-page/enterprise-profile';
-import Resume from '@/components/my-page/resume/resume';
+import ResumeList from '@/components/my-page/resume/resume-list';
 import HiringPost from '@/components/my-page/hiring-post';
 
 const MyPage = () => {
@@ -94,7 +94,7 @@ const MyPage = () => {
           </Tabs.Content>
 
           <Tabs.Content value="resume">
-            <Resume />
+            <ResumeList />
           </Tabs.Content>
 
           <Tabs.Content value="employment">

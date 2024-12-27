@@ -43,6 +43,26 @@ export type ResumeData = {
   is_fitcareer_resume?: boolean;
 };
 
+export type ResumeDataResponse = {
+  id: string;
+  user_id: string;
+  title: string;
+  resume_image: string[];
+  currentResumeImage?: string;
+  name: string;
+  phone: string;
+  email: string;
+  introduction: string;
+  education: Education[];
+  experience: Experience[];
+  certificates: Certificate[];
+  awards: Award[];
+  links: LinkData[];
+  upload_resume?: string | null;
+  is_fitcareer_resume?: boolean;
+  updated_at: string;
+};
+
 export type LinkData = {
   id: string;
   title: string;

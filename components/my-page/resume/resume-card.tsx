@@ -1,12 +1,13 @@
 'use client';
 
-import { useDeleteResume } from '@/actions/resume';
-import { ResumeData } from '@/types/resume/resume';
-import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { useDeleteResume } from '@/actions/resume';
+import { ResumeDataResponse } from '@/types/resume/resume';
+import ResumePDF from '@/components/my-page/resume/resume-pdf';
 
-const ResumeCard = ({ data }: { data: ResumeData }) => {
+const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
   const router = useRouter();
 
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -15,6 +16,17 @@ const ResumeCard = ({ data }: { data: ResumeData }) => {
 
   const decodeBase64Unicode = (str: string): string => {
     return decodeURIComponent(atob(str));
+  };
+
+  const downloadFile = async (url: string, filename: string) => {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const link = document.createElement('a');
+    link.href = window.URL.createObjectURL(blob);
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   useEffect(() => {
@@ -36,8 +48,6 @@ const ResumeCard = ({ data }: { data: ResumeData }) => {
       document.body.removeEventListener('click', handleClickOutside);
     };
   }, [data.id]);
-
-  console.log(decodeBase64Unicode(data.title));
 
   return (
     <>
@@ -71,7 +81,7 @@ const ResumeCard = ({ data }: { data: ResumeData }) => {
           <div
             id={`more-button-${data.id}`}
             className="absolute top-[5px] right-[10px] w-[25px] h-[25px] cursor-pointer"
-            onClick={(e) => {
+            onClick={() => {
               setOpenDropdownId((prev) => {
                 const newId = data.id ?? null;
                 return prev === newId ? null : newId;
@@ -86,6 +96,8 @@ const ResumeCard = ({ data }: { data: ResumeData }) => {
               id={`dropdown-${data.id}`}
               className="absolute top-[35px] right-[10px] w-[100px] h-fit px-2 bg-[#fff] border rounded"
             >
+              <ResumePDF data={data} />
+
               <div
                 className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
                 onClick={() =>
@@ -98,7 +110,7 @@ const ResumeCard = ({ data }: { data: ResumeData }) => {
               </div>
 
               <div
-                className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
+                className="flex items-center justify-center gap-2 py-2 cursor-pointer"
                 onClick={() => {
                   if (window.confirm('정말로 이력서를 삭제하시겠습니까?')) {
                     data.id && deleteResume(data.id);
@@ -110,16 +122,6 @@ const ResumeCard = ({ data }: { data: ResumeData }) => {
                 <Image
                   src="/svg/delete.svg"
                   alt="delete"
-                  width={15}
-                  height={15}
-                />
-              </div>
-
-              <div className="flex items-center justify-center gap-2 py-2">
-                <p className="text-sm">다운로드</p>
-                <Image
-                  src="/svg/download.svg"
-                  alt="download"
                   width={15}
                   height={15}
                 />
@@ -161,7 +163,7 @@ const ResumeCard = ({ data }: { data: ResumeData }) => {
               e.stopPropagation();
             }}
           >
-            <Image src="/svg/more.svg" alt="more" fill />
+            <Image src="/svg/more.svg" alt="more" />
           </div>
 
           {openDropdownId === data.id && (
@@ -169,10 +171,16 @@ const ResumeCard = ({ data }: { data: ResumeData }) => {
               id={`dropdown-${data.id}`}
               className="absolute top-[35px] right-[10px] w-[100px] h-fit px-2 bg-[#fff] border rounded"
             >
-              <a
-                className="flex items-center justify-center gap-2 py-2"
-                href={data.upload_resume}
-                download={decodeBase64Unicode(data.title)}
+              <div
+                className="flex items-center justify-center gap-2 py-2 cursor-pointer"
+                onClick={() =>
+                  data.upload_resume &&
+                  decodeBase64Unicode(data.title) &&
+                  downloadFile(
+                    data.upload_resume,
+                    decodeBase64Unicode(data.title)
+                  )
+                }
               >
                 <p className="text-sm">다운로드</p>
                 <Image
@@ -181,7 +189,7 @@ const ResumeCard = ({ data }: { data: ResumeData }) => {
                   width={15}
                   height={15}
                 />
-              </a>
+              </div>
 
               <div
                 className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
