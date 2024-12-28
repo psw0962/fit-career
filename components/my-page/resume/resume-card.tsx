@@ -173,7 +173,7 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               className="absolute top-[35px] right-[10px] w-[100px] h-fit px-2 bg-[#fff] border rounded"
             >
               <div
-                className="flex items-center justify-center gap-2 py-2 cursor-pointer"
+                className="flex items-center justify-center gap-2 py-2 border-b cursor-pointer"
                 onClick={() =>
                   data.upload_resume &&
                   decodeBase64Unicode(data.title) &&
