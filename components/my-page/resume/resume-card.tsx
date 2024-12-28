@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useDeleteResume } from '@/actions/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
-import ResumePDF from '@/components/my-page/resume/resume-pdf';
+import ResumeExport from '@/components/my-page/resume/resume-export';
 
 const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
   const router = useRouter();
@@ -96,7 +96,8 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               id={`dropdown-${data.id}`}
               className="absolute top-[35px] right-[10px] w-[100px] h-fit px-2 bg-[#fff] border rounded"
             >
-              <ResumePDF data={data} />
+              <ResumeExport data={data} isPreview={true} />
+              <ResumeExport data={data} isExport={true} />
 
               <div
                 className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
@@ -163,7 +164,7 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               e.stopPropagation();
             }}
           >
-            <Image src="/svg/more.svg" alt="more" />
+            <Image src="/svg/more.svg" alt="more" fill />
           </div>
 
           {openDropdownId === data.id && (
