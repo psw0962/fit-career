@@ -97,11 +97,8 @@ const Company = (): React.ReactElement => {
 
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {hiringDataByUserId.map((data) => (
-          <Link href={`/hiring/${data.id}`} passHref>
-            <div
-              key={data.id}
-              className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer"
-            >
+          <Link key={data.id} href={`/hiring/${data.id}`} passHref>
+            <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
               <div className="relative w-10 h-10 mx-auto mb-4">
                 <Image
                   src={

@@ -9,7 +9,7 @@ import ResumeList from '@/components/my-page/resume/resume-list';
 import HiringPost from '@/components/my-page/hiring-post';
 
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState<string>('resume');
+  const [activeTab, setActiveTab] = useState<string>('profile');
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   const getClassName = (value: string) => {
@@ -39,7 +39,7 @@ const MyPage = () => {
 
       <Tabs.Root
         className="pt-4"
-        defaultValue="resume"
+        defaultValue="profile"
         onValueChange={(value) => setActiveTab(value)}
       >
         <Tabs.List className="flex border-b whitespace-nowrap overflow-auto">

@@ -5,7 +5,7 @@ import {
   useQueryClient,
   UseMutationOptions,
 } from '@tanstack/react-query';
-import { ResumeData } from '@/types/resume/resume';
+import { ResumeData, ResumeDataResponse } from '@/types/resume/resume';
 import { v4 as uuidv4 } from 'uuid';
 
 // =========================================
@@ -22,7 +22,7 @@ const getResume = async (id?: string) => {
         .select('*')
         .eq('id', id);
 
-      return resumeData;
+      return resumeData as ResumeDataResponse[];
     }
 
     // user id로 가져오는 경우
@@ -33,7 +33,7 @@ const getResume = async (id?: string) => {
         .select('*')
         .eq('user_id', userData?.user?.id);
 
-      return resumeData;
+      return resumeData as ResumeDataResponse[];
     }
 
     return null;
@@ -125,6 +125,11 @@ const patchResume = async (data: {
       certificates: data.resumeData.certificates,
       awards: data.resumeData.awards,
       links: data.resumeData.links,
+      updated_at: new Date(
+        new Date().getTime() -
+          24 * 60 * 60 * 1000 -
+          new Date().getTimezoneOffset() * 60000
+      ).toISOString(),
     })
     .eq('id', data.resumeId);
 
@@ -205,6 +210,11 @@ const postNewResume = async () => {
       awards: [],
       links: [],
       is_fitcareer_resume: true,
+      updated_at: new Date(
+        new Date().getTime() -
+          24 * 60 * 60 * 1000 -
+          new Date().getTimezoneOffset() * 60000
+      ).toISOString(),
     },
   ]);
 
@@ -371,6 +381,11 @@ const uploadResume = async (file: File): Promise<string | null> => {
       links: [],
       upload_resume: url,
       is_fitcareer_resume: false,
+      updated_at: new Date(
+        new Date().getTime() -
+          24 * 60 * 60 * 1000 -
+          new Date().getTimezoneOffset() * 60000
+      ).toISOString(),
     },
   ]);
 

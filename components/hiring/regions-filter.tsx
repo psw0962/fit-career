@@ -212,12 +212,6 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                 return !regionFilter.allSelectedCities.includes(cityName);
               })
               .map((county) => (
-                //   <div
-                //   key={county}
-                //   className="w-fit px-2 py-2 bg-[#4C71C0] rounded text-white"
-                // >
-                //   {county}
-                // </div>
                 <div key={county} className="w-fit px-2 py-2 border rounded">
                   {county}
                 </div>

@@ -24,9 +24,7 @@ const RootLayout = ({
           <div className="min-w-[350px]">
             <Nav />
 
-            <div className="max-w-7xl mx-auto px-10 py-32">
-              <div className="">{children}</div>
-            </div>
+            <div className="max-w-7xl mx-auto px-10 py-32">{children}</div>
 
             <Footer />
           </div>

@@ -41,6 +41,7 @@ export type ResumeData = {
   }[];
   upload_resume?: string;
   is_fitcareer_resume?: boolean;
+  updated_at?: string;
 };
 
 export type ResumeDataResponse = {

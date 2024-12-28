@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useDeleteResume } from '@/actions/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import ResumeExport from '@/components/my-page/resume/resume-export';
+import { format, addHours } from 'date-fns';
 
 const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
   const router = useRouter();
@@ -78,6 +79,14 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
             서류 합격률 UP!
           </p>
 
+          <p className="mt-4 text-xs text-gray-500">
+            최근 수정일 :{' '}
+            {format(
+              addHours(new Date(data.updated_at), 15),
+              'yyyy-MM-dd HH:mm:ss'
+            )}
+          </p>
+
           <div
             id={`more-button-${data.id}`}
             className="absolute top-[5px] right-[10px] w-[25px] h-[25px] cursor-pointer"
@@ -148,8 +157,8 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
           </div>
 
           <p className="">
-            {decodeBase64Unicode(data.title).split('.')[0].length > 15
-              ? `${decodeBase64Unicode(data.title).slice(0, 15)}...${decodeBase64Unicode(data.title).split('.')[1]}`
+            {decodeBase64Unicode(data.title).split('.')[0].length > 22
+              ? `${decodeBase64Unicode(data.title).slice(0, 22)}...${decodeBase64Unicode(data.title).split('.')[1]}`
               : `${decodeBase64Unicode(data.title).split('.')[0]}.${decodeBase64Unicode(data.title).split('.')[1]}`}
           </p>
 

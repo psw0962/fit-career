@@ -6,13 +6,10 @@ import { RegionFilter } from '@/types/hiring/filter-type';
 import PositionFilter from '@/components/hiring/position-filter';
 import PeriodFilter from '@/components/hiring/period-filter';
 import HiringFilter from '@/components/hiring/hiring-filter';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 
 const Hiring = () => {
-  const router = useRouter();
-
   const [regionFilter, setRegionFilter] = useState<RegionFilter>({
     selectedCity: null,
     allSelectedCities: [],

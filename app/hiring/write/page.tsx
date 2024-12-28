@@ -7,16 +7,15 @@ import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import DaumPostcode, { Address } from 'react-daum-postcode';
-import withAuth from '@/hoc/withAuth';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import Spinner from '@/components/common/spinner';
 import GlobalSpinner from '@/components/common/global-spinner';
-import { useGetEnterpriseProfile } from '@/actions/auth';
+import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { POSITIONS } from '@/constant/position';
 import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
@@ -65,6 +64,8 @@ const DAUMPOSTCODESTYLE = {
 const HiringWrite = () => {
   const router = useRouter();
 
+  const alertShown = useRef(false);
+
   const [address, setAddress] = useState({
     findAddressModal: false,
     zoneCode: '',
@@ -91,6 +92,7 @@ const HiringWrite = () => {
   const [images, setImages] = useState<File[]>([]);
 
   const postHring = usePostHiring();
+  const { data: userData, isLoading: userDataLoading } = useGetUserData();
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
     useGetEnterpriseProfile();
 
@@ -169,13 +171,27 @@ const HiringWrite = () => {
     });
   };
 
+  useEffect(() => {
+    if (alertShown.current) return;
+
+    if (!userData) {
+      alertShown.current = true;
+      alert('로그인이 필요합니다.');
+      return router.push('/auth');
+    }
+
+    if (enterpriseProfile?.length === 0) {
+      alertShown.current = true;
+      alert('기업 프로필을 먼저 등록해주세요.');
+      return router.push('/auth/my-page');
+    }
+  }, [userData, enterpriseProfile]);
+
   if (enterpriseProfile?.length === 0) {
-    alert('기업 프로필을 먼저 등록해주세요.');
-    router.push('/auth/my-page');
-    return;
+    return <></>;
   }
 
-  if (postHring.isPending || enterpriseProfileLoading) {
+  if (postHring.isPending || enterpriseProfileLoading || userDataLoading) {
     return <GlobalSpinner />;
   }
 
@@ -509,4 +525,4 @@ const HiringWrite = () => {
   );
 };
 
-export default withAuth(HiringWrite);
+export default HiringWrite;
