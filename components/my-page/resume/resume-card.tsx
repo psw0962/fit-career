@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { useDeleteResume } from '@/actions/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import ResumeExport from '@/components/my-page/resume/resume-export';
-import { format, addHours } from 'date-fns';
 
 const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
   const router = useRouter();
@@ -80,11 +79,7 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
           </p>
 
           <p className="mt-4 text-xs text-gray-500">
-            최근 수정일 :{' '}
-            {format(
-              addHours(new Date(data.updated_at), 15),
-              'yyyy-MM-dd HH:mm:ss'
-            )}
+            최근 수정일 : {data.updated_at}
           </p>
 
           <div

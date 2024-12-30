@@ -3,21 +3,53 @@
 import { ResumeDataResponse } from '@/types/resume/resume';
 import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
-import { format, addHours } from 'date-fns';
+import { usePostResumeToHiring } from '@/actions/resume';
+import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
+import { useRouter } from 'next/navigation';
 
 const ResumeSelectIdModal = ({
+  hiringData,
   resumeData,
   resumeUserIdModalIsOpen,
   setResumeUserIdModalIsOpen,
   selectedResumeId,
   setSelectedResumeId,
 }: {
+  hiringData: HiringDataResponse[] | null | undefined;
   resumeData: ResumeDataResponse[] | null | undefined;
   resumeUserIdModalIsOpen: boolean;
   setResumeUserIdModalIsOpen: (isOpen: boolean) => void;
   selectedResumeId: string;
   setSelectedResumeId: (id: string) => void;
 }) => {
+  const router = useRouter();
+
+  const { mutate: postResumeToHiring } = usePostResumeToHiring();
+
+  const confirmSubmitted = () => {
+    const resumeReceived = hiringData?.[0].resume_received as ResumeReceived[];
+
+    return (
+      resumeReceived?.some(
+        (resume) => resume.user_id === resumeData?.[0].user_id
+      ) ?? false
+    );
+  };
+
+  const handlePostResumeToHiring = () => {
+    if (!selectedResumeId) {
+      alert('이력서를 선택해주세요.');
+      return;
+    }
+
+    if (hiringData && hiringData.length > 0) {
+      postResumeToHiring({
+        hiringId: hiringData[0].id,
+        resumeId: selectedResumeId,
+      });
+    }
+  };
+
   const decodeBase64Unicode = (str: string): string => {
     return decodeURIComponent(atob(str));
   };
@@ -48,8 +80,15 @@ const ResumeSelectIdModal = ({
             <Dialog.Title className="mb-4 font-bold">이력서 선택</Dialog.Title>
 
             {resumeData && resumeData.length === 0 && (
-              <div className="flex justify-center items-center border rounded p-6 mt-4">
+              <div className="flex flex-col gap-2 justify-center items-center border rounded p-6 mt-4">
                 <p className="text-[#000]">등록된 이력서가 없습니다.</p>
+
+                <button
+                  className="w-fit h-fit text-xs rounded px-4 py-2 border cursor-pointer"
+                  onClick={() => router.push('/auth/my-page')}
+                >
+                  이력서 작성하기
+                </button>
               </div>
             )}
 
@@ -89,11 +128,7 @@ const ResumeSelectIdModal = ({
                       </div>
 
                       <p className="text-xs text-gray-500">
-                        최근 수정일 :{' '}
-                        {format(
-                          addHours(new Date(resume.updated_at), 15),
-                          'yyyy-MM-dd HH:mm:ss'
-                        )}
+                        최근 수정일 : {resume.updated_at}
                       </p>
                     </div>
                   )}
@@ -121,11 +156,7 @@ const ResumeSelectIdModal = ({
                       </div>
 
                       <p className="text-xs text-gray-500">
-                        최근 수정일 :{' '}
-                        {format(
-                          addHours(new Date(resume.updated_at), 15),
-                          'yyyy-MM-dd HH:mm:ss'
-                        )}
+                        최근 수정일 : {resume.updated_at}
                       </p>
                     </div>
                   )}
@@ -134,11 +165,22 @@ const ResumeSelectIdModal = ({
             </div>
 
             <button
-              className="w-full mt-4 bg-[#4C71C0] rounded px-8 py-2 text-white cursor-pointer"
-              onClick={() => {}}
+              className={`w-full mt-4 rounded px-8 py-2 text-white cursor-pointer ${
+                confirmSubmitted()
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-[#4C71C0]'
+              }`}
+              onClick={() => handlePostResumeToHiring()}
+              disabled={confirmSubmitted()}
             >
-              제출하기
+              {confirmSubmitted() ? '이미 지원한 채용공고입니다.' : '제출하기'}
             </button>
+
+            {confirmSubmitted() && (
+              <p className="text-xs text-[red] mt-2">
+                *지원 취소는 마이페이지에서 할 수 있어요.
+              </p>
+            )}
 
             <Dialog.Close asChild>
               <Image

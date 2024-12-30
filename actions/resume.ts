@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { ResumeData, ResumeDataResponse } from '@/types/resume/resume';
 import { v4 as uuidv4 } from 'uuid';
+import { formatKRTime } from '@/functions/formatKRTime';
 
 // =========================================
 // ============== get resume
@@ -125,11 +126,7 @@ const patchResume = async (data: {
       certificates: data.resumeData.certificates,
       awards: data.resumeData.awards,
       links: data.resumeData.links,
-      updated_at: new Date(
-        new Date().getTime() -
-          24 * 60 * 60 * 1000 -
-          new Date().getTimezoneOffset() * 60000
-      ).toISOString(),
+      updated_at: formatKRTime(),
     })
     .eq('id', data.resumeId);
 
@@ -210,11 +207,7 @@ const postNewResume = async () => {
       awards: [],
       links: [],
       is_fitcareer_resume: true,
-      updated_at: new Date(
-        new Date().getTime() -
-          24 * 60 * 60 * 1000 -
-          new Date().getTimezoneOffset() * 60000
-      ).toISOString(),
+      updated_at: formatKRTime(),
     },
   ]);
 
@@ -381,11 +374,7 @@ const uploadResume = async (file: File): Promise<string | null> => {
       links: [],
       upload_resume: url,
       is_fitcareer_resume: false,
-      updated_at: new Date(
-        new Date().getTime() -
-          24 * 60 * 60 * 1000 -
-          new Date().getTimezoneOffset() * 60000
-      ).toISOString(),
+      updated_at: formatKRTime(),
     },
   ]);
 
@@ -414,4 +403,78 @@ export const useUploadResume = (
     },
     ...options,
   });
+};
+
+// =========================================
+// ============== post resume to hiring
+// =========================================
+const postResumeToHiring = async (data: {
+  hiringId: string;
+  resumeId: string;
+}) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const { data: resumeData, error: resumeError } = await supabase
+    .from('resume')
+    .select('*')
+    .eq('id', data.resumeId)
+    .single();
+
+  if (resumeError) {
+    throw new Error(resumeError.message);
+  }
+
+  const { data: hiringData, error: hiringError } = await supabase
+    .from('hiring')
+    .select('resume_received')
+    .eq('id', data.hiringId)
+    .single();
+
+  if (hiringError) {
+    throw new Error(hiringError.message);
+  }
+
+  const newResumeEntry = {
+    ...resumeData,
+    status: 'pending',
+    submitted_at: formatKRTime(),
+  };
+
+  const currentResumes = hiringData.resume_received || [];
+
+  const { error: updateError } = await supabase
+    .from('hiring')
+    .update({
+      resume_received: [...currentResumes, newResumeEntry],
+    })
+    .eq('id', data.hiringId);
+
+  if (updateError) {
+    throw new Error(updateError.message);
+  }
+};
+
+export const usePostResumeToHiring = (
+  options?: UseMutationOptions<
+    void,
+    Error,
+    { hiringId: string; resumeId: string },
+    void
+  >
+) => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { hiringId: string; resumeId: string }, void>(
+    {
+      mutationFn: postResumeToHiring,
+      onSuccess: () => {
+        alert('이력서가 성공적으로 제출되었습니다.');
+        queryClient.invalidateQueries({ queryKey: ['hiringList'] });
+      },
+      onError: (error: Error) => {
+        console.error(error.message);
+        alert('이력서 제출에 실패했습니다. 다시 시도해주세요.');
+      },
+      ...options,
+    }
+  );
 };

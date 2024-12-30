@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { createBrowserSupabaseClient } from '../utils/supabase/client';
 import { HiringData, HiringDataResponse } from '@/types/hiring/hiring';
+import { formatKRTime } from '@/functions/formatKRTime';
 
 // =========================================
 // ============== post hiring
@@ -46,6 +47,7 @@ const postHiring = async (data: HiringData) => {
       dead_line: data.deadLine,
       images: imageUrls,
       short_address: shortAddres,
+      updated_at: formatKRTime(),
     },
   ]);
 

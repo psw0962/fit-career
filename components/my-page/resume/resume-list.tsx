@@ -30,8 +30,14 @@ const Resume = (): React.ReactElement => {
   return (
     <div className="mt-10">
       <div className="flex gap-2 mb-4">
-        <div className="flex gap-2 items-center justify-center w-fit border rounded px-4 py-2 mb- cursor-pointer">
-          <Image src="/svg/add.svg" alt="add" width={20} height={20} />
+        <div className="flex gap-2 items-center justify-center w-fit rounded px-4 py-2 border-none bg-[#4C71C0] text-white cursor-pointer">
+          <Image
+            src="/svg/add.svg"
+            alt="add"
+            className="brightness-0 invert"
+            width={20}
+            height={20}
+          />
 
           <p
             className="text-sm whitespace-nowrap"

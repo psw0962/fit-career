@@ -89,6 +89,7 @@ const HiringDetail = ({
 
         <div className="flex items-end">
           <ResumeSelectModal
+            hiringData={hiringData}
             resumeData={resumeData}
             resumeUserIdModalIsOpen={resumeUserIdModalIsOpen}
             setResumeUserIdModalIsOpen={setResumeUserIdModalIsOpen}
