@@ -6,31 +6,19 @@ import { HiringFilterProps } from '@/types/hiring/filter-type';
 import { useState, useEffect } from 'react';
 import { formatPeriod } from '@/functions/formatPeriod';
 import Link from 'next/link';
-
-type HiringData = {
-  id: string;
-  address: string;
-  position: string;
-  position_etc: boolean;
-  period: number[];
-  title: string;
-  content: string;
-  dead_line: string;
-  images: string[];
-  short_address: string;
-  enterprise_name: string;
-  enterprise_logo: string;
-  enterprise_establishment: string;
-  enterprise_description: string;
-};
+import { HiringDataResponse } from '@/types/hiring/hiring';
+import GlobalSpinner from '@/components/common/global-spinner';
+import { useGetEnterpriseProfile } from '@/actions/auth';
 
 const HiringFilter: React.FC<HiringFilterProps> = ({
   regionFilter,
   positionFilter,
   periodValueFilter,
 }) => {
+  const [filteredData, setFilteredData] = useState<HiringDataResponse[]>([]);
+
   const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({});
-  const [filteredData, setFilteredData] = useState<HiringData[]>([]);
+  const { data: enterpriseProfile } = useGetEnterpriseProfile();
 
   const filterData = () => {
     if (!hiringData) {
@@ -87,18 +75,28 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
     });
-    setFilteredData(sortedData as HiringData[]);
+    setFilteredData(sortedData);
   };
 
   useEffect(() => {
     filterData();
-  }, [regionFilter, positionFilter, periodValueFilter, hiringData]);
+  }, [
+    regionFilter,
+    positionFilter,
+    periodValueFilter,
+    hiringData,
+    enterpriseProfile,
+  ]);
+
+  if (hiringDataIsLoading) {
+    return <GlobalSpinner />;
+  }
 
   return (
     <>
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
         {filteredData !== undefined &&
-          filteredData.map((x: HiringData) => {
+          filteredData.map((x: HiringDataResponse) => {
             return (
               <Link key={x.id} href={`/hiring/${x.id}`} passHref>
                 <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
@@ -117,10 +115,34 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
                   </div>
 
                   <div className="w-full flex flex-col gap-0">
-                    <p className="break-all line-clamp-2">{x.title}</p>
-                    <p>{x.enterprise_name}</p>
-                    <p className="text-sm text-gray-500">{x.short_address}</p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-lg font-bold break-all line-clamp-2">
+                      {x.title}
+                    </p>
+
+                    <div className="flex items-center gap-1 mt-2">
+                      <div className="relative w-5 h-5">
+                        <Image
+                          src={
+                            x.enterprise_profile?.logo[0]
+                              ? x.enterprise_profile?.logo[0]
+                              : '/svg/logo.svg'
+                          }
+                          alt={`image ${x.id}`}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                          priority
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                        />
+                      </div>
+
+                      <p>{x.enterprise_profile?.name}</p>
+                    </div>
+
+                    <p className="text-xs text-gray-500 mt-2">
+                      {x.short_address}
+                    </p>
+                    <p className="text-xs text-gray-500">
                       경력 {formatPeriod(x.period)}
                     </p>
                   </div>

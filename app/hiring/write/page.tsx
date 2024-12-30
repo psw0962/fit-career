@@ -164,10 +164,6 @@ const HiringWrite = () => {
       content,
       deadLine,
       images,
-      enterprise_name: enterpriseProfile?.[0]?.name ?? '',
-      enterprise_logo: enterpriseProfile?.[0]?.logo?.[0] ?? '',
-      enterprise_establishment: enterpriseProfile?.[0]?.establishment ?? '',
-      enterprise_description: enterpriseProfile?.[0]?.description ?? '',
     });
   };
 

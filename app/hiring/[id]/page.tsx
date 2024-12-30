@@ -32,7 +32,6 @@ const HiringDetail = ({
     if (!hiringData || hiringData.length === 0) return;
 
     const params = {
-      user_id: hiringData[0]?.user_id,
       hiring_id: hiringData[0]?.id,
     };
     const query = new URLSearchParams(params).toString();
@@ -63,8 +62,8 @@ const HiringDetail = ({
             <div className="relative w-8 h-8">
               <Image
                 src={
-                  hiringData[0]?.enterprise_logo
-                    ? hiringData[0]?.enterprise_logo
+                  hiringData[0].enterprise_profile?.logo[0]
+                    ? hiringData[0].enterprise_profile?.logo[0]
                     : '/svg/logo.svg'
                 }
                 alt="enterprise logo"
@@ -73,14 +72,11 @@ const HiringDetail = ({
                 priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                onError={(e) => {
-                  e.currentTarget.src = '/svg/logo.svg';
-                }}
               />
             </div>
 
             <p className="text-xl underline underline-offset-4 decoration-[#000]">
-              {hiringData[0].enterprise_name}
+              {hiringData[0].enterprise_profile?.name}
             </p>
           </div>
           <div>∙</div>

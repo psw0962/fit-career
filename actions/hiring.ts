@@ -5,12 +5,11 @@ import {
   UseQueryOptions,
 } from '@tanstack/react-query';
 import { createBrowserSupabaseClient } from '../utils/supabase/client';
-import { HiringData, HiringDataProps } from '@/types/hiring/hiring';
+import { HiringData, HiringDataResponse } from '@/types/hiring/hiring';
 
 // =========================================
 // ============== post hiring
 // =========================================
-
 const postHiring = async (data: HiringData) => {
   const supabase = createBrowserSupabaseClient();
 
@@ -47,10 +46,6 @@ const postHiring = async (data: HiringData) => {
       dead_line: data.deadLine,
       images: imageUrls,
       short_address: shortAddres,
-      enterprise_name: data.enterprise_name,
-      enterprise_logo: data.enterprise_logo,
-      enterprise_establishment: data.enterprise_establishment,
-      enterprise_description: data.enterprise_description,
     },
   ]);
 
@@ -79,13 +74,16 @@ export const usePostHiring = (
 // =========================================
 // ============== get hiring
 // =========================================
-
 const getHiring = async (params: {
   id?: string;
   user_id?: string;
-}): Promise<HiringDataProps[]> => {
+}): Promise<HiringDataResponse[]> => {
   const supabase = createBrowserSupabaseClient();
-  const query = supabase.from('hiring').select('*');
+
+  let query = supabase.from('hiring').select(`
+    *,
+    enterprise_profile:enterprise_profile!user_id(*)
+  `);
 
   if (params.user_id) {
     query.eq('user_id', params.user_id);
@@ -99,14 +97,14 @@ const getHiring = async (params: {
     throw new Error(`${error.message}`);
   }
 
-  return data as HiringDataProps[];
+  return data as HiringDataResponse[];
 };
 
 export const useGetHiring = (
   params: { id?: string; user_id?: string },
-  options?: UseQueryOptions<HiringDataProps[], Error>
+  options?: UseQueryOptions<HiringDataResponse[], Error>
 ) => {
-  return useQuery<HiringDataProps[], Error>({
+  return useQuery<HiringDataResponse[], Error>({
     queryKey: ['hiringList', params.id, params.user_id],
     queryFn: () => getHiring(params),
     ...options,

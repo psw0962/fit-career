@@ -11,7 +11,6 @@ import { EnterpriseProfile, SignInResponse } from '@/types/auth/auth';
 // =========================================
 // ============== post sign in
 // =========================================
-
 const signInWithKakao = async (): Promise<SignInResponse> => {
   const supabase = createBrowserSupabaseClient();
 
@@ -129,7 +128,6 @@ export const useGetUserData = () => {
 // =========================================
 // ============== post enterprise profile
 // =========================================
-
 const postEnterpriseProfile = async (data: EnterpriseProfile) => {
   const supabase = createBrowserSupabaseClient();
 
@@ -288,6 +286,10 @@ const getEnterpriseProfile = async (userId?: string) => {
     const { data: userData, error: userDataError } =
       await supabase.auth.getUser();
 
+    if (userDataError) {
+      throw new Error(userDataError.message);
+    }
+
     if (!userData) {
       return null;
     }
@@ -298,6 +300,10 @@ const getEnterpriseProfile = async (userId?: string) => {
         .select('*')
         .eq('user_id', userId);
 
+      if (enterpriseError) {
+        throw new Error(enterpriseError.message);
+      }
+
       return enterpriseData;
     }
 
@@ -305,6 +311,10 @@ const getEnterpriseProfile = async (userId?: string) => {
       .from('enterprise_profile')
       .select('*')
       .eq('user_id', userData?.user?.id);
+
+    if (enterpriseError) {
+      throw new Error(enterpriseError.message);
+    }
 
     return enterpriseData;
   } catch (error) {

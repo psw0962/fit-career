@@ -13,27 +13,31 @@ export type HiringData = {
   content: string;
   deadLine: string;
   images: File[];
-  enterprise_name: string;
-  enterprise_logo: string;
-  enterprise_establishment: string;
-  enterprise_description: string;
 };
 
-export type HiringDataProps = {
+export type HiringDataResponse = {
   id: string;
   created_at: string;
   address: string;
   position: string;
-  position_etc: boolean;
-  period: number[];
   title: string;
   content: string;
   dead_line: string;
   images: string[];
-  short_address: string;
   user_id: string;
-  enterprise_name: string;
-  enterprise_logo: string;
-  enterprise_establishment: string;
-  enterprise_description: string;
+  short_address: string;
+  period: number[];
+  position_etc: boolean;
+  resume_received: string[];
+  enterprise_profile?: {
+    id: string;
+    user_id: string;
+    name: string;
+    address: string;
+    description: string;
+    logo: string[];
+    establishment: string;
+    industry: string;
+    industry_etc: boolean;
+  };
 };
