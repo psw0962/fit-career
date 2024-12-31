@@ -6,11 +6,15 @@ import withAuth from '@/hoc/withAuth';
 import Profile from '@/components/my-page/profile';
 import EnterpriseProfile from '@/components/my-page/enterprise-profile';
 import ResumeList from '@/components/my-page/resume/resume-list';
-import HiringPost from '@/components/my-page/hiring-post';
-
+import HiringPosts from '@/components/my-page/hiring-posts';
+import ResumeSubmitted from '@/components/my-page/resume/resume-submitted';
+import { useGetEnterpriseProfile } from '@/actions/auth';
 const MyPage = () => {
-  const [activeTab, setActiveTab] = useState<string>('profile');
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+
+  const [activeTab, setActiveTab] = useState<string>('profile');
+
+  const { data: enterpriseProfileData } = useGetEnterpriseProfile();
 
   const getClassName = (value: string) => {
     return `px-4 py-2 ${
@@ -75,13 +79,25 @@ const MyPage = () => {
 
           <Tabs.Trigger
             ref={(el) => {
-              tabRefs.current['employment'] = el;
+              tabRefs.current['submitted'] = el;
             }}
-            className={getClassName('employment')}
-            value="employment"
+            className={getClassName('submitted')}
+            value="submitted"
           >
-            내가 등록한 채용공고
+            내가 지원한 채용공고
           </Tabs.Trigger>
+
+          {enterpriseProfileData && enterpriseProfileData.length > 0 && (
+            <Tabs.Trigger
+              ref={(el) => {
+                tabRefs.current['employment'] = el;
+              }}
+              className={getClassName('employment')}
+              value="employment"
+            >
+              내가 등록한 채용공고
+            </Tabs.Trigger>
+          )}
         </Tabs.List>
 
         <div className="mt-4">
@@ -97,9 +113,15 @@ const MyPage = () => {
             <ResumeList />
           </Tabs.Content>
 
-          <Tabs.Content value="employment">
-            <HiringPost />
+          <Tabs.Content value="submitted">
+            <ResumeSubmitted />
           </Tabs.Content>
+
+          {enterpriseProfileData && enterpriseProfileData.length > 0 && (
+            <Tabs.Content value="employment">
+              <HiringPosts />
+            </Tabs.Content>
+          )}
         </div>
       </Tabs.Root>
     </div>

@@ -72,7 +72,7 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
 
     const sortedData = [...data].sort((a, b) => {
       return (
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
       );
     });
     setFilteredData(sortedData);
@@ -94,7 +94,7 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
 
   return (
     <>
-      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {filteredData !== undefined &&
           filteredData.map((x: HiringDataResponse) => {
             return (
@@ -120,13 +120,9 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
                     </p>
 
                     <div className="flex items-center gap-1 mt-2">
-                      <div className="relative w-5 h-5">
+                      <div className="relative w-5 h-5 flex-shrink-0">
                         <Image
-                          src={
-                            x.enterprise_profile?.logo[0]
-                              ? x.enterprise_profile?.logo[0]
-                              : '/svg/logo.svg'
-                          }
+                          src={x.enterprise_profile?.logo[0] ?? '/svg/logo.svg'}
                           alt={`image ${x.id}`}
                           fill
                           style={{ objectFit: 'cover' }}
@@ -136,12 +132,15 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
                         />
                       </div>
 
-                      <p>{x.enterprise_profile?.name}</p>
+                      <p className="break-words line-clamp-1 flex-1">
+                        {x.enterprise_profile?.name}
+                      </p>
                     </div>
 
                     <p className="text-xs text-gray-500 mt-2">
                       {x.short_address}
                     </p>
+
                     <p className="text-xs text-gray-500">
                       경력 {formatPeriod(x.period)}
                     </p>

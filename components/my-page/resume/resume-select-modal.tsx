@@ -120,10 +120,8 @@ const ResumeSelectIdModal = ({
                           />
                         </div>
 
-                        <p>
-                          {resume.title.length > 15
-                            ? `${resume.title.slice(0, 15)}...`
-                            : resume.title}
+                        <p className="max-w-[200px] break-all line-clamp-1">
+                          {resume.title}
                         </p>
                       </div>
 
@@ -147,11 +145,8 @@ const ResumeSelectIdModal = ({
                           />
                         </div>
 
-                        <p>
-                          {decodeBase64Unicode(resume.title).split('.')[0]
-                            .length > 22
-                            ? `${decodeBase64Unicode(resume.title).slice(0, 22)}...${decodeBase64Unicode(resume.title).split('.')[1]}`
-                            : `${decodeBase64Unicode(resume.title).split('.')[0]}.${decodeBase64Unicode(resume.title).split('.')[1]}`}
+                        <p className="max-w-[200px] break-all line-clamp-1">
+                          {`${decodeBase64Unicode(resume.title).split('.')[0]}.${decodeBase64Unicode(resume.title).split('.')[1]}`}
                         </p>
                       </div>
 

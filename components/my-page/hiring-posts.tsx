@@ -1,6 +1,6 @@
 'use client';
 
-const HiringPost = () => {
+const HiringPosts = () => {
   return (
     <div className="mt-10">
       <p className="">내가 등록한 채용공고</p>
@@ -8,4 +8,4 @@ const HiringPost = () => {
   );
 };
 
-export default HiringPost;
+export default HiringPosts;

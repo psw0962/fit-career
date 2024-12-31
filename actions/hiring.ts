@@ -112,3 +112,59 @@ export const useGetHiring = (
     ...options,
   });
 };
+
+// =========================================
+// ============== get hirings by user submission
+// =========================================
+const getHiringByUserSubmission = async (
+  userId: string,
+  { page, pageSize }: { page: number; pageSize: number }
+): Promise<{ data: HiringDataResponse[]; count: number }> => {
+  const supabase = createBrowserSupabaseClient();
+
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
+
+  const [{ data, error }, { count, error: countError }] = await Promise.all([
+    supabase
+      .from('hiring')
+      .select(
+        `
+        *,
+        enterprise_profile:enterprise_profile!user_id(*)
+      `
+      )
+      .contains('resume_received', JSON.stringify([{ user_id: userId }]))
+      .range(from, to)
+      .order('updated_at', { ascending: false }),
+
+    supabase
+      .from('hiring')
+      .select('*', { count: 'exact', head: true })
+      .contains('resume_received', JSON.stringify([{ user_id: userId }])),
+  ]);
+
+  if (error || countError) {
+    throw new Error(error?.message || countError?.message);
+  }
+
+  return {
+    data: data as HiringDataResponse[],
+    count: count || 0,
+  };
+};
+
+export const useGetHiringByUserSubmission = (
+  userId: string,
+  { page, pageSize }: { page: number; pageSize: number },
+  options?: Partial<
+    UseQueryOptions<{ data: HiringDataResponse[]; count: number }, Error>
+  >
+) => {
+  return useQuery<{ data: HiringDataResponse[]; count: number }, Error>({
+    queryKey: ['hiringListByUserSubmission', userId, page, pageSize],
+    queryFn: () => getHiringByUserSubmission(userId, { page, pageSize }),
+    placeholderData: (previousData) => previousData,
+    ...options,
+  });
+};

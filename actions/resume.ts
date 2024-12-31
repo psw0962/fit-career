@@ -314,6 +314,7 @@ const uploadResume = async (file: File): Promise<string | null> => {
   const encodeBase64Unicode = (str: string): string => {
     return btoa(encodeURIComponent(str));
   };
+
   const fileName = `${uuidv4()}-${encodeBase64Unicode(file.name)}`;
 
   // 파일 처리
@@ -398,6 +399,11 @@ export const useUploadResume = (
       }
     },
     onError: (error: Error) => {
+      if (error.message.includes('KeyTooLongError')) {
+        alert('업로드하는 이력서의 제목은 최대 20자까지 입력할 수 있어요.');
+        return;
+      }
+
       console.error(error.message);
       alert('이력서 업로드에 실패했습니다. 다시 시도해주세요.');
     },
@@ -477,4 +483,66 @@ export const usePostResumeToHiring = (
       ...options,
     }
   );
+};
+
+// =========================================
+// ============== delete resume from hiring
+// =========================================
+const deleteResumeFromHiring = async (data: {
+  hiringId: string;
+  userId: string;
+}) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const { data: hiringData, error: hiringError } = await supabase
+    .from('hiring')
+    .select('resume_received')
+    .eq('id', data.hiringId)
+    .single();
+
+  if (hiringError) {
+    throw new Error(hiringError.message);
+  }
+
+  const updatedResumes = hiringData.resume_received.filter(
+    (resume: any) => resume.user_id !== data.userId
+  );
+
+  const { error: updateError } = await supabase
+    .from('hiring')
+    .update({
+      resume_received: updatedResumes,
+    })
+    .eq('id', data.hiringId);
+
+  if (updateError) {
+    throw new Error(updateError.message);
+  }
+};
+
+export const useDeleteResumeFromHiring = (
+  options?: UseMutationOptions<
+    void,
+    Error,
+    { hiringId: string; userId: string },
+    void
+  >
+) => {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, { hiringId: string; userId: string }, void>({
+    mutationFn: deleteResumeFromHiring,
+    onSuccess: () => {
+      alert('지원이 취소되었습니다.');
+      queryClient.invalidateQueries({ queryKey: ['hiringList'] });
+      queryClient.invalidateQueries({
+        queryKey: ['hiringListByUserSubmission'],
+      });
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
+      alert('지원 취소에 실패했습니다. 다시 시도해주세요.');
+    },
+    ...options,
+  });
 };

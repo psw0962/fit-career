@@ -66,11 +66,7 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
             />
           </div>
 
-          <p className="">
-            {data.title.length > 15
-              ? `${data.title.slice(0, 15)}...`
-              : data.title}
-          </p>
+          <p className="break-all line-clamp-1">{data.title}</p>
 
           <p className="text-center text-xs text-[#c3c4c5] break-keep">
             FIT Career 이력서로
@@ -151,10 +147,8 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
             />
           </div>
 
-          <p className="">
-            {decodeBase64Unicode(data.title).split('.')[0].length > 22
-              ? `${decodeBase64Unicode(data.title).slice(0, 22)}...${decodeBase64Unicode(data.title).split('.')[1]}`
-              : `${decodeBase64Unicode(data.title).split('.')[0]}.${decodeBase64Unicode(data.title).split('.')[1]}`}
+          <p className="break-all line-clamp-1">
+            {`${decodeBase64Unicode(data.title).split('.')[0]}.${decodeBase64Unicode(data.title).split('.')[1]}`}
           </p>
 
           <div
