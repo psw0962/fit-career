@@ -14,7 +14,7 @@ const Profile = (): React.ReactElement => {
   }
 
   return (
-    <div className="mt-10">
+    <div className="mt-5">
       <div className="flex flex-col gap-2 items-start sm:flex-row sm:items-center">
         <div className="relative w-20 h-20">
           <Image

@@ -9,6 +9,7 @@ import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import {
   useGetEnterpriseProfile,
+  useGetUserData,
   usePatchEnterpriseProfile,
   usePostEnterpriseProfile,
 } from '@/actions/auth';
@@ -17,6 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
 import { format, parse } from 'date-fns';
 import { POSITIONS } from '@/constant/position';
+import withAuth from '@/hoc/withAuth';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -85,7 +87,10 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
     });
   };
 
-  const { data: enterpriseProfile } = useGetEnterpriseProfile();
+  const { data: userData } = useGetUserData();
+  const { data: enterpriseProfile } = useGetEnterpriseProfile(
+    userData?.id ?? ''
+  );
   const { mutate: postMutate, status: postStatus } = usePostEnterpriseProfile();
   const { mutate: patchMutate, status: patchStatus } =
     usePatchEnterpriseProfile();
@@ -450,4 +455,4 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
   );
 };
 
-export default EnterpriseProfileEdit;
+export default withAuth(EnterpriseProfileEdit);

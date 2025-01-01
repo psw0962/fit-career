@@ -8,6 +8,8 @@ import {
 import { ResumeData, ResumeDataResponse } from '@/types/resume/resume';
 import { v4 as uuidv4 } from 'uuid';
 import { formatKRTime } from '@/functions/formatKRTime';
+import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
+import { ResumeReceived } from '@/types/hiring/hiring';
 
 // =========================================
 // ============== get resume
@@ -311,11 +313,7 @@ export const useDeleteResume = (
 const uploadResume = async (file: File): Promise<string | null> => {
   const supabase = createBrowserSupabaseClient();
 
-  const encodeBase64Unicode = (str: string): string => {
-    return btoa(encodeURIComponent(str));
-  };
-
-  const fileName = `${uuidv4()}-${encodeBase64Unicode(file.name)}`;
+  const fileName = `${uuidv4()}-${convertBase64Unicode(file.name, 'encode')}`;
 
   // 파일 처리
   const allowedExtensions = ['pdf', 'hwp', 'xlsx', 'xls', 'docx', 'pptx'];
@@ -362,7 +360,7 @@ const uploadResume = async (file: File): Promise<string | null> => {
 
   const { error: insertError } = await supabase.from('resume').insert([
     {
-      title: encodeBase64Unicode(file.name),
+      title: convertBase64Unicode(file.name, 'encode'),
       resume_image: [],
       name: '',
       email: '',
@@ -505,7 +503,7 @@ const deleteResumeFromHiring = async (data: {
   }
 
   const updatedResumes = hiringData.resume_received.filter(
-    (resume: any) => resume.user_id !== data.userId
+    (resume: ResumeReceived) => resume.user_id !== data.userId
   );
 
   const { error: updateError } = await supabase

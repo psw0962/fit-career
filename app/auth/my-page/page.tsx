@@ -1,26 +1,31 @@
 'use client';
 
 import * as Tabs from '@radix-ui/react-tabs';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import withAuth from '@/hoc/withAuth';
 import Profile from '@/components/my-page/profile';
 import EnterpriseProfile from '@/components/my-page/enterprise-profile';
 import ResumeList from '@/components/my-page/resume/resume-list';
 import HiringPosts from '@/components/my-page/hiring-posts';
 import ResumeSubmitted from '@/components/my-page/resume/resume-submitted';
-import { useGetEnterpriseProfile } from '@/actions/auth';
+import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
+import { useSessionStorage } from 'usehooks-ts';
+
 const MyPage = () => {
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
-  const [activeTab, setActiveTab] = useState<string>('profile');
+  const [activeTab, setActiveTab] = useSessionStorage('activeTab', 'profile');
 
-  const { data: enterpriseProfileData } = useGetEnterpriseProfile();
+  const { data: userData } = useGetUserData();
+  const { data: enterpriseProfileData } = useGetEnterpriseProfile(
+    userData?.id ?? ''
+  );
 
   const getClassName = (value: string) => {
-    return `px-4 py-2 ${
+    return `px-2 py-1 ${
       activeTab === value
-        ? 'border-b-2 border-[#4C71C0]'
-        : 'border-b-2 border-transparent text-[#C3C4C5]'
+        ? 'border-2 rounded border-[#4C71C0] z-10'
+        : 'border-2 rounded border-transparent text-[#C3C4C5] z-0'
     }`;
   };
 
@@ -43,10 +48,10 @@ const MyPage = () => {
 
       <Tabs.Root
         className="pt-4"
-        defaultValue="profile"
+        defaultValue={activeTab}
         onValueChange={(value) => setActiveTab(value)}
       >
-        <Tabs.List className="flex border-b whitespace-nowrap overflow-auto">
+        <Tabs.List className="relative flex whitespace-nowrap overflow-auto pb-1">
           <Tabs.Trigger
             ref={(el) => {
               tabRefs.current['profile'] = el;
@@ -100,7 +105,9 @@ const MyPage = () => {
           )}
         </Tabs.List>
 
-        <div className="mt-4">
+        <div className="w-full h-[1px] mt-2 bg-gray-200" />
+
+        <div>
           <Tabs.Content value="profile">
             <Profile />
           </Tabs.Content>

@@ -42,7 +42,7 @@ export type HiringDataResponse = {
   };
 };
 
-export interface ResumeReceived {
+export type ResumeReceived = {
   id: string;
   name: string;
   email: string;
@@ -88,4 +88,4 @@ export interface ResumeReceived {
   submitted_at: string;
   upload_resume: string | 'NULL';
   is_fitcareer_resume: boolean;
-}
+};

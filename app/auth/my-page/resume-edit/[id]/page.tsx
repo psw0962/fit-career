@@ -17,6 +17,7 @@ import {
 } from '@/types/resume/resume';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
+import withAuth from '@/hoc/withAuth';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -1143,4 +1144,4 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
   );
 };
 
-export default ResumeEdit;
+export default withAuth(ResumeEdit);

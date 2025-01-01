@@ -3,6 +3,7 @@ import '../public/styles/global.css';
 import Nav from '@/components/common/nav';
 import Footer from '@/components/common/footer';
 import ReactQueryClientProvider from '@/config/ReactQueryClientProvider';
+import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: '피트니스의 모든 정보, FIT Career',
@@ -21,10 +22,14 @@ const RootLayout = ({
         <head></head>
 
         <body className="overflow-x-auto" suppressHydrationWarning={true}>
-          <div className="min-w-[350px]">
+          <div className="flex flex-col min-w-[350px] min-h-screen">
             <Nav />
 
-            <div className="max-w-7xl mx-auto px-10 py-32">{children}</div>
+            <main className="flex-grow w-full max-w-7xl mx-auto px-10 py-32">
+              {children}
+            </main>
+
+            <Toaster />
 
             <Footer />
           </div>

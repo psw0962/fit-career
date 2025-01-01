@@ -5,7 +5,7 @@ import updating from '@/public/svg/updating.json';
 
 const Community = () => {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center h-[50vh]">
       <Lottie
         animationData={updating}
         loop={true}

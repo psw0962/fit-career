@@ -8,7 +8,6 @@ import { formatPeriod } from '@/functions/formatPeriod';
 import Link from 'next/link';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 import GlobalSpinner from '@/components/common/global-spinner';
-import { useGetEnterpriseProfile } from '@/actions/auth';
 
 const HiringFilter: React.FC<HiringFilterProps> = ({
   regionFilter,
@@ -16,9 +15,30 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
   periodValueFilter,
 }) => {
   const [filteredData, setFilteredData] = useState<HiringDataResponse[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({});
-  const { data: enterpriseProfile } = useGetEnterpriseProfile();
+  const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({
+    page: 0,
+    pageSize: 12,
+  });
+
+  const itemsPerPage = 12;
+  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+  const pageGroupSize = 10;
+  const currentGroup = Math.floor((currentPage - 1) / pageGroupSize);
+  const startPage = currentGroup * pageGroupSize + 1;
+  const endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+  const paginatedData = filteredData.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   const filterData = () => {
     if (!hiringData) {
@@ -29,8 +49,8 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
     // regionFilter 적용
     let data =
       regionFilter.selectedCounties.length === 0
-        ? hiringData
-        : hiringData.filter((data) => {
+        ? hiringData.data
+        : hiringData.data.filter((data) => {
             const addressParts = `${data.address.split(' ')[1]} ${data.address.split(' ')[2]}`;
 
             return regionFilter.selectedCounties.includes(addressParts);
@@ -85,8 +105,12 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
     positionFilter,
     periodValueFilter,
     hiringData,
-    enterpriseProfile,
+    currentPage,
   ]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [regionFilter, positionFilter, periodValueFilter]);
 
   if (hiringDataIsLoading) {
     return <GlobalSpinner />;
@@ -95,8 +119,8 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
   return (
     <>
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {filteredData !== undefined &&
-          filteredData.map((x: HiringDataResponse) => {
+        {paginatedData !== undefined &&
+          paginatedData.map((x: HiringDataResponse) => {
             return (
               <Link key={x.id} href={`/hiring/${x.id}`} passHref>
                 <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
@@ -150,6 +174,42 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
             );
           })}
       </div>
+
+      {totalPages > 1 && (
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <button
+            className="min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            onClick={() => handlePageChange(startPage - 1)}
+            disabled={startPage === 1}
+          >
+            이전
+          </button>
+
+          {Array.from(
+            { length: endPage - startPage + 1 },
+            (_, i) => startPage + i
+          ).map((page) => (
+            <button
+              key={page}
+              className={`min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 ${
+                currentPage === page ? 'bg-[#4C71C0] text-white' : ''
+              }`}
+              onClick={() => handlePageChange(page)}
+              disabled={currentPage === page}
+            >
+              {page}
+            </button>
+          ))}
+
+          <button
+            className="min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            onClick={() => handlePageChange(endPage + 1)}
+            disabled={endPage === totalPages}
+          >
+            다음
+          </button>
+        </div>
+      )}
     </>
   );
 };

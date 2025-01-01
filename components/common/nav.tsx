@@ -50,7 +50,7 @@ const Nav = (): React.ReactElement => {
 
   return (
     <nav
-      className={`overflow-x-auto fixed top-0 w-full shadow bg-white z-10 transition-all duration-300`}
+      className={`overflow-x-auto fixed top-0 w-full shadow bg-white z-10 transition-all duration-300 z-30`}
     >
       {/* desktop */}
       <div

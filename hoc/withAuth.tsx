@@ -9,8 +9,7 @@ const withAuth = (WrappedComponent: any) => {
 
     useEffect(() => {
       if (!isLoading && !data) {
-        alert('로그인이 필요합니다.');
-        router.push('/auth');
+        router.push('/auth?message=login_required');
       }
     }, [data, isLoading, router]);
 

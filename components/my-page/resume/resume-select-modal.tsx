@@ -6,6 +6,9 @@ import Image from 'next/image';
 import { usePostResumeToHiring } from '@/actions/resume';
 import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
 import { useRouter } from 'next/navigation';
+import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
+import { useSessionStorage } from 'usehooks-ts';
+import { useGetUserData } from '@/actions/auth';
 
 const ResumeSelectIdModal = ({
   hiringData,
@@ -24,15 +27,21 @@ const ResumeSelectIdModal = ({
 }) => {
   const router = useRouter();
 
+  const [activeTab, setActiveTab] = useSessionStorage('activeTab', '');
+
+  const { data: userData } = useGetUserData();
   const { mutate: postResumeToHiring } = usePostResumeToHiring();
 
   const confirmSubmitted = () => {
     const resumeReceived = hiringData?.[0].resume_received as ResumeReceived[];
+    const selectedResume = resumeData?.find(
+      (resume) => resume.id === selectedResumeId
+    );
+    const userIdToCheck = selectedResume?.user_id ?? userData?.id;
 
     return (
-      resumeReceived?.some(
-        (resume) => resume.user_id === resumeData?.[0].user_id
-      ) ?? false
+      resumeReceived?.some((resume) => resume.user_id === userIdToCheck) ??
+      false
     );
   };
 
@@ -50,16 +59,19 @@ const ResumeSelectIdModal = ({
     }
   };
 
-  const decodeBase64Unicode = (str: string): string => {
-    return decodeURIComponent(atob(str));
-  };
-
   return (
     <Dialog.Root>
       <Dialog.Trigger asChild>
         <button
           className="w-fit h-fit bg-[#4C71C0] rounded px-8 py-2 text-white cursor-pointer"
-          onClick={() => setResumeUserIdModalIsOpen(true)}
+          onClick={() => {
+            if (!userData) {
+              router.push('/auth?message=login_required');
+              return;
+            }
+
+            setResumeUserIdModalIsOpen(true);
+          }}
         >
           지원하기
         </button>
@@ -85,7 +97,10 @@ const ResumeSelectIdModal = ({
 
                 <button
                   className="w-fit h-fit text-xs rounded px-4 py-2 border cursor-pointer"
-                  onClick={() => router.push('/auth/my-page')}
+                  onClick={() => {
+                    router.push('/auth/my-page');
+                    setActiveTab('resume');
+                  }}
                 >
                   이력서 작성하기
                 </button>
@@ -146,7 +161,7 @@ const ResumeSelectIdModal = ({
                         </div>
 
                         <p className="max-w-[200px] break-all line-clamp-1">
-                          {`${decodeBase64Unicode(resume.title).split('.')[0]}.${decodeBase64Unicode(resume.title).split('.')[1]}`}
+                          {`${convertBase64Unicode(resume.title, 'decode').split('.')[0]}.${convertBase64Unicode(resume.title, 'decode').split('.')[1]}`}
                         </p>
                       </div>
 

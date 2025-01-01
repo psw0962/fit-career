@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useDeleteResume } from '@/actions/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import ResumeExport from '@/components/my-page/resume/resume-export';
+import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 
 const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
   const router = useRouter();
@@ -13,10 +14,6 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
 
   const { mutate: deleteResume } = useDeleteResume();
-
-  const decodeBase64Unicode = (str: string): string => {
-    return decodeURIComponent(atob(str));
-  };
 
   const downloadFile = async (url: string, filename: string) => {
     const response = await fetch(url);
@@ -148,7 +145,7 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
           </div>
 
           <p className="break-all line-clamp-1">
-            {`${decodeBase64Unicode(data.title).split('.')[0]}.${decodeBase64Unicode(data.title).split('.')[1]}`}
+            {`${convertBase64Unicode(data.title, 'decode').split('.')[0]}.${convertBase64Unicode(data.title, 'decode').split('.')[1]}`}
           </p>
 
           <div
@@ -174,10 +171,10 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
                 className="flex items-center justify-center gap-2 py-2 border-b cursor-pointer"
                 onClick={() =>
                   data.upload_resume &&
-                  decodeBase64Unicode(data.title) &&
+                  convertBase64Unicode(data.title, 'decode') &&
                   downloadFile(
                     data.upload_resume,
-                    decodeBase64Unicode(data.title)
+                    convertBase64Unicode(data.title, 'decode')
                   )
                 }
               >

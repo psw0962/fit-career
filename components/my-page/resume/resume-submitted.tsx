@@ -14,12 +14,9 @@ import { useState } from 'react';
 import Spinner from '@/components/common/spinner';
 import { useRouter } from 'next/navigation';
 import { useDeleteResumeFromHiring } from '@/actions/resume';
+import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 
 const ResumeSubmitted = () => {
-  const decodeBase64Unicode = (str: string): string => {
-    return decodeURIComponent(atob(str));
-  };
-
   const columns: ColumnDef<HiringDataResponse>[] = [
     {
       accessorKey: 'enterprise_profile.name',
@@ -61,8 +58,8 @@ const ResumeSubmitted = () => {
                   ? `${submittedAt.title.slice(0, 15)}...`
                   : submittedAt.title
                 : submittedAt.title.length > 15
-                  ? `${decodeBase64Unicode(submittedAt.title).split('.')[0].slice(0, 15)}...${decodeBase64Unicode(submittedAt.title).split('.')[1]}`
-                  : `${decodeBase64Unicode(submittedAt.title).split('.')[0]}.${decodeBase64Unicode(submittedAt.title).split('.')[1]}`}
+                  ? `${convertBase64Unicode(submittedAt.title, 'decode').split('.')[0].slice(0, 15)}...${convertBase64Unicode(submittedAt.title, 'decode').split('.')[1]}`
+                  : `${convertBase64Unicode(submittedAt.title, 'decode').split('.')[0]}.${convertBase64Unicode(submittedAt.title, 'decode').split('.')[1]}`}
             </span>
           </div>
         );
@@ -95,14 +92,13 @@ const ResumeSubmitted = () => {
   const router = useRouter();
 
   const [page, setPage] = useState(0);
-  const pageSize = 10;
 
   const { data: userData } = useGetUserData();
   const { mutate: deleteResumeFromHiring } = useDeleteResumeFromHiring();
   const { data: hiringData, isLoading: hiringDataIsLoading } =
     useGetHiringByUserSubmission(
       userData?.id ?? '',
-      { page, pageSize },
+      { page, pageSize: 12 },
       {
         enabled: !!userData?.id,
       }
@@ -113,16 +109,19 @@ const ResumeSubmitted = () => {
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    pageCount: hiringData ? Math.ceil(hiringData.count / pageSize) : -1,
+    pageCount: hiringData ? Math.ceil(hiringData.count / 12) : -1,
     state: {
       pagination: {
         pageIndex: page,
-        pageSize,
+        pageSize: 12,
       },
     },
     onPaginationChange: (updater) => {
       if (typeof updater === 'function') {
-        const newPageIndex = updater({ pageIndex: page, pageSize }).pageIndex;
+        const newPageIndex = updater({
+          pageIndex: page,
+          pageSize: 12,
+        }).pageIndex;
         setPage(newPageIndex);
       }
     },
@@ -130,7 +129,7 @@ const ResumeSubmitted = () => {
   });
 
   return (
-    <div className="mt-10">
+    <div className="mt-5">
       <div className="w-full overflow-x-auto">
         <table className="w-full min-w-[450px] border-collapse bg-white rounded-lg shadow-sm">
           <thead>
@@ -180,15 +179,15 @@ const ResumeSubmitted = () => {
       </div>
 
       <div className="flex items-center justify-center gap-1.5 py-4">
-        {table.getPageCount() > 10 && (
+        {table.getPageCount() > 12 && (
           <button
             className="min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
             onClick={() => {
               const currentPage = table.getState().pagination.pageIndex;
-              const targetPage = Math.floor(currentPage / 10) * 10 - 1;
+              const targetPage = Math.floor(currentPage / 12) * 12 - 1;
               if (targetPage >= 0) table.setPageIndex(targetPage);
             }}
-            disabled={table.getState().pagination.pageIndex < 10}
+            disabled={table.getState().pagination.pageIndex < 12}
           >
             이전
           </button>
@@ -197,9 +196,9 @@ const ResumeSubmitted = () => {
         {Array.from({ length: table.getPageCount() }, (_, index) => index)
           .filter((pageIndex) => {
             const currentGroup = Math.floor(
-              table.getState().pagination.pageIndex / 10
+              table.getState().pagination.pageIndex / 12
             );
-            const pageGroup = Math.floor(pageIndex / 10);
+            const pageGroup = Math.floor(pageIndex / 12);
             return currentGroup === pageGroup;
           })
           .map((pageIndex) => (
@@ -217,19 +216,19 @@ const ResumeSubmitted = () => {
             </button>
           ))}
 
-        {table.getPageCount() > 10 && (
+        {table.getPageCount() > 12 && (
           <button
             className="min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
             onClick={() => {
               const currentPage = table.getState().pagination.pageIndex;
-              const nextGroupFirstPage = Math.floor(currentPage / 10) * 10 + 10;
+              const nextGroupFirstPage = Math.floor(currentPage / 12) * 12 + 12;
               if (nextGroupFirstPage < table.getPageCount()) {
                 table.setPageIndex(nextGroupFirstPage);
               }
             }}
             disabled={
-              Math.floor(table.getState().pagination.pageIndex / 10) ===
-              Math.floor((table.getPageCount() - 1) / 10)
+              Math.floor(table.getState().pagination.pageIndex / 12) ===
+              Math.floor((table.getPageCount() - 1) / 12)
             }
           >
             다음

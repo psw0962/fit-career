@@ -9,31 +9,43 @@ import { formatPeriod } from '@/functions/formatPeriod';
 import useKakaoLoader from '@/hooks/useKakaoLoader';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import Link from 'next/link';
+import { useState } from 'react';
+import GlobalSpinner from '@/components/common/global-spinner';
 
 const Company = (): React.ReactElement => {
   useKakaoLoader();
+
   const searchParams = useSearchParams();
   const hiringId = searchParams.get('hiring_id') ?? '';
 
+  const [page, setPage] = useState(0);
+
   const { data: hiringData } = useGetHiring({ id: hiringId });
-  const { data: hiringDataByUserId } = useGetHiring({
-    user_id: hiringData?.[0]?.user_id,
-  });
+  const { data: hiringDataByUserId, isLoading: hiringDataByUserIdIsLoading } =
+    useGetHiring({
+      user_id: hiringData?.data[0]?.user_id ?? '',
+      page,
+      pageSize: 12,
+    });
 
   if (
     !hiringData ||
-    hiringData.length === 0 ||
+    hiringData.data.length === 0 ||
     !hiringDataByUserId ||
-    hiringDataByUserId.length === 0
+    hiringDataByUserId.data.length === 0
   ) {
     return <></>;
+  }
+
+  if (hiringDataByUserIdIsLoading) {
+    return <GlobalSpinner />;
   }
 
   return (
     <div className="flex flex-col">
       <div className="relative w-full h-36">
         <Image
-          src={hiringData?.[0]?.images?.[0] ?? '/svg/logo.svg'}
+          src={hiringData.data[0]?.images?.[0] ?? '/svg/logo.svg'}
           alt="enterprise images"
           fill
           style={{ objectFit: 'contain' }}
@@ -43,64 +55,67 @@ const Company = (): React.ReactElement => {
         />
       </div>
 
-      <div className="flex items-center gap-2 mt-2">
-        <div className="relative w-8 h-8">
-          <Image
-            src={
-              hiringData[0].enterprise_profile?.logo[0]
-                ? hiringData[0].enterprise_profile?.logo[0]
-                : '/svg/logo.svg'
-            }
-            alt="enterprise logo"
-            fill
-            style={{ objectFit: 'cover' }}
-            priority
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-          />
+      <div className="flex flex-col gap-2 mt-2 sm:flex-row">
+        <div className="flex items-center gap-2">
+          <div className="relative w-8 h-8">
+            <Image
+              src={
+                hiringData.data[0].enterprise_profile?.logo[0]
+                  ? hiringData.data[0].enterprise_profile?.logo[0]
+                  : '/svg/logo.svg'
+              }
+              alt="enterprise logo"
+              fill
+              style={{ objectFit: 'cover' }}
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+            />
+          </div>
+
+          <p className="text-xl underline underline-offset-4 decoration-[#000]">
+            {hiringData.data[0].enterprise_profile?.name}
+          </p>
         </div>
 
-        <p className="text-xl underline underline-offset-4 decoration-[#000]">
-          {hiringData[0].enterprise_profile?.name}
-        </p>
-      </div>
-
-      <div className="flex gap-1 mt-2">
-        <p>{hiringData[0].enterprise_profile?.industry}</p>
-        <div>∙</div>
-        <p>
-          {hiringData[0].enterprise_profile?.address
-            .split(' ')
-            .slice(1, 3)
-            .join(' ')}
-        </p>
-        <div>∙</div>
-        <p>
-          {calculateYearsInBusiness(
-            hiringData[0].enterprise_profile?.establishment ?? ''
-          )}
-          년차 (
-          {parseInt(
-            hiringData[0].enterprise_profile?.establishment?.split('-')[0] ??
-              '0',
-            10
-          )}
-          )
-        </p>
+        <div className="flex flex-col gap-1 mt-2 sm:flex-row">
+          <p>∙ {hiringData.data[0].enterprise_profile?.industry}</p>
+          <p>
+            ∙{' '}
+            {hiringData.data[0].enterprise_profile?.address
+              .split(' ')
+              .slice(1, 3)
+              .join(' ')}
+          </p>
+          <p>
+            ∙{' '}
+            {calculateYearsInBusiness(
+              hiringData.data[0].enterprise_profile?.establishment ?? ''
+            )}
+            년차 (
+            {parseInt(
+              hiringData.data[0].enterprise_profile?.establishment?.split(
+                '-'
+              )[0] ?? '0',
+              12
+            )}
+            )
+          </p>
+        </div>
       </div>
 
       <div className="mt-1 text-[#707173]">
         <div
           dangerouslySetInnerHTML={{
-            __html: hiringData[0].enterprise_profile?.description ?? '',
+            __html: hiringData.data[0].enterprise_profile?.description ?? '',
           }}
         />
       </div>
 
       <p className="mt-14 mb-4 text-xl font-bold">채용중인 포지션</p>
 
-      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
-        {hiringDataByUserId.map((x) => (
+      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {hiringDataByUserId.data.map((x) => (
           <Link key={x.id} href={`/hiring/${x.id}`} passHref>
             <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
               <div className="relative w-10 h-10 mx-auto mb-4">
@@ -124,8 +139,8 @@ const Company = (): React.ReactElement => {
                   <div className="relative w-5 h-5">
                     <Image
                       src={
-                        hiringData[0].enterprise_profile?.logo[0]
-                          ? hiringData[0].enterprise_profile?.logo[0]
+                        hiringData.data[0].enterprise_profile?.logo[0]
+                          ? hiringData.data[0].enterprise_profile?.logo[0]
                           : '/svg/logo.svg'
                       }
                       alt={`image ${x.id}`}
@@ -137,7 +152,7 @@ const Company = (): React.ReactElement => {
                     />
                   </div>
 
-                  <p>{hiringData[0].enterprise_profile?.name}</p>
+                  <p>{hiringData.data[0].enterprise_profile?.name}</p>
                 </div>
 
                 <p className="text-xs text-gray-500 mt-2">{x.short_address}</p>
@@ -149,6 +164,39 @@ const Company = (): React.ReactElement => {
           </Link>
         ))}
       </div>
+
+      {(hiringDataByUserId?.count ?? 0) > 12 && (
+        <div className="flex items-center justify-center gap-1.5 py-4">
+          <button
+            className="min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            onClick={() => setPage(Math.max(0, page - 1))}
+            disabled={page === 0}
+          >
+            이전
+          </button>
+
+          <span className="mx-2">
+            {page + 1} / {Math.ceil((hiringDataByUserId?.count ?? 0) / 12)}
+          </span>
+
+          <button
+            className="min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            onClick={() =>
+              setPage(
+                Math.min(
+                  Math.ceil((hiringDataByUserId?.count ?? 0) / 12) - 1,
+                  page + 1
+                )
+              )
+            }
+            disabled={
+              page >= Math.ceil((hiringDataByUserId?.count ?? 0) / 12) - 1
+            }
+          >
+            다음
+          </button>
+        </div>
+      )}
 
       <div className="mt-16 border border-gray-300 rounded">
         <Map
@@ -165,7 +213,7 @@ const Company = (): React.ReactElement => {
         >
           <CustomMapMaker
             address={
-              hiringData[0].enterprise_profile?.address
+              hiringData.data[0].enterprise_profile?.address
                 ?.split(' ')
                 .slice(1)
                 .join(' ') ?? ''
@@ -174,7 +222,7 @@ const Company = (): React.ReactElement => {
         </Map>
 
         <div className="p-4 border-t border-gray-300">
-          {hiringData[0].enterprise_profile?.address
+          {hiringData.data[0].enterprise_profile?.address
             .split(' ')
             .slice(1)
             .join(' ')}

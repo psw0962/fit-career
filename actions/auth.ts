@@ -279,21 +279,10 @@ export const usePatchEnterpriseProfile = (
 // =========================================
 // ============== get enterprise profile
 // =========================================
-const getEnterpriseProfile = async (userId?: string) => {
+const getEnterpriseProfile = async (userId: string) => {
   const supabase = createBrowserSupabaseClient();
 
   try {
-    const { data: userData, error: userDataError } =
-      await supabase.auth.getUser();
-
-    if (userDataError) {
-      throw new Error(userDataError.message);
-    }
-
-    if (!userData) {
-      return null;
-    }
-
     if (userId) {
       const { data: enterpriseData, error: enterpriseError } = await supabase
         .from('enterprise_profile')
@@ -310,7 +299,7 @@ const getEnterpriseProfile = async (userId?: string) => {
     const { data: enterpriseData, error: enterpriseError } = await supabase
       .from('enterprise_profile')
       .select('*')
-      .eq('user_id', userData?.user?.id);
+      .eq('user_id', userId);
 
     if (enterpriseError) {
       throw new Error(enterpriseError.message);
@@ -322,7 +311,7 @@ const getEnterpriseProfile = async (userId?: string) => {
   }
 };
 
-export const useGetEnterpriseProfile = (userId?: string) => {
+export const useGetEnterpriseProfile = (userId: string) => {
   return useQuery({
     queryKey: ['enterpriseProfile', userId],
     queryFn: (context) => getEnterpriseProfile(context.queryKey[1]),

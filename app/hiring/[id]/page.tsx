@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 import { useGetResume } from '@/actions/resume';
 import ResumeSelectModal from '@/components/my-page/resume/resume-select-modal';
 import { useState } from 'react';
+import GlobalSpinner from '@/components/common/global-spinner';
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -25,27 +26,33 @@ const HiringDetail = ({
   const [resumeUserIdModalIsOpen, setResumeUserIdModalIsOpen] = useState(false);
   const [selectedResumeId, setSelectedResumeId] = useState<string>('');
 
-  const { data: hiringData } = useGetHiring({ id: params.id });
+  const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({
+    id: params.id,
+  });
   const { data: resumeData } = useGetResume();
 
   const handleNavigate = () => {
-    if (!hiringData || hiringData.length === 0) return;
+    if (!hiringData || hiringData.data.length === 0) return;
 
     const params = {
-      hiring_id: hiringData[0]?.id,
+      hiring_id: hiringData.data[0]?.id,
     };
     const query = new URLSearchParams(params).toString();
 
     router.push(`/company?${query}`);
   };
 
-  if (!hiringData || hiringData.length === 0) {
+  if (!hiringData || hiringData.data.length === 0) {
     return <></>;
+  }
+
+  if (hiringDataIsLoading) {
+    return <GlobalSpinner />;
   }
 
   return (
     <div>
-      {hiringData[0].images.length > 0 ? (
+      {hiringData.data[0].images.length > 0 ? (
         <ThumbnailCarousel slides={hiringData[0].images} options={OPTIONS} />
       ) : (
         <div className="text-xl h-60 p-10 border rounded flex items-center justify-center">
@@ -54,16 +61,16 @@ const HiringDetail = ({
       )}
 
       <div className="flex flex-col gap-3 sm:flex-row justify-between">
-        <div className="mt-10 flex gap-1 items-center">
+        <div className="flex flex-col gap-1 items-start sm:items-center sm:flex-row mt-10">
           <div
-            className="flex items-center gap-2 cursor-pointer"
+            className="flex gap-2 items-center cursor-pointer"
             onClick={handleNavigate}
           >
             <div className="relative w-8 h-8">
               <Image
                 src={
-                  hiringData[0].enterprise_profile?.logo[0]
-                    ? hiringData[0].enterprise_profile?.logo[0]
+                  hiringData.data[0].enterprise_profile?.logo[0]
+                    ? hiringData.data[0].enterprise_profile?.logo[0]
                     : '/svg/logo.svg'
                 }
                 alt="enterprise logo"
@@ -76,20 +83,24 @@ const HiringDetail = ({
             </div>
 
             <p className="text-lg underline underline-offset-4 decoration-[#000]">
-              {hiringData[0].enterprise_profile?.name}
+              {hiringData.data[0].enterprise_profile?.name}
             </p>
           </div>
-          <div>∙</div>
-          <p className="text-sm text-gray-500">{hiringData[0].short_address}</p>
-          <div>∙</div>
-          <p className="text-sm text-gray-500">
-            경력 {hiringData[0].period[0]}년 ~ {hiringData[0].period[1]}년
-          </p>
+
+          <div className="flex flex-col gap-1 mt-2 sm:flex-row">
+            <p className="text-sm text-gray-500">
+              ∙ {hiringData.data[0].short_address}
+            </p>
+            <p className="text-sm text-gray-500">
+              ∙ 경력 {hiringData.data[0].period[0]}년 ~{' '}
+              {hiringData.data[0].period[1]}년
+            </p>
+          </div>
         </div>
 
         <div className="flex items-end">
           <ResumeSelectModal
-            hiringData={hiringData}
+            hiringData={hiringData.data}
             resumeData={resumeData}
             resumeUserIdModalIsOpen={resumeUserIdModalIsOpen}
             setResumeUserIdModalIsOpen={setResumeUserIdModalIsOpen}
@@ -102,25 +113,34 @@ const HiringDetail = ({
       <div className="my-4 border"></div>
 
       <div>
-        <p className="text-2xl font-bold">{hiringData[0].title}</p>
+        <p className="text-2xl font-bold break-keep">
+          {hiringData.data[0].title}
+        </p>
 
         <div className="flex flex-col gap-0 mt-6">
           <p className="text-lg font-bold">채용 정보</p>
-          <p className="text-lg">- 근무장소 : {hiringData[0].address}</p>
-          <p className="text-lg">
-            - 필요 경력 : {hiringData[0].period[0]}년 ~{' '}
-            {hiringData[0].period[1]}년
+          <p className="text-lg break-keep">
+            - 근무장소 : {hiringData.data[0].address}
           </p>
-          <p className="text-lg">- 채용 포지션 : {hiringData[0].position}</p>
-          <p className="text-lg">- 채용 마감일 : {hiringData[0].dead_line}</p>
+          <p className="text-lg break-keep">
+            - 필요 경력 : {hiringData.data[0].period[0]}년 ~{' '}
+            {hiringData.data[0].period[1]}년
+          </p>
+          <p className="text-lg break-keep">
+            - 채용 포지션 : {hiringData.data[0].position}
+          </p>
+          <p className="text-lg break-keep">
+            - 채용 마감일 : {hiringData.data[0].dead_line}
+          </p>
         </div>
 
         <div className="mt-10">
           <p className="text-lg font-bold">채용 상세</p>
           <p
             dangerouslySetInnerHTML={{
-              __html: hiringData[0].content,
+              __html: hiringData.data[0].content,
             }}
+            className="break-keep"
           />
         </div>
       </div>
@@ -139,17 +159,17 @@ const HiringDetail = ({
           level={4}
         >
           <CustomMapMaker
-            address={hiringData[0].address.split(' ').slice(1).join(' ')}
+            address={hiringData.data[0].address.split(' ').slice(1).join(' ')}
           />
         </Map>
 
         <div className="p-4 border-t border-gray-300">
-          {hiringData[0].address.split(' ').slice(1).join(' ')}
+          {hiringData.data[0].address.split(' ').slice(1).join(' ')}
         </div>
       </div>
 
       <p className="mt-4 text-sm text-gray-500">
-        * 최근 수정일 : {hiringData[0].updated_at}
+        * 최근 수정일 : {hiringData.data[0].updated_at}
       </p>
     </div>
   );

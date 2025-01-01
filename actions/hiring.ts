@@ -79,35 +79,69 @@ export const usePostHiring = (
 const getHiring = async (params: {
   id?: string;
   user_id?: string;
-}): Promise<HiringDataResponse[]> => {
+  page?: number;
+  pageSize?: number;
+}): Promise<{ data: HiringDataResponse[]; count: number }> => {
   const supabase = createBrowserSupabaseClient();
+  const { page = 0, pageSize = 12 } = params;
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
 
-  let query = supabase.from('hiring').select(`
-    *,
-    enterprise_profile:enterprise_profile!user_id(*)
-  `);
+  const [{ data, error }, { count, error: countError }] = await Promise.all([
+    supabase
+      .from('hiring')
+      .select(
+        `
+        *,
+        enterprise_profile:enterprise_profile!user_id(*)
+      `
+      )
+      .match(
+        params.id
+          ? { id: params.id }
+          : params.user_id
+            ? { user_id: params.user_id }
+            : {}
+      )
+      .order('updated_at', { ascending: false })
+      .range(from, to),
 
-  if (params.user_id) {
-    query.eq('user_id', params.user_id);
-  } else if (params.id) {
-    query.eq('id', params.id);
+    supabase
+      .from('hiring')
+      .select('*', { count: 'exact', head: true })
+      .match(
+        params.id
+          ? { id: params.id }
+          : params.user_id
+            ? { user_id: params.user_id }
+            : {}
+      ),
+  ]);
+
+  if (error || countError) {
+    throw new Error(error?.message || countError?.message);
   }
 
-  const { data, error } = await query;
-
-  if (error) {
-    throw new Error(`${error.message}`);
-  }
-
-  return data as HiringDataResponse[];
+  return {
+    data: data as HiringDataResponse[],
+    count: count || 0,
+  };
 };
 
 export const useGetHiring = (
-  params: { id?: string; user_id?: string },
-  options?: UseQueryOptions<HiringDataResponse[], Error>
+  params: {
+    id?: string;
+    user_id?: string;
+    page?: number;
+    pageSize?: number;
+  },
+  options?: UseQueryOptions<
+    { data: HiringDataResponse[]; count: number },
+    Error
+  >
 ) => {
-  return useQuery<HiringDataResponse[], Error>({
-    queryKey: ['hiringList', params.id, params.user_id],
+  return useQuery<{ data: HiringDataResponse[]; count: number }, Error>({
+    queryKey: ['hiringList', params],
     queryFn: () => getHiring(params),
     ...options,
   });
@@ -136,7 +170,7 @@ const getHiringByUserSubmission = async (
       )
       .contains('resume_received', JSON.stringify([{ user_id: userId }]))
       .range(from, to)
-      .order('updated_at', { ascending: false }),
+      .order('resume_received->0->>submitted_at', { ascending: false }),
 
     supabase
       .from('hiring')
@@ -156,7 +190,7 @@ const getHiringByUserSubmission = async (
 
 export const useGetHiringByUserSubmission = (
   userId: string,
-  { page, pageSize }: { page: number; pageSize: number },
+  { page = 0, pageSize = 12 }: { page?: number; pageSize?: number } = {},
   options?: Partial<
     UseQueryOptions<{ data: HiringDataResponse[]; count: number }, Error>
   >

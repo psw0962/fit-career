@@ -11,6 +11,13 @@ import { ResumeDataResponse } from '@/types/resume/resume';
 import ReactHtmlParser from 'react-html-parser';
 import React from 'react';
 
+type HtmlNode = {
+  type: 'tag' | 'text';
+  name?: string;
+  children?: Array<HtmlNode | { data?: string }>;
+  data?: string;
+};
+
 Font.register({
   family: 'PretendardMedium',
   src: '/fonts/PretendardMedium.ttf',
@@ -49,18 +56,18 @@ const pdfStyles = StyleSheet.create({
 const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
   const renderHtmlToPdf = (html: string) => {
     return ReactHtmlParser(html, {
-      transform: (node: any, index: number) => {
+      transform: (node: HtmlNode, index: number) => {
         if (node.type === 'tag' && node.name === 'p') {
           return (
             <Text key={`p-${index}`} style={pdfStyles.text}>
-              {node.children[0]?.data}
+              {node.children?.[0]?.data}
             </Text>
           );
         }
         if (node.type === 'tag' && node.name === 'strong') {
           return (
             <Text key={`strong-${index}`} style={{ ...pdfStyles.text }}>
-              {node.children[0]?.data}
+              {node.children?.[0]?.data}
             </Text>
           );
         }

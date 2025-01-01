@@ -4,12 +4,15 @@ import Image from 'next/image';
 import { useSignInWithKakao } from '@/actions/auth';
 import { useGetUserData } from '@/actions/auth';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import GlobalSpinner from '@/components/common/global-spinner';
+import { useToast } from '@/hooks/use-toast';
 
 const Auth = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
 
+  const { toast } = useToast();
   const { mutate } = useSignInWithKakao();
   const { data, isLoading } = useGetUserData();
 
@@ -19,12 +22,39 @@ const Auth = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    const message = searchParams.get('message');
+
+    if (message === 'login_required') {
+      setTimeout(() => {
+        toast({
+          title: '로그인이 필요합니다.',
+          description: '해당 서비스를 이용하기 위해서는 로그인이 필요합니다.',
+          className: 'bg-[#4C71C0] text-white rounded',
+        });
+      }, 100);
+    }
+
+    if (message === 'enterprise_profile_required') {
+      setTimeout(() => {
+        toast({
+          title: '기업 프로필을 먼저 등록해주세요.',
+          description:
+            '해당 서비스를 이용하기 위해서는 기업 프로필을 먼저 등록해주세요.',
+          className: 'bg-[#4C71C0] text-white rounded',
+        });
+      }, 100);
+    }
+  }, [searchParams, toast]);
+
   if (isLoading) return <GlobalSpinner />;
 
   return (
     <div className="w-fit m-auto">
       <div className="flex flex-col gap-4 justify-center items-center mt-20">
-        <p className="text-3xl font-bold">피트니스의 모든 정보, FIT Career</p>
+        <p className="text-center text-3xl font-bold">
+          피트니스의 모든 정보, FIT Career
+        </p>
 
         <p className="flex items-center text-center text-[#8F9091] font-bold">
           취업, 이직, 커리어 콘텐츠까지

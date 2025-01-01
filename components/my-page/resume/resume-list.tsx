@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useGetUserData } from '@/actions/auth';
 import GlobalSpinner from '@/components/common/global-spinner';
+import Spinner from '@/components/common/spinner';
 import {
   useGetResume,
   usePostNewResume,
@@ -13,14 +14,17 @@ import ResumeCard from '@/components/my-page/resume/resume-card';
 const Resume = (): React.ReactElement => {
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
   const { data: resumeListData } = useGetResume();
-  const { mutate: postNewResumeMutate } = usePostNewResume();
-  const { mutate: uploadResumeMutate } = useUploadResume();
+  const { mutate: postNewResumeMutate, status: postNewResumeStatus } =
+    usePostNewResume();
+  const { mutate: uploadResumeMutate, status: uploadResumeStatus } =
+    useUploadResume();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      uploadResumeMutate(file);
-    }
+    if (!file || uploadResumeStatus === 'pending') return;
+
+    uploadResumeMutate(file);
+    event.target.value = '';
   };
 
   if (userDataLoading || !userData) {
@@ -28,9 +32,16 @@ const Resume = (): React.ReactElement => {
   }
 
   return (
-    <div className="mt-10">
+    <div className="mt-5">
       <div className="flex gap-2 mb-4">
-        <div className="flex gap-2 items-center justify-center w-fit rounded px-4 py-2 border-none bg-[#4C71C0] text-white cursor-pointer">
+        <button
+          className="flex gap-2 items-center justify-center w-fit rounded px-4 py-2 border-none bg-[#4C71C0] text-white cursor-pointer"
+          onClick={() => {
+            if (postNewResumeStatus === 'pending') return;
+            postNewResumeMutate();
+          }}
+          disabled={postNewResumeStatus === 'pending'}
+        >
           <Image
             src="/svg/add.svg"
             alt="add"
@@ -38,32 +49,29 @@ const Resume = (): React.ReactElement => {
             width={20}
             height={20}
           />
+          <span className="text-sm whitespace-nowrap">
+            {postNewResumeStatus === 'pending' ? <Spinner /> : '새 이력서'}
+          </span>
+        </button>
 
-          <p
-            className="text-sm whitespace-nowrap"
-            onClick={() => postNewResumeMutate()}
-          >
-            새 이력서
-          </p>
-        </div>
-
-        <div className="flex gap-2 items-center justify-center w-fit border rounded px-4 py-2 mb- cursor-pointer">
-          <label
-            htmlFor="file-upload"
-            className="flex gap-2 items-center cursor-pointer"
-          >
-            <Image src="/svg/upload.svg" alt="upload" width={20} height={20} />
-            <p className="text-sm whitespace-nowrap">이력서 업로드</p>
-          </label>
-
+        <label
+          htmlFor="file-upload"
+          className={`flex gap-2 items-center justify-center w-fit border rounded px-4 py-2 
+            ${uploadResumeStatus === 'pending' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+        >
+          <Image src="/svg/upload.svg" alt="upload" width={20} height={20} />
+          <span className="text-sm whitespace-nowrap">
+            {uploadResumeStatus === 'pending' ? <Spinner /> : '이력서 업로드'}
+          </span>
           <input
             type="file"
             accept=".pdf,.hwp,.xlsx,.xls,.docx,.pptx"
             onChange={handleFileChange}
             className="hidden"
             id="file-upload"
+            disabled={uploadResumeStatus === 'pending'}
           />
-        </div>
+        </label>
       </div>
 
       <div className="text-xs mb-4 p-2 bg-[#EAEAEC] rounded break-keep">
@@ -84,7 +92,11 @@ const Resume = (): React.ReactElement => {
 
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {resumeListData
-          ?.sort((a, b) => a.id.localeCompare(b.id))
+          ?.sort(
+            (a, b) =>
+              new Date(b.updated_at).getTime() -
+              new Date(a.updated_at).getTime()
+          )
           .map((data) => {
             return <ResumeCard key={data.id} data={data} />;
           })}

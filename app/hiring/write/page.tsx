@@ -7,7 +7,7 @@ import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import DaumPostcode, { Address } from 'react-daum-postcode';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
@@ -19,6 +19,7 @@ import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { POSITIONS } from '@/constant/position';
 import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
+import { useSessionStorage } from 'usehooks-ts';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -64,7 +65,7 @@ const DAUMPOSTCODESTYLE = {
 const HiringWrite = () => {
   const router = useRouter();
 
-  const alertShown = useRef(false);
+  const [activeTab, setActiveTab] = useSessionStorage('activeTab', '');
 
   const [address, setAddress] = useState({
     findAddressModal: false,
@@ -94,7 +95,7 @@ const HiringWrite = () => {
   const postHring = usePostHiring();
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
-    useGetEnterpriseProfile();
+    useGetEnterpriseProfile(userData?.id ?? '');
 
   const daumPostCodeHandler = (data: Address) => {
     setAddress({
@@ -168,24 +169,26 @@ const HiringWrite = () => {
   };
 
   useEffect(() => {
-    if (alertShown.current) return;
-
-    if (!userData) {
-      alertShown.current = true;
-      alert('로그인이 필요합니다.');
-      return router.push('/auth');
+    if (!userDataLoading && !userData) {
+      router.replace('/auth?message=login_required');
+      return;
     }
 
-    if (enterpriseProfile?.length === 0) {
-      alertShown.current = true;
-      alert('기업 프로필을 먼저 등록해주세요.');
-      return router.push('/auth/my-page');
+    if (
+      !enterpriseProfileLoading &&
+      (!enterpriseProfile || enterpriseProfile?.length === 0)
+    ) {
+      router.replace('/auth/my-page?message=enterprise_profile_required');
+      setActiveTab('enterprise');
+      return;
     }
-  }, [userData, enterpriseProfile]);
-
-  if (enterpriseProfile?.length === 0) {
-    return <></>;
-  }
+  }, [
+    userData,
+    enterpriseProfile,
+    userDataLoading,
+    enterpriseProfileLoading,
+    router,
+  ]);
 
   if (postHring.isPending || enterpriseProfileLoading || userDataLoading) {
     return <GlobalSpinner />;
