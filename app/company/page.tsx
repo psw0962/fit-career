@@ -9,7 +9,7 @@ import { formatPeriod } from '@/functions/formatPeriod';
 import useKakaoLoader from '@/hooks/useKakaoLoader';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
 
 const Company = (): React.ReactElement => {
@@ -27,6 +27,10 @@ const Company = (): React.ReactElement => {
       page,
       pageSize: 12,
     });
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [page]);
 
   if (
     !hiringData ||

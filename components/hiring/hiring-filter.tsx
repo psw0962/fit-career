@@ -14,99 +14,32 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
   positionFilter,
   periodValueFilter,
 }) => {
-  const [filteredData, setFilteredData] = useState<HiringDataResponse[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12;
 
   const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({
-    page: 0,
-    pageSize: 12,
+    page: currentPage - 1,
+    pageSize: itemsPerPage,
+    filters: {
+      regions: regionFilter.selectedCounties,
+      positions: positionFilter,
+      periodRange: periodValueFilter as [number, number],
+    },
   });
 
-  const itemsPerPage = 12;
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
-  const pageGroupSize = 10;
+  const totalPages = Math.ceil((hiringData?.count || 0) / itemsPerPage);
+  const pageGroupSize = 12;
   const currentGroup = Math.floor((currentPage - 1) / pageGroupSize);
   const startPage = currentGroup * pageGroupSize + 1;
   const endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
 
-  const paginatedData = filteredData.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 0);
   };
-
-  const filterData = () => {
-    if (!hiringData) {
-      setFilteredData([]);
-      return;
-    }
-
-    // regionFilter 적용
-    let data =
-      regionFilter.selectedCounties.length === 0
-        ? hiringData.data
-        : hiringData.data.filter((data) => {
-            const addressParts = `${data.address.split(' ')[1]} ${data.address.split(' ')[2]}`;
-
-            return regionFilter.selectedCounties.includes(addressParts);
-          });
-
-    // positionFilter 적용
-    data =
-      positionFilter.length === 0
-        ? data
-        : data.filter(
-            (data) =>
-              positionFilter.includes(data.position) ||
-              (positionFilter.includes('기타') && data.position_etc === true)
-          );
-
-    // periodFilter 적용
-    data =
-      periodValueFilter[0] === 0 && periodValueFilter[1] === 10
-        ? data
-        : data
-            .filter((data) => {
-              const [start, end] = periodValueFilter;
-
-              if (start === end) {
-                return data.period.some((period: number) => period >= start);
-              } else {
-                return data.period.some(
-                  (period: number) => period >= start && period <= end
-                );
-              }
-            })
-            .filter((data) => {
-              const [start, end] = periodValueFilter;
-
-              return data.period.every(
-                (period: number) => period >= start && period <= end
-              );
-            });
-
-    const sortedData = [...data].sort((a, b) => {
-      return (
-        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
-      );
-    });
-    setFilteredData(sortedData);
-  };
-
-  useEffect(() => {
-    filterData();
-  }, [
-    regionFilter,
-    positionFilter,
-    periodValueFilter,
-    hiringData,
-    currentPage,
-  ]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -119,8 +52,8 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
   return (
     <>
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {paginatedData !== undefined &&
-          paginatedData.map((x: HiringDataResponse) => {
+        {hiringData !== undefined &&
+          hiringData.data.map((x: HiringDataResponse) => {
             return (
               <Link key={x.id} href={`/hiring/${x.id}`} passHref>
                 <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
@@ -191,7 +124,7 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
           ).map((page) => (
             <button
               key={page}
-              className={`min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 ${
+              className={`min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border ${
                 currentPage === page ? 'bg-[#4C71C0] text-white' : ''
               }`}
               onClick={() => handlePageChange(page)}

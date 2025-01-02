@@ -168,9 +168,18 @@ const HiringDetail = ({
         </div>
       </div>
 
-      <p className="mt-4 text-sm text-gray-500">
-        * 최근 수정일 : {hiringData.data[0].updated_at}
-      </p>
+      <div className="flex flex-col gap-0 mt-4">
+        <p className=" text-sm text-gray-500">
+          * 등록일 : {hiringData.data[0].created_at}
+        </p>
+
+        <p className="text-sm text-gray-500">
+          * 최근 수정일 :{' '}
+          {hiringData.data[0].updated_at === 'NULL'
+            ? hiringData.data[0].created_at
+            : hiringData.data[0].updated_at}
+        </p>
+      </div>
     </div>
   );
 };

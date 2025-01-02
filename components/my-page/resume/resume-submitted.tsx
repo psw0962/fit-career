@@ -10,7 +10,7 @@ import {
   ColumnDef,
   flexRender,
 } from '@tanstack/react-table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Spinner from '@/components/common/spinner';
 import { useRouter } from 'next/navigation';
 import { useDeleteResumeFromHiring } from '@/actions/resume';
@@ -127,6 +127,10 @@ const ResumeSubmitted = () => {
     },
     manualPagination: true,
   });
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [page]);
 
   return (
     <div className="mt-5">

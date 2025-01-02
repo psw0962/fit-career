@@ -2,11 +2,13 @@ import {
   useMutation,
   UseMutationOptions,
   useQuery,
+  useQueryClient,
   UseQueryOptions,
 } from '@tanstack/react-query';
 import { createBrowserSupabaseClient } from '../utils/supabase/client';
 import { HiringData, HiringDataResponse } from '@/types/hiring/hiring';
 import { formatKRTime } from '@/functions/formatKRTime';
+import { useToast } from '@/hooks/use-toast';
 
 // =========================================
 // ============== post hiring
@@ -47,7 +49,7 @@ const postHiring = async (data: HiringData) => {
       dead_line: data.deadLine,
       images: imageUrls,
       short_address: shortAddres,
-      updated_at: formatKRTime(),
+      created_at: formatKRTime(),
     },
   ]);
 
@@ -76,46 +78,95 @@ export const usePostHiring = (
 // =========================================
 // ============== get hiring
 // =========================================
-const getHiring = async (params: {
+type FilterParams = {
   id?: string;
   user_id?: string;
   page?: number;
   pageSize?: number;
-}): Promise<{ data: HiringDataResponse[]; count: number }> => {
+  getAllData?: boolean;
+  filters?: {
+    regions?: string[];
+    positions?: string[];
+    periodRange?: [number, number];
+  };
+};
+
+const getHiring = async (params: FilterParams) => {
   const supabase = createBrowserSupabaseClient();
-  const { page = 0, pageSize = 12 } = params;
-  const from = page * pageSize;
-  const to = from + pageSize - 1;
+  const { page = 0, pageSize = 12, getAllData = false, filters } = params;
+
+  let query = supabase.from('hiring').select(`
+      *,
+      enterprise_profile:enterprise_profile!user_id(*)
+    `);
+
+  let countQuery = supabase
+    .from('hiring')
+    .select('*', { count: 'exact', head: true });
+
+  // 기본 조건
+  const matchCondition = params.id
+    ? { id: params.id }
+    : params.user_id
+      ? { user_id: params.user_id }
+      : {};
+
+  query = query.match(matchCondition);
+  countQuery = countQuery.match(matchCondition);
+
+  // 지역 필터
+  if (filters?.regions?.length) {
+    const regionFilter = filters.regions
+      .map((region) => `address.ilike.%${region}%`)
+      .join(',');
+    query = query.or(regionFilter);
+    countQuery = countQuery.or(regionFilter);
+  }
+
+  // 포지션 필터
+  if (filters?.positions?.length) {
+    if (filters.positions.includes('기타')) {
+      const positionFilter = `position_etc.eq.true,position.in.(${filters.positions
+        .filter((p) => p !== '기타')
+        .join(',')})`;
+      query = query.or(positionFilter);
+      countQuery = countQuery.or(positionFilter);
+    } else {
+      query = query.in('position', filters.positions);
+      countQuery = countQuery.in('position', filters.positions);
+    }
+  }
+
+  // 경력 기간 필터
+  if (filters?.periodRange) {
+    const [start, end] = filters.periodRange;
+
+    // 전체 범위 필터 없이 통과
+    if (start === 0 && end === 10) {
+      // 단일 값 필터링
+    } else if (start === end) {
+      query = query.gte('period->>0', start).lte('period->>1', end);
+      countQuery = countQuery.gte('period->>0', start).lte('period->>1', end);
+      // 범위 내 값 필터링
+    } else {
+      query = query.gte('period->>0', start).lte('period->>1', end);
+      countQuery = countQuery.gte('period->>0', start).lte('period->>1', end);
+    }
+  }
+
+  // 정렬
+  query = query.order('updated_at', { ascending: false });
+
+  // 페이지네이션
+  if (!getAllData) {
+    const from = page * pageSize;
+    const to = from + pageSize - 1;
+    query = query.range(from, to);
+  }
 
   const [{ data, error }, { count, error: countError }] = await Promise.all([
-    supabase
-      .from('hiring')
-      .select(
-        `
-        *,
-        enterprise_profile:enterprise_profile!user_id(*)
-      `
-      )
-      .match(
-        params.id
-          ? { id: params.id }
-          : params.user_id
-            ? { user_id: params.user_id }
-            : {}
-      )
-      .order('updated_at', { ascending: false })
-      .range(from, to),
-
-    supabase
-      .from('hiring')
-      .select('*', { count: 'exact', head: true })
-      .match(
-        params.id
-          ? { id: params.id }
-          : params.user_id
-            ? { user_id: params.user_id }
-            : {}
-      ),
+    query,
+    countQuery,
   ]);
 
   if (error || countError) {
@@ -129,12 +180,7 @@ const getHiring = async (params: {
 };
 
 export const useGetHiring = (
-  params: {
-    id?: string;
-    user_id?: string;
-    page?: number;
-    pageSize?: number;
-  },
+  params: FilterParams,
   options?: UseQueryOptions<
     { data: HiringDataResponse[]; count: number },
     Error
@@ -199,6 +245,84 @@ export const useGetHiringByUserSubmission = (
     queryKey: ['hiringListByUserSubmission', userId, page, pageSize],
     queryFn: () => getHiringByUserSubmission(userId, { page, pageSize }),
     placeholderData: (previousData) => previousData,
+    ...options,
+  });
+};
+
+// =========================================
+// ============== update hiring visibility
+// =========================================
+const updateHiringVisibility = async ({
+  hiringId,
+  isVisible,
+}: {
+  hiringId: string;
+  isVisible: boolean;
+}) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const { error } = await supabase
+    .from('hiring')
+    .update({ is_visible: isVisible })
+    .eq('id', hiringId);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const useUpdateHiringVisibility = (
+  options?: UseMutationOptions<
+    void,
+    Error,
+    { hiringId: string; isVisible: boolean },
+    void
+  >
+) => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  return useMutation<
+    void,
+    Error,
+    {
+      hiringId: string;
+      isVisible: boolean;
+      setUpdatingId: (id: string | null) => void;
+    },
+    void
+  >({
+    mutationFn: updateHiringVisibility,
+    onMutate: (variables) => {
+      variables.setUpdatingId(variables.hiringId);
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+
+      toast({
+        title: variables.isVisible
+          ? '채용공고가 표시되었습니다.'
+          : '채용공고가 숨김 표시되었습니다.',
+        description: variables.isVisible
+          ? '이제부터 지원자가 해당 채용공고를 볼 수 있어요.'
+          : '이제부터 지원자가 해당 채용공고를 볼 수 없어요.',
+        className: 'bg-[#4C71C0] text-white rounded',
+      });
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
+      toast({
+        description:
+          '상태 변경에 실패했습니다. 네트워크 에러, 잠시 후 다시 시도해주세요.',
+        className: 'bg-[#4C71C0] text-white rounded',
+      });
+    },
+    onSettled: (_, __, variables) => {
+      variables.setUpdatingId(null);
+    },
     ...options,
   });
 };

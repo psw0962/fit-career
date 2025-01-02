@@ -18,6 +18,7 @@ export type HiringData = {
 export type HiringDataResponse = {
   id: string;
   updated_at: string;
+  created_at: string;
   address: string;
   position: string;
   title: string;
@@ -28,6 +29,7 @@ export type HiringDataResponse = {
   short_address: string;
   period: number[];
   position_etc: boolean;
+  is_visible: boolean;
   resume_received: {}[];
   enterprise_profile?: {
     id: string;

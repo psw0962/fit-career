@@ -3,7 +3,7 @@ export const formatPeriod = (value: number[]) => {
     const [start, end] = value;
 
     if (start === 0 && end === 0) {
-      return '신입/연습생';
+      return '신입';
     }
 
     if (start === 0 && end === 10) {
