@@ -10,11 +10,16 @@ import { useGetUserData } from '@/actions/auth';
 import { useEffect, useRef, useState } from 'react';
 import * as Switch from '@radix-ui/react-switch';
 import Spinner from '@/components/common/spinner';
+import { useRouter } from 'next/navigation';
+import HiringResumeReceivedModal from '@/components/my-page/hiring/hiring-resume-received-modal';
 
 const HiringPosts = () => {
+  const router = useRouter();
+
   const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const timeoutRef = useRef<NodeJS.Timeout>();
   const [page, setPage] = useState(0);
+
+  const timeoutRef = useRef<NodeJS.Timeout>();
 
   const { data: userData } = useGetUserData();
   const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({
@@ -22,10 +27,7 @@ const HiringPosts = () => {
     page,
     pageSize: 12,
   });
-  const {
-    mutate: updateHiringVisibility,
-    status: updateHiringVisibilityStatus,
-  } = useUpdateHiringVisibility();
+  const { mutate: updateHiringVisibility } = useUpdateHiringVisibility();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -62,7 +64,7 @@ const HiringPosts = () => {
                     </div>
 
                     <div className="w-full flex flex-col gap-0">
-                      <p className="text-lg font-bold break-all line-clamp-2">
+                      <p className="text-lg font-bold break-keep line-clamp-2">
                         {x.title}
                       </p>
 
@@ -145,15 +147,7 @@ const HiringPosts = () => {
                     </div>
                   </div>
 
-                  <button
-                    className="w-full mt-[2px] text-sm bg-[#4C71C0] px-2 py-2 rounded text-white"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      console.log('resume');
-                    }}
-                  >
-                    {`접수된 이력서 (${x.resume_received.length})`}
-                  </button>
+                  <HiringResumeReceivedModal data={x} />
                 </div>
 
                 <div className="absolute top-4 right-4 cursor-pointer">
@@ -232,6 +226,23 @@ const HiringPosts = () => {
             disabled={page >= Math.ceil((hiringData?.count ?? 0) / 12) - 1}
           >
             다음
+          </button>
+        </div>
+      )}
+
+      {hiringData?.data.length === 0 && (
+        <div className="flex flex-col gap-2 items-center justify-center h-48">
+          <p className="text-lg text-gray-500">
+            내가 등록한 채용공고가 없어요.
+          </p>
+
+          <button
+            className="w-fit h-fit bg-[#4C71C0] rounded px-8 py-2 text-sm text-white cursor-pointer"
+            onClick={() => {
+              router.push('/hiring/write');
+            }}
+          >
+            채용공고 등록하기
           </button>
         </div>
       )}

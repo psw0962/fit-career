@@ -74,20 +74,31 @@ const Resume = (): React.ReactElement => {
         </label>
       </div>
 
-      <div className="text-xs mb-4 p-2 bg-[#EAEAEC] rounded break-keep">
+      <div className="flex flex-col gap-2 text-xs mb-4 p-2 bg-[#EAEAEC] rounded break-keep">
+        <p className="font-bold text-base">{`[이력서 업로드 가이드]`}</p>
+
         <p>• 이력서는 최대 4개까지 업로드 가능해요.</p>
-        <p>• 이력서 파일의 확장자는 pdf 파일을 권장해요.</p>
-        <p>
-          • 왜 pdf 파일을 권장하나요?
-          <br />
-          1) pdf 파일은 웹 브라우저에서 바로 확인이 가능하기 때문에 모바일, PC
-          모두 확인이 가능해요.
-          <br />
-          2) 파일 크기가 작아 업로드 속도가 빨라요.
-          <br />
-          3) 범용성이 좋아 대부분의 기업에서도 pdf 파일을 선호해요.
-          <br />
-        </p>
+
+        <div>
+          <p>• 왜 FIT Career 이력서 사용을 권장하나요?</p>
+          <p>
+            {`1) 명확한 이력서를 작성할 수 있어서 기업에서 쉽고 명확하게 지원자의 정보를 파악할 수 있어요.`}
+            <br />
+            {`2) FIT Career 이력서는 지원자가 삭제해도 기업에서 내가 지원한 이력서를 계속해서 확인할 수 있어요.`}
+            <br />
+            {`3) 업로드된 이력서는 지원자가 삭제 시 기업에서 열람이 불가능 합니다.`}
+          </p>
+        </div>
+
+        <div>
+          <p>• 왜 pdf 파일을 권장하나요?</p>
+          <p>
+            {`1) pdf 파일은 웹 브라우저에서 바로 확인이 가능하기 때문에 모바일, PC
+          모두 확인이 가능해요.`}
+            <br />
+            {`2) 파일 크기가 작아 업로드 속도가 빠르고 범용성이 좋아 대부분의 기업에서 pdf 파일을 선호해요.`}
+          </p>
+        </div>
       </div>
 
       <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

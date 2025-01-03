@@ -9,7 +9,7 @@ import {
 } from '@react-pdf/renderer';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import ReactHtmlParser from 'react-html-parser';
-import React from 'react';
+import * as React from 'react';
 
 type HtmlNode = {
   type: 'tag' | 'text';

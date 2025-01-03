@@ -20,6 +20,7 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
   const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({
     page: currentPage - 1,
     pageSize: itemsPerPage,
+    isVisibleFilter: true,
     filters: {
       regions: regionFilter.selectedCounties,
       positions: positionFilter,
@@ -72,7 +73,7 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
                   </div>
 
                   <div className="w-full flex flex-col gap-0">
-                    <p className="text-lg font-bold break-all line-clamp-2">
+                    <p className="text-lg font-bold break-keep line-clamp-2">
                       {x.title}
                     </p>
 

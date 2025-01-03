@@ -24,6 +24,7 @@ const Company = (): React.ReactElement => {
   const { data: hiringDataByUserId, isLoading: hiringDataByUserIdIsLoading } =
     useGetHiring({
       user_id: hiringData?.data[0]?.user_id ?? '',
+      isVisibleFilter: true,
       page,
       pageSize: 12,
     });
@@ -135,7 +136,7 @@ const Company = (): React.ReactElement => {
               </div>
 
               <div className="w-full flex flex-col gap-0">
-                <p className="text-lg font-bold break-all line-clamp-2">
+                <p className="text-lg font-bold break-keep line-clamp-2">
                   {x.title}
                 </p>
 

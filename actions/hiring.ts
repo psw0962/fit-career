@@ -84,6 +84,7 @@ type FilterParams = {
   page?: number;
   pageSize?: number;
   getAllData?: boolean;
+  isVisibleFilter?: boolean;
   filters?: {
     regions?: string[];
     positions?: string[];
@@ -93,7 +94,13 @@ type FilterParams = {
 
 const getHiring = async (params: FilterParams) => {
   const supabase = createBrowserSupabaseClient();
-  const { page = 0, pageSize = 12, getAllData = false, filters } = params;
+  const {
+    page = 0,
+    pageSize = 12,
+    getAllData = false,
+    isVisibleFilter = false,
+    filters,
+  } = params;
 
   let query = supabase.from('hiring').select(`
       *,
@@ -113,6 +120,12 @@ const getHiring = async (params: FilterParams) => {
 
   query = query.match(matchCondition);
   countQuery = countQuery.match(matchCondition);
+
+  // 숨김 여부 필터
+  if (isVisibleFilter) {
+    query = query.eq('is_visible', true);
+    countQuery = countQuery.eq('is_visible', true);
+  }
 
   // 지역 필터
   if (filters?.regions?.length) {
@@ -155,7 +168,7 @@ const getHiring = async (params: FilterParams) => {
   }
 
   // 정렬
-  query = query.order('updated_at', { ascending: false });
+  query = query.order('created_at', { ascending: false });
 
   // 페이지네이션
   if (!getAllData) {

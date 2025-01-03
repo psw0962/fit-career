@@ -104,8 +104,12 @@ const ResumeSubmitted = () => {
       }
     );
 
+  const sortedHiringData = hiringData?.data.sort((a, b) => {
+    return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+  });
+
   const table = useReactTable({
-    data: hiringData?.data ?? [],
+    data: sortedHiringData ?? [],
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -134,6 +138,11 @@ const ResumeSubmitted = () => {
 
   return (
     <div className="mt-5">
+      <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
+        <p>• 내가 지원했던 채용공고가 수정되면 수정된 내용으로 보여요.</p>
+        <p>• 내가 지원한 채용공고가 삭제되면 지원했던 정보도 함께 삭제돼요.</p>
+      </div>
+
       <div className="w-full overflow-x-auto">
         <table className="w-full min-w-[450px] border-collapse bg-white rounded-lg shadow-sm">
           <thead>

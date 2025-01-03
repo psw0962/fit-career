@@ -190,7 +190,11 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               <div
                 className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
                 onClick={() => {
-                  if (window.confirm('이력서를 삭제하시겠습니까?')) {
+                  if (
+                    window.confirm(
+                      '업로드한 이력서는 삭제 시 지원했던 기업에서 열람이 불가능합니다. 정말 삭제하시겠습니까?'
+                    )
+                  ) {
                     data.id && deleteResume(data.id);
                   }
                 }}

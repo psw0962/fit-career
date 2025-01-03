@@ -6,7 +6,7 @@ import withAuth from '@/hoc/withAuth';
 import Profile from '@/components/my-page/profile';
 import EnterpriseProfile from '@/components/my-page/enterprise-profile';
 import ResumeList from '@/components/my-page/resume/resume-list';
-import HiringPosts from '@/components/my-page/hiring-posts';
+import HiringPosts from '@/components/my-page/hiring/hiring-posts';
 import ResumeSubmitted from '@/components/my-page/resume/resume-submitted';
 import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { useSessionStorage } from 'usehooks-ts';
