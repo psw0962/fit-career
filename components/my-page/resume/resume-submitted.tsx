@@ -104,12 +104,8 @@ const ResumeSubmitted = () => {
       }
     );
 
-  const sortedHiringData = hiringData?.data.sort((a, b) => {
-    return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
-  });
-
   const table = useReactTable({
-    data: sortedHiringData ?? [],
+    data: hiringData?.data ?? [],
     columns: columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
