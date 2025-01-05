@@ -92,7 +92,7 @@ const HiringWrite = () => {
   );
   const [images, setImages] = useState<File[]>([]);
 
-  const postHring = usePostHiring();
+  const { mutate: postHring, status: postHringStatus } = usePostHiring();
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
     useGetEnterpriseProfile(userData?.id ?? '');
@@ -157,7 +157,7 @@ const HiringWrite = () => {
       return;
     }
 
-    postHring.mutate({
+    postHring({
       address,
       position,
       periodValue,
@@ -190,7 +190,13 @@ const HiringWrite = () => {
     router,
   ]);
 
-  if (postHring.isPending || enterpriseProfileLoading || userDataLoading) {
+  console.log(postHringStatus);
+
+  if (
+    postHringStatus === 'pending' ||
+    enterpriseProfileLoading ||
+    userDataLoading
+  ) {
     return <GlobalSpinner />;
   }
 

@@ -10,6 +10,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { formatKRTime } from '@/functions/formatKRTime';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 import { ResumeReceived } from '@/types/hiring/hiring';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 // =========================================
 // ============== get resume
@@ -76,6 +78,8 @@ const patchResume = async (data: {
   if (resumeError) {
     throw new Error(resumeError.message);
   }
+
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   const currentImages: string[] = resumeData?.resume_image || [];
   const newImages: string[] = [];
@@ -146,6 +150,8 @@ export const usePatchResume = (
   >
 ) => {
   const queryClient = useQueryClient();
+  const router = useRouter();
+  const { toast } = useToast();
 
   return useMutation<
     void,
@@ -156,13 +162,21 @@ export const usePatchResume = (
     mutationFn: ({ resumeData, resumeId }) =>
       patchResume({ resumeData, resumeId }),
     onSuccess: () => {
-      alert('이력서가 수정 되었습니다.');
+      toast({
+        title: '이력서가 수정 되었습니다.',
+        description: '성공적으로 이력서를 수정했어요.',
+        className: 'bg-[#4C71C0] text-white rounded',
+      });
       queryClient.invalidateQueries({ queryKey: ['resume'] });
-      window.location.replace('/auth/my-page');
+      router.push('/auth/my-page');
     },
     onError: (error: Error) => {
       console.error(error.message);
-      alert('이력서 수정에 실패했습니다. 다시 시도해주세요.');
+      toast({
+        title: '이력서 수정에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        className: 'bg-[#4C71C0] text-white rounded',
+      });
     },
     ...options,
   });

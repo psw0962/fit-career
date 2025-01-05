@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 import { validateInput } from '@/functions/validateInput';
 import dynamic from 'next/dynamic';
 import Spinner from '@/components/common/spinner';
+import GlobalSpinner from '@/components/common/global-spinner';
+
 import { v4 as uuidv4 } from 'uuid';
 import React from 'react';
 import { useGetResume, usePatchResume } from '@/actions/resume';
@@ -236,7 +238,7 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
   }, [resumeData]);
 
   if (patchStatus === 'pending') {
-    return <Spinner />;
+    return <GlobalSpinner />;
   }
 
   if (
@@ -246,7 +248,7 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
     awards.length === 0 ||
     links.length === 0
   ) {
-    return <Spinner />;
+    return <GlobalSpinner />;
   }
 
   return (

@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import DaumPostcode, { Address } from 'react-daum-postcode';
+import GlobalSpinner from '@/components/common/global-spinner';
 import Spinner from '@/components/common/spinner';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
@@ -190,7 +191,7 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
   }, [enterpriseProfile]);
 
   if (postStatus === 'pending' || patchStatus === 'pending') {
-    return <Spinner />;
+    return <GlobalSpinner />;
   }
 
   return (

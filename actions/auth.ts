@@ -7,6 +7,8 @@ import {
 } from '@tanstack/react-query';
 import { User, Provider } from '@supabase/supabase-js';
 import { EnterpriseProfile, SignInResponse } from '@/types/auth/auth';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 // =========================================
 // ============== post sign in
@@ -131,6 +133,8 @@ export const useGetUserData = () => {
 const postEnterpriseProfile = async (data: EnterpriseProfile) => {
   const supabase = createBrowserSupabaseClient();
 
+  await new Promise((resolve) => setTimeout(resolve, 3000));
+
   const imageUrls: string[] = [];
 
   for (const image of data?.settingLogo || []) {
@@ -167,15 +171,30 @@ const postEnterpriseProfile = async (data: EnterpriseProfile) => {
 export const usePostEnterpriseProfile = (
   options?: UseMutationOptions<void, Error, EnterpriseProfile, void>
 ) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { toast } = useToast();
+
   return useMutation<void, Error, EnterpriseProfile, void>({
     mutationFn: postEnterpriseProfile,
     onSuccess: () => {
-      alert('기업 프로필이 저장 되었습니다.');
-      window.location.replace('/auth/my-page');
+      queryClient.invalidateQueries({
+        queryKey: ['enterpriseProfile', 'hiringList'],
+      });
+      toast({
+        title: '기업 프로필이 저장 되었습니다.',
+        description: '이제부터 채용 공고를 등록할 수 있어요.',
+        className: 'bg-[#4C71C0] text-white rounded',
+      });
+      router.push('/auth/my-page');
     },
     onError: (error: Error) => {
       console.error(error.message);
-      alert('기업 프로필 저장에 실패했습니다. 다시 시도해주세요.');
+      toast({
+        title: '기업 프로필 저장에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        className: 'bg-[#4C71C0] text-white rounded',
+      });
     },
     ...options,
   });
@@ -203,6 +222,8 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
   if (enterpriseError) {
     throw new Error(enterpriseError.message);
   }
+
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   const currentLogos: string[] = enterpriseData?.logo || [];
   const newLogos: string[] = [];
@@ -262,15 +283,30 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
 export const usePatchEnterpriseProfile = (
   options?: UseMutationOptions<void, Error, EnterpriseProfile, void>
 ) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { toast } = useToast();
+
   return useMutation<void, Error, EnterpriseProfile, void>({
     mutationFn: patchEnterpriseProfile,
     onSuccess: () => {
-      alert('기업 프로필이 수정 되었습니다.');
-      window.location.replace('/auth/my-page');
+      queryClient.invalidateQueries({
+        queryKey: ['enterpriseProfile', 'hiringList'],
+      });
+      toast({
+        title: '기업 프로필이 수정 되었습니다.',
+        description: '성공적으로 기업 프로필을 수정했어요.',
+        className: 'bg-[#4C71C0] text-white rounded',
+      });
+      router.push('/auth/my-page');
     },
     onError: (error: Error) => {
       console.error(error.message);
-      alert('기업 프로필 수정에 실패했습니다. 다시 시도해주세요.');
+      toast({
+        title: '기업 프로필 수정에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        className: 'bg-[#4C71C0] text-white rounded',
+      });
     },
     ...options,
   });

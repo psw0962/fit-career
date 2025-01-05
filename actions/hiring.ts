@@ -9,12 +9,15 @@ import { createBrowserSupabaseClient } from '../utils/supabase/client';
 import { HiringData, HiringDataResponse } from '@/types/hiring/hiring';
 import { formatKRTime } from '@/functions/formatKRTime';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 // =========================================
 // ============== post hiring
 // =========================================
 const postHiring = async (data: HiringData) => {
   const supabase = createBrowserSupabaseClient();
+
+  await new Promise((resolve) => setTimeout(resolve, 3000));
 
   const imageUrls: string[] = [];
 
@@ -61,15 +64,43 @@ const postHiring = async (data: HiringData) => {
 export const usePostHiring = (
   options?: UseMutationOptions<void, Error, HiringData, void>
 ) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { toast } = useToast();
+
   return useMutation<void, Error, HiringData, void>({
     mutationFn: postHiring,
     onSuccess: () => {
-      alert('채용 공고가 성공적으로 등록되었습니다.');
-      window.location.replace('/hiring');
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+      toast({
+        title: '채용 공고가 성공적으로 등록되었습니다.',
+        description: '이제부터 지원자가 해당 채용공고를 볼 수 있어요.',
+        className: 'bg-[#4C71C0] text-white rounded',
+      });
+      router.push('/hiring');
     },
     onError: (error: Error) => {
-      console.error('채용 공고 등록 중 에러 발생:', error.message);
-      alert('채용 공고 등록에 실패했습니다. 다시 시도해주세요.');
+      console.error('채용 공고 등록 중 에러 발생:', error);
+
+      // Supabase 에러 메시지 확인
+      if (error.message.includes('You can only post once every hour')) {
+        const minutes = error.message.match(/\d+/)?.[0];
+        toast({
+          title: '연달아 채용공고 게시글을 생성할 수 없어요.',
+          description: `도배 방지를 위해 채용 게시글 생성은 1시간 제한이 있습니다.
+${minutes}분 후에 다시 시도해 주세요.`,
+          className: 'bg-[#4C71C0] text-white rounded',
+        });
+      } else {
+        toast({
+          description: '채용 공고 등록에 실패했습니다. 다시 시도해주세요.',
+          className: 'bg-[#4C71C0] text-white rounded',
+        });
+      }
     },
     ...options,
   });
