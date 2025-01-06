@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import DaumPostcode, { Address } from 'react-daum-postcode';
 import GlobalSpinner from '@/components/common/global-spinner';
@@ -20,6 +20,7 @@ import { ko } from 'date-fns/locale';
 import { format, parse } from 'date-fns';
 import { POSITIONS } from '@/constant/position';
 import withAuth from '@/hoc/withAuth';
+import { useToast } from '@/hooks/use-toast';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -63,6 +64,15 @@ const DAUMPOSTCODESTYLE = {
 };
 
 const EnterpriseProfileEdit = (): React.ReactElement => {
+  const { toast } = useToast();
+
+  const nameRef = useRef<HTMLInputElement>(null);
+  const industryRef = useRef<HTMLDivElement>(null);
+  const industryEtcRef = useRef<HTMLInputElement>(null);
+  const addressRef = useRef<HTMLDivElement>(null);
+  const establishmentRef = useRef<HTMLDivElement>(null);
+  const descriptionRef = useRef<HTMLDivElement>(null);
+
   const [name, setName] = useState<string>('');
   const [industry, setIndustry] = useState({
     job: '',
@@ -107,34 +117,79 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
     setSettingLogo(settingLogo.filter((_, i) => i !== index));
   };
 
+  const stripHtml = (html: string) => {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
+
   const onSubmit = () => {
-    if (!name.trim()) {
-      alert('회사 이름을 입력해주세요.');
+    if (!name?.trim()) {
+      toast({
+        title: '회사 이름을 입력해주세요.',
+        variant: 'warning',
+      });
+      nameRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
     if (!industry.job) {
-      alert('업종을 선택해주세요.');
+      toast({
+        title: '업종을 선택해주세요.',
+        variant: 'warning',
+      });
+      industryRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
     if (industry.job === '기타' && !industry.etc) {
-      alert('기타 업종을 입력해주세요.');
+      toast({
+        title: '기타 업종을 입력해주세요.',
+        variant: 'warning',
+      });
+      industryEtcRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
     if (!address.zoneAddress || !address.detailAddress) {
-      alert('주소를 모두 입력해주세요.');
+      toast({
+        title: '주소를 모두 입력해주세요.',
+        variant: 'warning',
+      });
+      addressRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
     if (establishment === '0') {
-      alert('설립일을 선택해주세요.');
+      toast({
+        title: '설립일을 선택해주세요.',
+        variant: 'warning',
+      });
+      establishmentRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
-    if (!description.trim()) {
-      alert('회사 소개를 입력해주세요.');
+    if (!description || !stripHtml(description).trim()) {
+      toast({
+        title: '회사 소개를 입력해주세요.',
+        variant: 'warning',
+      });
+      descriptionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
@@ -284,13 +339,15 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
       </div>
 
       {/* name */}
-      <div className="flex flex-col mb-20">
-        <label className="text-2xl font-bold mb-2">회사 이름</label>
+      <div className="flex flex-col mb-20" ref={nameRef}>
+        <label className="text-2xl font-bold mb-2">
+          회사 이름 <span className="text-sm text-red-500 align-top">*</span>
+        </label>
         <input
           className="border p-2 rounded"
           type="text"
           placeholder="회사 이름을 입력해 주세요"
-          defaultValue={name}
+          value={name}
           onChange={(e) => {
             setName(e.target.value);
           }}
@@ -298,9 +355,9 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
       </div>
 
       {/* insudtry */}
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={industryRef}>
         <label htmlFor="industry" className="text-2xl font-bold mb-2">
-          업종
+          업종 <span className="text-sm text-red-500 align-top">*</span>
         </label>
 
         <select
@@ -342,8 +399,10 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
       </div>
 
       {/* address */}
-      <div className="flex flex-col mb-20">
-        <label className="text-2xl font-bold mb-2">주소</label>
+      <div className="flex flex-col mb-20" ref={addressRef}>
+        <label className="text-2xl font-bold mb-2">
+          주소 <span className="text-sm text-red-500 align-top">*</span>
+        </label>
 
         <button
           className="py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2"
@@ -401,8 +460,10 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
       </div>
 
       {/* establishment */}
-      <div className="flex flex-col mb-20">
-        <label className="text-2xl font-bold mb-2">설립일</label>
+      <div className="flex flex-col mb-20" ref={establishmentRef}>
+        <label className="text-2xl font-bold mb-2">
+          설립일 <span className="text-sm text-red-500 align-top">*</span>
+        </label>
 
         <DatePicker
           className="px-2 py-2 border rounded"
@@ -424,8 +485,10 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
       </div>
 
       {/* description */}
-      <div className="flex flex-col mb-4">
-        <label className="text-2xl font-bold mb-2">회사 소개</label>
+      <div className="flex flex-col mb-4" ref={descriptionRef}>
+        <label className="text-2xl font-bold mb-2">
+          회사 소개 <span className="text-sm text-red-500 align-top">*</span>
+        </label>
 
         <FroalaEditor
           tag="textarea"

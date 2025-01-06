@@ -15,6 +15,14 @@ import Spinner from '@/components/common/spinner';
 import { useRouter } from 'next/navigation';
 import { useDeleteResumeFromHiring } from '@/actions/resume';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const ResumeSubmitted = () => {
   const columns: ColumnDef<HiringDataResponse>[] = [
@@ -70,20 +78,57 @@ const ResumeSubmitted = () => {
       header: '지원취소',
       cell: ({ row }) => {
         return (
-          <button
-            className="px-3 py-1 border rounded text-sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (confirm('지원을 취소하시겠습니까?')) {
-                deleteResumeFromHiring({
-                  hiringId: row.original.id,
-                  userId: userData?.id ?? '',
-                });
-              }
-            }}
-          >
-            지원취소
-          </button>
+          <>
+            <button
+              className="px-3 py-1 border rounded text-sm hover:bg-gray-100"
+              onClick={(e) => {
+                e.stopPropagation();
+                setOpenDeleteDialog(row.original.id);
+              }}
+            >
+              지원취소
+            </button>
+
+            <Dialog
+              open={openDeleteDialog === row.original.id}
+              onOpenChange={() => setOpenDeleteDialog(null)}
+            >
+              <DialogContent
+                className="sm:max-w-[425px]"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <DialogHeader>
+                  <DialogTitle>지원 취소</DialogTitle>
+                  <DialogDescription>
+                    지원을 취소하시겠습니까?
+                  </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                  <div className="flex gap-2 justify-center">
+                    <button
+                      className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2"
+                      onClick={() => {
+                        deleteResumeFromHiring({
+                          hiringId: row.original.id,
+                          userId: userData?.id ?? '',
+                        });
+                        setOpenDeleteDialog(null);
+                      }}
+                    >
+                      확인
+                    </button>
+
+                    <button
+                      className="border rounded px-4 py-2"
+                      onClick={() => setOpenDeleteDialog(null)}
+                    >
+                      취소
+                    </button>
+                  </div>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </>
         );
       },
     },
@@ -91,6 +136,7 @@ const ResumeSubmitted = () => {
 
   const router = useRouter();
 
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<string | null>(null);
   const [page, setPage] = useState(0);
 
   const { data: userData } = useGetUserData();

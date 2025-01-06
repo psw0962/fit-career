@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 import { useSessionStorage } from 'usehooks-ts';
 import { useGetUserData } from '@/actions/auth';
+import { useToast } from '@/hooks/use-toast';
 
 const ResumeSelectIdModal = ({
   hiringData,
@@ -29,6 +30,8 @@ const ResumeSelectIdModal = ({
 
   const [activeTab, setActiveTab] = useSessionStorage('activeTab', '');
 
+  const { toast } = useToast();
+
   const { data: userData } = useGetUserData();
   const { mutate: postResumeToHiring } = usePostResumeToHiring();
 
@@ -47,7 +50,10 @@ const ResumeSelectIdModal = ({
 
   const handlePostResumeToHiring = () => {
     if (!selectedResumeId) {
-      alert('이력서를 선택해주세요.');
+      toast({
+        title: '이력서를 선택해주세요.',
+        variant: 'warning',
+      });
       return;
     }
 

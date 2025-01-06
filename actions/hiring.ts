@@ -79,7 +79,7 @@ export const usePostHiring = (
       toast({
         title: '채용 공고가 성공적으로 등록되었습니다.',
         description: '이제부터 지원자가 해당 채용공고를 볼 수 있어요.',
-        className: 'bg-[#4C71C0] text-white rounded',
+        variant: 'default',
       });
       router.push('/hiring');
     },
@@ -87,18 +87,19 @@ export const usePostHiring = (
       console.error('채용 공고 등록 중 에러 발생:', error);
 
       // Supabase 에러 메시지 확인
-      if (error.message.includes('You can only post once every hour')) {
+      if (error.message.includes('You can only post once every 24 hour.')) {
         const minutes = error.message.match(/\d+/)?.[0];
         toast({
           title: '연달아 채용공고 게시글을 생성할 수 없어요.',
-          description: `도배 방지를 위해 채용 게시글 생성은 1시간 제한이 있습니다.
+          description: `도배 방지를 위해 채용 게시글 생성은 24시간마다 한 번만 할 수 있어요.
 ${minutes}분 후에 다시 시도해 주세요.`,
-          className: 'bg-[#4C71C0] text-white rounded',
+          variant: 'warning',
         });
       } else {
         toast({
-          description: '채용 공고 등록에 실패했습니다. 다시 시도해주세요.',
-          className: 'bg-[#4C71C0] text-white rounded',
+          title:
+            '채용 공고 등록에 실패했습니다. 네트워크 에러, 잠시 후 다시 시도해주세요.',
+          variant: 'warning',
         });
       }
     },
@@ -353,7 +354,7 @@ export const useUpdateHiringVisibility = (
         description: variables.isVisible
           ? '이제부터 지원자가 해당 채용공고를 볼 수 있어요.'
           : '이제부터 지원자가 해당 채용공고를 볼 수 없어요.',
-        className: 'bg-[#4C71C0] text-white rounded',
+        variant: 'default',
       });
     },
     onError: (error: Error) => {
@@ -361,7 +362,7 @@ export const useUpdateHiringVisibility = (
       toast({
         description:
           '상태 변경에 실패했습니다. 네트워크 에러, 잠시 후 다시 시도해주세요.',
-        className: 'bg-[#4C71C0] text-white rounded',
+        variant: 'warning',
       });
     },
     onSettled: (_, __, variables) => {

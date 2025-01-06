@@ -7,7 +7,7 @@ import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import DaumPostcode, { Address } from 'react-daum-postcode';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
@@ -20,6 +20,7 @@ import { POSITIONS } from '@/constant/position';
 import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useSessionStorage } from 'usehooks-ts';
+import { useToast } from '@/hooks/use-toast';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -65,6 +66,13 @@ const DAUMPOSTCODESTYLE = {
 const HiringWrite = () => {
   const router = useRouter();
 
+  const addressRef = useRef<HTMLDivElement>(null);
+  const positionRef = useRef<HTMLDivElement>(null);
+  const periodRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const deadLineRef = useRef<HTMLDivElement>(null);
+
   const [activeTab, setActiveTab] = useSessionStorage('activeTab', '');
 
   const [address, setAddress] = useState({
@@ -91,6 +99,8 @@ const HiringWrite = () => {
     format(new Date(), 'yyyy-MM-dd')
   );
   const [images, setImages] = useState<File[]>([]);
+
+  const { toast } = useToast();
 
   const { mutate: postHring, status: postHringStatus } = usePostHiring();
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
@@ -121,39 +131,96 @@ const HiringWrite = () => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
 
+  const stripHtml = (html: string) => {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
+
+  console.log(content);
+
   const onSubmit = () => {
     if (!address.zoneAddress || !address.detailAddress) {
-      alert('주소를 모두 입력해주세요.');
+      toast({
+        title: '주소를 모두 입력해주세요.',
+        variant: 'warning',
+      });
+      addressRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
     if (!position.job) {
-      alert('직무를 선택해주세요.');
+      toast({
+        title: '직무를 선택해주세요.',
+        variant: 'warning',
+      });
+      positionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
     if (position.job === '기타' && !position.etc) {
-      alert('기타 직무를 입력해주세요.');
+      toast({
+        title: '기타 직무를 입력해주세요.',
+        variant: 'warning',
+      });
+      positionRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
     if (!periodValue) {
-      alert('경력을 선택해주세요.');
+      toast({
+        title: '경력을 선택해주세요.',
+        variant: 'warning',
+      });
+      periodRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
     if (!title.trim()) {
-      alert('채용공고 제목을 입력해주세요.');
+      toast({
+        title: '채용공고 제목을 입력해주세요.',
+        variant: 'warning',
+      });
+      titleRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
-    if (!content.trim()) {
-      alert('채용공고 내용을 입력해주세요.');
+    if (!content || !stripHtml(content).trim()) {
+      toast({
+        title: '채용공고 내용을 입력해주세요.',
+        variant: 'warning',
+      });
+      contentRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
     if (!deadLine) {
-      alert('마감일을 선택해주세요.');
+      toast({
+        title: '마감일을 선택해주세요.',
+        variant: 'warning',
+      });
+      deadLineRef.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
       return;
     }
 
@@ -190,8 +257,6 @@ const HiringWrite = () => {
     router,
   ]);
 
-  console.log(postHringStatus);
-
   if (
     postHringStatus === 'pending' ||
     enterpriseProfileLoading ||
@@ -205,6 +270,29 @@ const HiringWrite = () => {
       <p className="text-3xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]">
         채용공고 등록
       </p>
+
+      <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
+        <p className="font-bold text-sm">
+          • 무분별한 도배 게시글 방지를 위해 채용공고 등록은 24시간마다 한 번만
+          할 수 있어요.
+        </p>
+        <p className="text-sm">
+          • 지원자가 한눈에 직무와 관련된 정보를 파악할 수 있도록 명확하고
+          간결한 제목을 작성하면 좋아요.
+        </p>
+        <p className="text-sm">
+          • 회사의 비전, 미션, 문화 등을 간단히 소개하여 지원자가 회사에 대한
+          이해를 높일 수 있도록 하면 좋아요.
+        </p>
+        <p className="text-sm">
+          • 필수 자격 요건과 우대 사항을 명확히 구분하여 작성하고, 근무 지역과
+          회사가 제공하는 혜택과 복지를 명시하여 지원률을 높일 수 있어요.
+        </p>
+        <p className="text-sm">
+          • 지원 절차와 채용 프로세스를 명확히 안내하여 지원자가 쉽게 지원할 수
+          있도록 하면 좋아요.
+        </p>
+      </div>
 
       {/* enterprise profile */}
       <div className="flex flex-col mt-10">
@@ -266,9 +354,9 @@ const HiringWrite = () => {
       <div className="border-t border-gray-300 my-7"></div>
 
       {/* address */}
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={addressRef}>
         <label htmlFor="address" className="text-2xl font-bold mb-2">
-          근무 지역
+          근무 지역 <span className="text-sm text-red-500 align-top">*</span>
         </label>
 
         <button
@@ -329,9 +417,9 @@ const HiringWrite = () => {
       </div>
 
       {/* job position */}
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={positionRef}>
         <label htmlFor="job-position" className="text-2xl font-bold mb-2">
-          채용 직무
+          채용 직무<span className="text-sm text-red-500 align-top">*</span>
         </label>
 
         <select
@@ -372,9 +460,9 @@ const HiringWrite = () => {
       </div>
 
       {/* employment period */}
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={periodRef}>
         <label htmlFor="employment-period" className="text-2xl font-bold mb-2">
-          필요 경력
+          필요 경력 <span className="text-sm text-red-500 align-top">*</span>
         </label>
 
         {formatPeriod(periodValue)}
@@ -404,15 +492,17 @@ const HiringWrite = () => {
       </div>
 
       {/* title */}
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={titleRef}>
         <label htmlFor="title" className="text-2xl font-bold mb-2">
-          채용공고 제목
+          채용공고 제목{' '}
+          <span className="text-sm text-red-500 align-top">*</span>
         </label>
         <input
           id="title"
           className="border p-2 mb-4 rounded"
           type="text"
           placeholder="채용 글 제목을 입력해 주세요"
+          value={title}
           onChange={(e) => {
             setTitle(e.target.value);
           }}
@@ -420,9 +510,10 @@ const HiringWrite = () => {
       </div>
 
       {/* content */}
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={contentRef}>
         <label htmlFor="content" className="text-2xl font-bold mb-2">
-          채용공고 내용
+          채용공고 내용{' '}
+          <span className="text-sm text-red-500 align-top">*</span>
         </label>
 
         <FroalaEditor
@@ -443,9 +534,9 @@ const HiringWrite = () => {
       </div>
 
       {/* deadline */}
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={deadLineRef}>
         <label htmlFor="deadline" className="text-2xl font-bold mb-2">
-          마감일
+          마감일 <span className="text-sm text-red-500 align-top">*</span>
         </label>
 
         <DatePicker

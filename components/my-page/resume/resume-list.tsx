@@ -75,7 +75,7 @@ const Resume = (): React.ReactElement => {
       </div>
 
       <div className="flex flex-col gap-2 text-xs mb-4 p-2 bg-[#EAEAEC] rounded break-keep">
-        <p className="font-bold text-base">{`[이력서 업로드 가이드]`}</p>
+        <p className="font-bold text-sm">{`[이력서 업로드 가이드]`}</p>
 
         <p>• 이력서는 최대 4개까지 업로드 가능해요.</p>
 

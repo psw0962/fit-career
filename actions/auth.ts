@@ -61,15 +61,27 @@ const signOut = async (): Promise<void> => {
 export const useSignOut = (
   options?: UseMutationOptions<void, Error, void, void>
 ) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { toast } = useToast();
+
   return useMutation<void, Error, void, void>({
     mutationFn: signOut,
     onSuccess: () => {
-      alert('성공적으로 로그아웃 되었습니다.');
-      window.location.replace('/');
+      queryClient.invalidateQueries({ queryKey: ['userData'] });
+      toast({
+        title: '정상적으로 로그아웃 되었습니다.',
+        variant: 'default',
+      });
+      router.push('/');
     },
     onError: (error: Error) => {
       console.error(error.message);
-      alert('로그아웃 중 문제가 발생했습니다. 다시 시도해주세요.');
+      toast({
+        title: '로그아웃 중 문제가 발생했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
     },
     ...options,
   });
@@ -179,12 +191,15 @@ export const usePostEnterpriseProfile = (
     mutationFn: postEnterpriseProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({
+        queryKey: ['enterpriseProfile'],
+      });
+      queryClient.invalidateQueries({
         queryKey: ['enterpriseProfile', 'hiringList'],
       });
       toast({
         title: '기업 프로필이 저장 되었습니다.',
         description: '이제부터 채용 공고를 등록할 수 있어요.',
-        className: 'bg-[#4C71C0] text-white rounded',
+        variant: 'default',
       });
       router.push('/auth/my-page');
     },
@@ -193,7 +208,7 @@ export const usePostEnterpriseProfile = (
       toast({
         title: '기업 프로필 저장에 실패했습니다.',
         description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-        className: 'bg-[#4C71C0] text-white rounded',
+        variant: 'warning',
       });
     },
     ...options,
@@ -291,12 +306,15 @@ export const usePatchEnterpriseProfile = (
     mutationFn: patchEnterpriseProfile,
     onSuccess: () => {
       queryClient.invalidateQueries({
+        queryKey: ['enterpriseProfile'],
+      });
+      queryClient.invalidateQueries({
         queryKey: ['enterpriseProfile', 'hiringList'],
       });
       toast({
         title: '기업 프로필이 수정 되었습니다.',
         description: '성공적으로 기업 프로필을 수정했어요.',
-        className: 'bg-[#4C71C0] text-white rounded',
+        variant: 'default',
       });
       router.push('/auth/my-page');
     },
@@ -305,7 +323,7 @@ export const usePatchEnterpriseProfile = (
       toast({
         title: '기업 프로필 수정에 실패했습니다.',
         description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-        className: 'bg-[#4C71C0] text-white rounded',
+        variant: 'warning',
       });
     },
     ...options,

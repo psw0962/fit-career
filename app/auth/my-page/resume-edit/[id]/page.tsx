@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { validateInput } from '@/functions/validateInput';
 import dynamic from 'next/dynamic';
 import Spinner from '@/components/common/spinner';
@@ -20,6 +20,7 @@ import {
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import 'froala-editor/css/froala_style.min.css';
 import withAuth from '@/hoc/withAuth';
+import { useToast } from '@/hooks/use-toast';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -44,6 +45,11 @@ const FroalaEditorView = dynamic(
 );
 
 const ResumeEdit = ({ params }: { params: { id: string } }) => {
+  const titleRef = useRef<HTMLInputElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+
   const [title, setTitle] = useState<string>('');
   const [resumeImage, setResumeImage] = useState<File[]>([]);
   const [currentResumeImage, setCurrentResumeImage] = useState<string>('');
@@ -66,6 +72,8 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [awards, setAwards] = useState<Award[]>([]);
   const [links, setLinks] = useState<LinkData[]>([]);
+
+  const { toast } = useToast();
 
   const { data: resumeData } = useGetResume(params && params.id);
   const { mutate: patchResumeMutate, status: patchStatus } = usePatchResume();
@@ -117,18 +125,39 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
   };
 
   const onSubmit = () => {
+    if (!title.trim()) {
+      toast({
+        title: '이력서 제목은 필수 입력항목입니다.',
+        variant: 'warning',
+      });
+      titleRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
     if (!name.trim()) {
-      alert('이름은 필수 입력항목입니다.');
+      toast({
+        title: '이름은 필수 입력항목입니다.',
+        variant: 'warning',
+      });
+      nameRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
     if (!phone.part1 || !phone.part2 || !phone.part3) {
-      alert('연락처는 필수 입력항목입니다.');
+      toast({
+        title: '연락처는 필수 입력항목입니다.',
+        variant: 'warning',
+      });
+      phoneRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
     if (!email.trim()) {
-      alert('이메일은 필수 입력항목입니다.');
+      toast({
+        title: '이메일은 필수 입력항목입니다.',
+        variant: 'warning',
+      });
+      emailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       return;
     }
 
@@ -273,7 +302,7 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
 
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={titleRef}>
         <p className="text-2xl font-bold mb-2">
           이력서 제목 <span className="text-sm text-red-500 align-top">*</span>
         </p>
@@ -384,7 +413,7 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
 
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={nameRef}>
         <p className="text-2xl font-bold mb-2">
           이름 <span className="text-sm text-red-500 align-top">*</span>
         </p>
@@ -398,7 +427,7 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
         />
       </div>
 
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={phoneRef}>
         <p className="text-2xl font-bold mb-2">
           연락처 <span className="text-sm text-red-500 align-top">*</span>
         </p>
@@ -445,7 +474,7 @@ const ResumeEdit = ({ params }: { params: { id: string } }) => {
         </div>
       </div>
 
-      <div className="flex flex-col mb-20">
+      <div className="flex flex-col mb-20" ref={emailRef}>
         <p className="text-2xl font-bold mb-2">
           이메일 <span className="text-sm text-red-500 align-top">*</span>
         </p>

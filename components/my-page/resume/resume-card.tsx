@@ -7,13 +7,30 @@ import { useDeleteResume } from '@/actions/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import ResumeExport from '@/components/my-page/resume/resume-export';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
   const router = useRouter();
 
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { mutate: deleteResume } = useDeleteResume();
+
+  const handleDelete = () => {
+    if (data.id) {
+      deleteResume(data.id);
+      setIsDeleteModalOpen(false);
+      setOpenDropdownId(null);
+    }
+  };
 
   const downloadFile = async (url: string, filename: string) => {
     const response = await fetch(url);
@@ -109,14 +126,9 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
 
               <div
                 className="flex items-center justify-center gap-2 py-2 cursor-pointer"
-                onClick={() => {
-                  if (window.confirm('정말로 이력서를 삭제하시겠습니까?')) {
-                    data.id && deleteResume(data.id);
-                  }
-                }}
+                onClick={() => setIsDeleteModalOpen(true)}
               >
                 <p className="text-sm">삭제하기</p>
-
                 <Image
                   src="/svg/delete.svg"
                   alt="delete"
@@ -188,19 +200,10 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               </div>
 
               <div
-                className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
-                onClick={() => {
-                  if (
-                    window.confirm(
-                      '업로드한 이력서는 삭제 시 지원했던 기업에서 열람이 불가능합니다. 정말 삭제하시겠습니까?'
-                    )
-                  ) {
-                    data.id && deleteResume(data.id);
-                  }
-                }}
+                className="flex items-center justify-center gap-2 py-2 cursor-pointer"
+                onClick={() => setIsDeleteModalOpen(true)}
               >
                 <p className="text-sm">삭제하기</p>
-
                 <Image
                   src="/svg/delete.svg"
                   alt="delete"
@@ -212,6 +215,49 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
           )}
         </div>
       )}
+
+      <Dialog
+        open={isDeleteModalOpen}
+        onOpenChange={(open) => {
+          setIsDeleteModalOpen(open);
+          if (!open) {
+            setOpenDropdownId(null);
+          }
+        }}
+      >
+        <DialogContent onClick={(e) => e.stopPropagation()}>
+          <DialogHeader>
+            <DialogTitle>이력서 삭제</DialogTitle>
+            <DialogDescription>
+              {data.is_fitcareer_resume
+                ? '이력서를 삭제하시겠습니까?'
+                : '업로드한 이력서는 삭제 시 지원했던 기업에서 열람이 불가능합니다. 정말 삭제하시겠습니까?'}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <div className="flex gap-2 justify-center">
+              <button
+                className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2"
+                onClick={() => {
+                  handleDelete();
+                }}
+              >
+                삭제
+              </button>
+
+              <button
+                className="border rounded px-4 py-2"
+                onClick={() => {
+                  setIsDeleteModalOpen(false);
+                  setOpenDropdownId(null);
+                }}
+              >
+                취소
+              </button>
+            </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

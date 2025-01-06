@@ -165,7 +165,7 @@ export const usePatchResume = (
       toast({
         title: '이력서가 수정 되었습니다.',
         description: '성공적으로 이력서를 수정했어요.',
-        className: 'bg-[#4C71C0] text-white rounded',
+        variant: 'default',
       });
       queryClient.invalidateQueries({ queryKey: ['resume'] });
       router.push('/auth/my-page');
@@ -175,7 +175,7 @@ export const usePatchResume = (
       toast({
         title: '이력서 수정에 실패했습니다.',
         description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-        className: 'bg-[#4C71C0] text-white rounded',
+        variant: 'warning',
       });
     },
     ...options,
@@ -187,6 +187,8 @@ export const usePatchResume = (
 // =========================================
 const postNewResume = async () => {
   const supabase = createBrowserSupabaseClient();
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const { data: userData, error: userDataError } =
     await supabase.auth.getUser();
@@ -205,8 +207,7 @@ const postNewResume = async () => {
   }
 
   if (resumeCountData.length >= 4) {
-    alert('이력서는 최대 4개까지 등록할 수 있습니다.');
-    return;
+    throw new Error('MAX_RESUME_COUNT');
   }
 
   const { error: insertError } = await supabase.from('resume').insert([
@@ -236,6 +237,7 @@ export const usePostNewResume = (
   options?: UseMutationOptions<void, Error, void, void>
 ) => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation<void, Error, void, void>({
     mutationFn: postNewResume,
@@ -244,7 +246,20 @@ export const usePostNewResume = (
     },
     onError: (error: Error) => {
       console.error(error.message);
-      alert('네트워크 연결이 원활하지 않습니다. 잠시 후 다시 시도해 주세요.');
+
+      if (error.message === 'MAX_RESUME_COUNT') {
+        toast({
+          title: '이력서는 최대 4개까지 등록할 수 있습니다.',
+          variant: 'warning',
+        });
+        return;
+      }
+
+      toast({
+        title: '이력서 등록에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
     },
     ...options,
   });
@@ -307,15 +322,24 @@ export const useDeleteResume = (
   options?: UseMutationOptions<void, Error, string, void>
 ) => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation<void, Error, string, void>({
     mutationFn: deleteResume,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['resume'] });
+      toast({
+        title: '이력서가 삭제되었습니다.',
+        variant: 'default',
+      });
     },
     onError: (error: Error) => {
       console.error(error.message);
-      alert('이력서 삭제에 실패했습니다. 다시 시도해주세요.');
+      toast({
+        title: '이력서 삭제에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
     },
     ...options,
   });
@@ -334,8 +358,7 @@ const uploadResume = async (file: File): Promise<string | null> => {
   const fileExtension = file.name.split('.').pop()?.toLowerCase();
 
   if (!allowedExtensions.includes(fileExtension || '')) {
-    alert('PDF, 한글, 엑셀, 워드, 파워포인트 파일만 업로드 가능합니다.');
-    return null;
+    throw new Error('INVALID_FILE_EXTENSION');
   }
 
   const { error: uploadError } = await supabase.storage
@@ -368,8 +391,7 @@ const uploadResume = async (file: File): Promise<string | null> => {
   }
 
   if (resumeCountData.length >= 4) {
-    alert('이력서는 최대 4개까지 등록할 수 있습니다.');
-    return null;
+    throw new Error('MAX_RESUME_COUNT');
   }
 
   const { error: insertError } = await supabase.from('resume').insert([
@@ -402,6 +424,7 @@ export const useUploadResume = (
   options?: UseMutationOptions<string | null, Error, File, void>
 ) => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation<string | null, Error, File, void>({
     mutationFn: uploadResume,
@@ -411,13 +434,37 @@ export const useUploadResume = (
       }
     },
     onError: (error: Error) => {
-      if (error.message.includes('KeyTooLongError')) {
-        alert('업로드하는 이력서의 제목은 최대 20자까지 입력할 수 있어요.');
+      console.error(error.message);
+
+      if (error.message === 'INVALID_FILE_EXTENSION') {
+        toast({
+          title: 'PDF, 한글, 엑셀, 워드, 파워포인트 파일만 업로드 가능합니다.',
+          variant: 'warning',
+        });
         return;
       }
 
-      console.error(error.message);
-      alert('이력서 업로드에 실패했습니다. 다시 시도해주세요.');
+      if (error.message === 'MAX_RESUME_COUNT') {
+        toast({
+          title: '이력서는 최대 4개까지 등록할 수 있습니다.',
+          variant: 'warning',
+        });
+        return;
+      }
+
+      if (error.message.includes('KeyTooLongError')) {
+        toast({
+          title: '업로드하는 이력서의 제목은 최대 20자까지 입력할 수 있어요.',
+          variant: 'warning',
+        });
+        return;
+      }
+
+      toast({
+        title: '이력서 업로드에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
     },
     ...options,
   });
@@ -481,16 +528,28 @@ export const usePostResumeToHiring = (
   >
 ) => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
+
   return useMutation<void, Error, { hiringId: string; resumeId: string }, void>(
     {
       mutationFn: postResumeToHiring,
       onSuccess: () => {
-        alert('이력서가 성공적으로 제출되었습니다.');
+        toast({
+          title: '이력서가 성공적으로 제출되었습니다.',
+          variant: 'default',
+        });
+
         queryClient.invalidateQueries({ queryKey: ['hiringList'] });
       },
       onError: (error: Error) => {
         console.error(error.message);
-        alert('이력서 제출에 실패했습니다. 다시 시도해주세요.');
+
+        toast({
+          title: '이력서 제출에 실패했습니다.',
+          description:
+            '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+          variant: 'warning',
+        });
       },
       ...options,
     }
@@ -541,11 +600,16 @@ export const useDeleteResumeFromHiring = (
   >
 ) => {
   const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   return useMutation<void, Error, { hiringId: string; userId: string }, void>({
     mutationFn: deleteResumeFromHiring,
     onSuccess: () => {
-      alert('지원이 취소되었습니다.');
+      toast({
+        title: '지원이 취소되었습니다.',
+        variant: 'default',
+      });
+
       queryClient.invalidateQueries({ queryKey: ['hiringList'] });
       queryClient.invalidateQueries({
         queryKey: ['hiringListByUserSubmission'],
@@ -553,7 +617,12 @@ export const useDeleteResumeFromHiring = (
     },
     onError: (error: Error) => {
       console.error(error.message);
-      alert('지원 취소에 실패했습니다. 다시 시도해주세요.');
+
+      toast({
+        title: '지원 취소에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
     },
     ...options,
   });

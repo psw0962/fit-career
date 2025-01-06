@@ -6,12 +6,15 @@ import { useState } from 'react';
 import Image from 'next/image';
 import { PDFViewer } from '@react-pdf/renderer';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
+import { useToast } from '@/hooks/use-toast';
 
 const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
   const [showPreview, setShowPreview] = useState(false);
   const [selectedResume, setSelectedResume] = useState<ResumeReceived | null>(
     null
   );
+
+  const { toast } = useToast();
 
   return (
     <Dialog.Root>
@@ -97,9 +100,11 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
                             className="text-sm text-blue-500"
                             onClick={async () => {
                               if (!resume.upload_resume) {
-                                alert(
-                                  '이력서 파일 링크가 존재하지 않습니다. 지원자가 이력서를 삭제했어요.'
-                                );
+                                toast({
+                                  title:
+                                    '이력서 파일 링크가 존재하지 않습니다. 지원자가 이력서를 삭제했어요.',
+                                  variant: 'warning',
+                                });
                                 return;
                               }
 
@@ -109,16 +114,20 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
                                   { method: 'HEAD' }
                                 );
                                 if (!response.ok) {
-                                  alert(
-                                    '이력서 파일을 찾을 수 없습니다. 지원자가 이력서를 삭제했어요.'
-                                  );
+                                  toast({
+                                    title:
+                                      '이력서 파일을 찾을 수 없습니다. 지원자가 이력서를 삭제했어요.',
+                                    variant: 'warning',
+                                  });
                                   return;
                                 }
                                 window.open(resume.upload_resume, '_blank');
                               } catch (error) {
-                                alert(
-                                  '이력서 파일에 접근할 수 없습니다. 지원자가 이력서를 삭제했어요.'
-                                );
+                                toast({
+                                  title:
+                                    '이력서 파일에 접근할 수 없습니다. 지원자가 이력서를 삭제했어요.',
+                                  variant: 'warning',
+                                });
                               }
                             }}
                           >
