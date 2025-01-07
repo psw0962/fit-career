@@ -1,107 +1,99 @@
 'use client';
 
-import * as Dialog from '@radix-ui/react-dialog';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
 import { PeriodFilterProps } from '@/types/hiring/filter-type';
 import { formatPeriod } from '@/functions/formatPeriod';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { useState } from 'react';
 
 const PeriodFilter: React.FC<PeriodFilterProps> = ({
   periodValueFilter,
   setPeriodValueFilter,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const periodValueHandleChange = (value: number[]) => {
     setPeriodValueFilter(value);
   };
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <button className="flex items-center gap-0.5 py-2 px-2 border rounded">
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>
+        <button
+          className="flex items-center gap-0.5 py-2 px-2 border rounded"
+          onClick={() => setIsModalOpen(true)}
+        >
           <p>경력필터</p>
           <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">
             {formatPeriod(periodValueFilter)}
           </p>
         </button>
-      </Dialog.Trigger>
+      </DialogTrigger>
 
-      <Dialog.Description></Dialog.Description>
+      <DialogContent className="w-full max-w-[500px] min-w-[300px]">
+        <DialogHeader>
+          <DialogTitle>경력필터</DialogTitle>
+          <DialogDescription></DialogDescription>
+        </DialogHeader>
 
-      <Dialog.Portal>
-        {/* <Dialog.Overlay className="fixed inset-0 bg-black opacity-50" /> */}
-
-        <div className="fixed inset-0 flex items-center justify-center">
-          <div
-            id="modal-overlay"
-            className="absolute inset-0 bg-black/50 z-40"
-          />
-
-          <Dialog.Content className="fixed left-1/2 top-1/2 max-h-[30vh] w-full min-w-[350px] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded bg-white p-[25px] shadow focus:outline-none overflow-y-auto z-50">
-            <Dialog.Title className="mb-2 font-bold">경력필터</Dialog.Title>
-
-            <button
-              className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
-              onClick={() => {
-                setPeriodValueFilter([0, 10]);
-              }}
-            >
-              <div className="relative w-4 h-4">
-                <Image
-                  src="/svg/reset.svg"
-                  alt="reset"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  priority
-                />
-              </div>
-              <p>초기화</p>
-            </button>
-
-            <div className="flex flex-col gap-2 border rounded mt-4 p-4">
-              <p className="text-base">{formatPeriod(periodValueFilter)}</p>
-
-              <div className="w-full flex flex-wrap">
-                <Slider.Root
-                  className="relative flex h-5 w-full mt-2 touch-none select-none items-center"
-                  value={periodValueFilter}
-                  onValueChange={periodValueHandleChange}
-                  max={10}
-                  step={1}
-                >
-                  <Slider.Track className="relative h-[3px] grow rounded-full bg-blackA7">
-                    <Slider.Range className="absolute h-full rounded-full bg-slate-200" />
-                  </Slider.Track>
-
-                  <Slider.Thumb
-                    className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
-                    aria-label="Volume"
-                  />
-
-                  <Slider.Thumb
-                    className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
-                    aria-label="Volume"
-                  />
-                </Slider.Root>
-              </div>
-            </div>
-
-            <Dialog.Close asChild>
+        <div className="flex flex-col gap-3 mt-3">
+          <button
+            className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
+            onClick={() => {
+              setPeriodValueFilter([0, 10]);
+            }}
+          >
+            <div className="relative w-4 h-4">
               <Image
-                src="/svg/close.svg"
-                alt="close"
+                src="/svg/reset.svg"
+                alt="reset"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="absolute right-4 top-4 cursor-pointer"
-                aria-label="Close"
-                width={25}
-                height={25}
-                priority={true}
+                fill
+                style={{ objectFit: 'cover' }}
+                priority
               />
-            </Dialog.Close>
-          </Dialog.Content>
+            </div>
+            <p>초기화</p>
+          </button>
+
+          <div className="flex flex-col gap-2 border rounded p-4">
+            <p className="text-base">{formatPeriod(periodValueFilter)}</p>
+
+            <div className="w-full flex flex-wrap">
+              <Slider.Root
+                className="relative flex h-5 w-full mt-2 touch-none select-none items-center"
+                value={periodValueFilter}
+                onValueChange={periodValueHandleChange}
+                max={10}
+                step={1}
+              >
+                <Slider.Track className="relative h-[3px] grow rounded-full bg-blackA7">
+                  <Slider.Range className="absolute h-full rounded-full bg-slate-200" />
+                </Slider.Track>
+
+                <Slider.Thumb
+                  className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
+                  aria-label="Volume"
+                />
+
+                <Slider.Thumb
+                  className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
+                  aria-label="Volume"
+                />
+              </Slider.Root>
+            </div>
+          </div>
         </div>
-      </Dialog.Portal>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };
 

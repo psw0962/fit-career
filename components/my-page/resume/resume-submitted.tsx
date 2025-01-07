@@ -94,7 +94,7 @@ const ResumeSubmitted = () => {
               onOpenChange={() => setOpenDeleteDialog(null)}
             >
               <DialogContent
-                className="sm:max-w-[425px]"
+                className="w-full max-w-[500px] min-w-[300px]"
                 onClick={(e) => e.stopPropagation()}
               >
                 <DialogHeader>
@@ -104,7 +104,7 @@ const ResumeSubmitted = () => {
                   </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <div className="flex gap-2 justify-center">
+                  <div className="flex gap-2 justify-center mt-4 sm:mt-0">
                     <button
                       className="border rounded px-4 py-2"
                       onClick={() => setOpenDeleteDialog(null)}

@@ -122,9 +122,34 @@ const HiringWrite = () => {
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
+
     if (files) {
-      setImages((prev) => [...prev, ...Array.from(files)]);
+      // 파일 이름 중복 방지
+      const uniqueFiles = Array.from(files).map((file) => {
+        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        const uniqueName = `${uniqueSuffix}-${file.name}`;
+        return new File([file], uniqueName, { type: file.type });
+      });
+
+      // 상태 업데이트
+      setImages((prev) => {
+        const totalImages = prev.length + uniqueFiles.length;
+        if (totalImages > 5) {
+          return prev;
+        }
+        return [...prev, ...uniqueFiles];
+      });
+
+      // 이미지 최대 5개 제한
+      if (uniqueFiles.length + images.length > 5) {
+        toast({
+          title: '회사 이미지는 최대 5개까지 업로드할 수 있습니다.',
+          variant: 'warning',
+        });
+      }
     }
+
+    event.target.value = '';
   };
 
   const removeImage = (index: number) => {
@@ -558,7 +583,7 @@ const HiringWrite = () => {
       {/* images */}
       <div className="flex flex-col">
         <p className="text-2xl font-bold mb-2">
-          센터 이미지
+          회사 이미지
           <span className="text-xs text-red-500 align-bottom ml-2">
             * 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.
           </span>
@@ -587,7 +612,7 @@ const HiringWrite = () => {
         </label>
       </div>
 
-      <div className="border border-gray-300 my-4"></div>
+      {images.length > 0 && <div className="border border-gray-300 my-4"></div>}
 
       <div className="flex flex-wrap gap-3">
         {images.map((image, index) => (
@@ -608,7 +633,7 @@ const HiringWrite = () => {
       </div>
 
       <button
-        className="mx-auto mt-8 px-4 py-2 bg-[#4C71C0] text-white rounded w-fit"
+        className="mx-auto mt-20 px-4 py-2 bg-[#4C71C0] text-white rounded w-fit"
         onClick={() => onSubmit()}
       >
         등록하기

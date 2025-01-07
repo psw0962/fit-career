@@ -220,7 +220,7 @@ const HiringPosts = () => {
           open={deleteHiringId !== null}
           onOpenChange={(isOpen) => !isOpen && setDeleteHiringId(null)}
         >
-          <DialogContent>
+          <DialogContent className="w-full max-w-[500px] min-w-[300px]">
             <DialogHeader>
               <DialogTitle>채용공고 삭제</DialogTitle>
               <DialogDescription>
@@ -230,7 +230,7 @@ const HiringPosts = () => {
             </DialogHeader>
 
             <DialogFooter>
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2 mt-4 sm:mt-0">
                 <button
                   className="px-4 py-2 text-sm border rounded"
                   onClick={() => setDeleteHiringId(null)}

@@ -1,14 +1,24 @@
 'use client';
 
-import * as Dialog from '@radix-ui/react-dialog';
 import Image from 'next/image';
 import { PositionFilterProps } from '@/types/hiring/filter-type';
 import { POSITIONS } from '@/constant/position';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { useState } from 'react';
 
 const PositionFilter: React.FC<PositionFilterProps> = ({
   positionFilter,
   setPositionFilter,
 }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleCheckboxChange = (position: string) => {
     if (positionFilter.includes(position)) {
       setPositionFilter(positionFilter.filter((item) => item !== position));
@@ -18,78 +28,63 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
   };
 
   return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <button className="flex items-center gap-0.5 py-2 px-2 border rounded">
+    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <DialogTrigger asChild>
+        <button
+          className="flex items-center gap-0.5 py-2 px-2 border rounded"
+          onClick={() => setIsModalOpen(true)}
+        >
           <p>직무필터</p>
           <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">
             {positionFilter.length}
           </p>
         </button>
-      </Dialog.Trigger>
+      </DialogTrigger>
 
-      <Dialog.Description></Dialog.Description>
+      <DialogContent className="w-full max-w-[500px] min-w-[300px]">
+        <DialogHeader>
+          <DialogTitle>직무필터</DialogTitle>
+          <DialogDescription></DialogDescription>
+        </DialogHeader>
 
-      <Dialog.Portal>
-        {/* <Dialog.Overlay className="fixed inset-0 bg-black opacity-50" /> */}
-
-        <div className="fixed inset-0 flex items-center justify-center">
-          <div
-            id="modal-overlay"
-            className="absolute inset-0 bg-black/50 z-40"
-          />
-
-          <Dialog.Content className="fixed left-1/2 top-1/2 max-h-[30vh] w-full min-w-[350px] max-w-[550px] -translate-x-1/2 -translate-y-1/2 rounded bg-white p-[25px] shadow focus:outline-none overflow-y-auto z-50">
-            <Dialog.Title className="mb-2 font-bold">직무필터</Dialog.Title>
-
-            <button
-              className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
-              onClick={() => {
-                setPositionFilter([]);
-              }}
-            >
-              <div className="relative w-4 h-4">
-                <Image
-                  src="/svg/reset.svg"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  alt="reset"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  priority
-                />
-              </div>
-              <p>초기화</p>
-            </button>
-
-            <div className="flex flex-wrap gap-2 mt-4 border rounded p-4">
-              {POSITIONS.map((position) => (
-                <label key={position.id} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={positionFilter.includes(position.position)}
-                    onChange={() => handleCheckboxChange(position.position)}
-                  />
-                  {position.position}
-                </label>
-              ))}
-            </div>
-
-            <Dialog.Close asChild>
+        <div className="flex flex-col gap-3 mt-3">
+          <button
+            className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
+            onClick={() => {
+              setPositionFilter([]);
+            }}
+          >
+            <div className="relative w-4 h-4">
               <Image
-                src="/svg/close.svg"
-                alt="close"
+                src="/svg/reset.svg"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="absolute right-4 top-4 cursor-pointer"
-                aria-label="Close"
-                width={25}
-                height={25}
-                priority={true}
+                alt="reset"
+                fill
+                style={{ objectFit: 'cover' }}
+                priority
               />
-            </Dialog.Close>
-          </Dialog.Content>
+            </div>
+            <p>초기화</p>
+          </button>
+
+          <div className="flex flex-wrap gap-2 border rounded p-4">
+            {POSITIONS.map((position) => (
+              <label
+                key={position.id}
+                className="flex items-center gap-2 break-keep"
+              >
+                <input
+                  type="checkbox"
+                  checked={positionFilter.includes(position.position)}
+                  onChange={() => handleCheckboxChange(position.position)}
+                />
+                {position.position}
+              </label>
+            ))}
+          </div>
         </div>
-      </Dialog.Portal>
-    </Dialog.Root>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -42,7 +42,7 @@ const Hiring = () => {
         </Link>
       </div>
 
-      <div className="flex gap-1 mt-4 overflow-x-auto scrollbar-hide whitespace-nowrap">
+      <div className="flex gap-1.5 mt-4 overflow-x-auto scrollbar-hide whitespace-nowrap">
         <button
           className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
           onClick={() => resetFilters()}
