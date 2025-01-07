@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 const postHiring = async (data: HiringData) => {
   const supabase = createBrowserSupabaseClient();
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const imageUrls: string[] = [];
 
@@ -88,7 +88,7 @@ export const usePostHiring = (
 
       // Supabase 에러 메시지 확인
       if (error.message.includes('You can only post once every 24 hour.')) {
-        const minutes = error.message.match(/\d+/)?.[0];
+        const minutes = error.message.match(/(\d+)\s*minutes/)?.[1] ?? '';
         toast({
           title: '연달아 채용공고 게시글을 생성할 수 없어요.',
           description: `도배 방지를 위해 채용 게시글 생성은 24시간마다 한 번만 할 수 있어요.
@@ -367,6 +367,79 @@ export const useUpdateHiringVisibility = (
     },
     onSettled: (_, __, variables) => {
       variables.setUpdatingId(null);
+    },
+    ...options,
+  });
+};
+
+// =========================================
+// ============== delete hiring
+// =========================================
+const deleteHiring = async (hiringId: string) => {
+  const supabase = createBrowserSupabaseClient();
+
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  const { data: hiringData, error: hiringError } = await supabase
+    .from('hiring')
+    .select('*')
+    .eq('id', hiringId)
+    .single();
+
+  if (hiringError) {
+    throw new Error(hiringError.message);
+  }
+
+  const { error: deleteError } = await supabase
+    .from('hiring')
+    .delete()
+    .eq('id', hiringId);
+
+  if (deleteError) {
+    throw new Error(deleteError.message);
+  }
+
+  const currentImages: string[] = hiringData?.images || [];
+
+  for (const imageUrl of currentImages) {
+    const path = imageUrl.split('/').slice(-1)[0];
+    const { error: storageDeleteError } = await supabase.storage
+      .from('hiring')
+      .remove([`hiring/${path}`]);
+
+    if (storageDeleteError) {
+      console.error(`Failed to delete image: ${storageDeleteError.message}`);
+    }
+  }
+};
+
+export const useDeleteHiring = (
+  options?: UseMutationOptions<void, Error, string, void>
+) => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation<void, Error, string, void>({
+    mutationFn: deleteHiring,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+
+      toast({
+        title: '채용공고가 삭제되었습니다.',
+        variant: 'default',
+      });
+    },
+    onError: (error: Error) => {
+      console.error('채용 공고 삭제 중 에러 발생:', error);
+      toast({
+        title: '채용 공고 삭제에 실패했습니다.',
+        description: '네트워크 에러, 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
     },
     ...options,
   });

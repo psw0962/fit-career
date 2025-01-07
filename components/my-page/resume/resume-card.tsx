@@ -237,15 +237,6 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
           <DialogFooter>
             <div className="flex gap-2 justify-center">
               <button
-                className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2"
-                onClick={() => {
-                  handleDelete();
-                }}
-              >
-                삭제
-              </button>
-
-              <button
                 className="border rounded px-4 py-2"
                 onClick={() => {
                   setIsDeleteModalOpen(false);
@@ -253,6 +244,15 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
                 }}
               >
                 취소
+              </button>
+
+              <button
+                className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2"
+                onClick={() => {
+                  handleDelete();
+                }}
+              >
+                삭제
               </button>
             </div>
           </DialogFooter>

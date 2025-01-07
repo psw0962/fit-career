@@ -162,13 +162,28 @@ export const usePatchResume = (
     mutationFn: ({ resumeData, resumeId }) =>
       patchResume({ resumeData, resumeId }),
     onSuccess: () => {
+      router.push('/auth/my-page');
+
       toast({
         title: '이력서가 수정 되었습니다.',
         description: '성공적으로 이력서를 수정했어요.',
         variant: 'default',
       });
-      queryClient.invalidateQueries({ queryKey: ['resume'] });
-      router.push('/auth/my-page');
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['hiringListByUserSubmission'],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['resume'],
+        refetchType: 'all',
+        exact: false,
+      });
     },
     onError: (error: Error) => {
       console.error(error.message);
@@ -242,7 +257,21 @@ export const usePostNewResume = (
   return useMutation<void, Error, void, void>({
     mutationFn: postNewResume,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['resume'] });
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['hiringListByUserSubmission'],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['resume'],
+        refetchType: 'all',
+        exact: false,
+      });
     },
     onError: (error: Error) => {
       console.error(error.message);
@@ -327,7 +356,19 @@ export const useDeleteResume = (
   return useMutation<void, Error, string, void>({
     mutationFn: deleteResume,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['resume'] });
+      queryClient.invalidateQueries({
+        queryKey: ['resume'],
+        refetchType: 'all',
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['hiringListByUserSubmission'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
       toast({
         title: '이력서가 삭제되었습니다.',
         variant: 'default',
@@ -430,7 +471,21 @@ export const useUploadResume = (
     mutationFn: uploadResume,
     onSuccess: (data) => {
       if (data) {
-        queryClient.invalidateQueries({ queryKey: ['resume'] });
+        queryClient.invalidateQueries({
+          queryKey: ['hiringList'],
+          refetchType: 'active',
+          exact: false,
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['hiringListByUserSubmission'],
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['resume'],
+          refetchType: 'all',
+          exact: false,
+        });
       }
     },
     onError: (error: Error) => {
@@ -539,7 +594,21 @@ export const usePostResumeToHiring = (
           variant: 'default',
         });
 
-        queryClient.invalidateQueries({ queryKey: ['hiringList'] });
+        queryClient.invalidateQueries({
+          queryKey: ['hiringList'],
+          refetchType: 'active',
+          exact: false,
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['hiringListByUserSubmission'],
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['resume'],
+          refetchType: 'all',
+          exact: false,
+        });
       },
       onError: (error: Error) => {
         console.error(error.message);
@@ -610,9 +679,20 @@ export const useDeleteResumeFromHiring = (
         variant: 'default',
       });
 
-      queryClient.invalidateQueries({ queryKey: ['hiringList'] });
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+
       queryClient.invalidateQueries({
         queryKey: ['hiringListByUserSubmission'],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['resume'],
+        refetchType: 'all',
+        exact: false,
       });
     },
     onError: (error: Error) => {

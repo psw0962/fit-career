@@ -369,6 +369,7 @@ export const useGetEnterpriseProfile = (userId: string) => {
   return useQuery({
     queryKey: ['enterpriseProfile', userId],
     queryFn: (context) => getEnterpriseProfile(context.queryKey[1]),
+    enabled: !!userId,
     throwOnError: true,
     refetchOnMount: false,
     refetchOnWindowFocus: false,

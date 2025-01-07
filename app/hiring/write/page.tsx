@@ -137,8 +137,6 @@ const HiringWrite = () => {
     return tmp.textContent || tmp.innerText || '';
   };
 
-  console.log(content);
-
   const onSubmit = () => {
     if (!address.zoneAddress || !address.detailAddress) {
       toast({
@@ -243,7 +241,9 @@ const HiringWrite = () => {
 
     if (
       !enterpriseProfileLoading &&
-      (!enterpriseProfile || enterpriseProfile?.length === 0)
+      userData &&
+      enterpriseProfile !== undefined &&
+      (!enterpriseProfile || enterpriseProfile.length === 0)
     ) {
       router.replace('/auth/my-page?message=enterprise_profile_required');
       setActiveTab('enterprise');
@@ -255,6 +255,7 @@ const HiringWrite = () => {
     userDataLoading,
     enterpriseProfileLoading,
     router,
+    setActiveTab,
   ]);
 
   if (
@@ -555,47 +556,42 @@ const HiringWrite = () => {
       </div>
 
       {/* images */}
-      <div className="flex flex-col mb-4">
-        <label htmlFor="file-upload" className="text-2xl font-bold mb-2">
+      <div className="flex flex-col">
+        <p className="text-2xl font-bold mb-2">
           센터 이미지
-        </label>
+          <span className="text-xs text-red-500 align-bottom ml-2">
+            * 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.
+          </span>
+        </p>
 
-        <div className="relative flex items-center justify-center w-full h-36 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-500 transition-all">
+        <label className="relative py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
+          <div className="flex gap-2 items-center justify-center">
+            <Image
+              src="/svg/upload.svg"
+              alt="upload"
+              width={32}
+              height={32}
+              priority
+              className="invert brightness-0"
+            />
+            <p className="text-sm text-white">이미지 업로드</p>
+          </div>
+
           <input
             type="file"
-            id="file-upload"
             className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             multiple
-            accept="image/*"
+            accept="image/jpeg, image/jpg, image/png, image/webp"
             onChange={handleImageUpload}
           />
-
-          <div className="flex flex-col items-center">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 text-gray-400 mb-2"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M7 16V12M7 8h.01M16 12V8m0 8h.01M16 12h.01m0 0L12 16l-4-4"
-              />
-            </svg>
-            <span className="text-gray-600">이미지 업로드</span>
-          </div>
-        </div>
+        </label>
       </div>
 
-      <div className="flex flex-wrap mt-4">
+      <div className="border border-gray-300 my-4"></div>
+
+      <div className="flex flex-wrap gap-3">
         {images.map((image, index) => (
-          <div
-            key={index}
-            className="relative w-32 h-32 m-2 p-2 border rounded"
-          >
+          <div key={index} className="relative w-32 h-32 border rounded">
             <img
               src={URL.createObjectURL(image)}
               alt={`uploaded ${index}`}

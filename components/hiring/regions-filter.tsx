@@ -86,151 +86,159 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
       <Dialog.Description></Dialog.Description>
 
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black opacity-50" />
+        {/* <Dialog.Overlay className="fixed inset-0 bg-black opacity-50" /> */}
 
-        <Dialog.Content className="fixed left-1/2 top-1/2 max-h-[50vh] w-[90vw] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded bg-white p-[25px] shadow focus:outline-none overflow-y-auto">
-          <Dialog.Title className="mb-2 font-bold">지역필터</Dialog.Title>
+        <div className="fixed inset-0 flex items-center justify-center">
+          <div
+            id="modal-overlay"
+            className="absolute inset-0 bg-black/50 z-40"
+          />
 
-          <button
-            className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
-            onClick={() => {
-              setRegionFilter({
-                selectedCity: null,
-                selectedCounties: [],
-                allSelectedCities: [],
-              });
-            }}
-          >
-            <div className="relative w-4 h-4">
-              <Image
-                src="/svg/reset.svg"
-                alt="reset"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                fill
-                style={{ objectFit: 'cover' }}
-                priority
-              />
-            </div>
-            <p>초기화</p>
-          </button>
+          <Dialog.Content className="fixed left-1/2 top-1/2 max-h-[30vh] w-full min-w-[350px] max-w-[450px] -translate-x-1/2 -translate-y-1/2 rounded bg-white p-[25px] shadow focus:outline-none overflow-y-auto z-50">
+            <Dialog.Title className="mb-2 font-bold">지역필터</Dialog.Title>
 
-          {/* City selection */}
-          <div className="flex w-full mt-3">
-            <div className="border p-4 w-full max-h-72 overflow-auto rounded">
-              <ul>
-                {REGIONS.map((region) => (
-                  <li key={region.id} className="flex items-center">
-                    <input
-                      type="radio"
-                      id={`city ${region.id}`}
-                      name="city"
-                      checked={regionFilter.selectedCity?.id === region.id}
-                      onChange={() => handleCitySelect(region)}
-                    />
-                    <label htmlFor={`city ${region.id}`} className="ml-2">
-                      {region.city}
-                    </label>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <button
+              className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
+              onClick={() => {
+                setRegionFilter({
+                  selectedCity: null,
+                  selectedCounties: [],
+                  allSelectedCities: [],
+                });
+              }}
+            >
+              <div className="relative w-4 h-4">
+                <Image
+                  src="/svg/reset.svg"
+                  alt="reset"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority
+                />
+              </div>
+              <p>초기화</p>
+            </button>
 
-            {/* County selection */}
-            {regionFilter.selectedCity ? (
+            {/* City selection */}
+            <div className="flex w-full mt-3">
               <div className="border p-4 w-full max-h-72 overflow-auto rounded">
                 <ul>
-                  {regionFilter.selectedCity.county.map((county) => {
-                    const countyLabel =
-                      county ===
-                      `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체`
-                        ? county
-                        : `${regionFilter.selectedCity && regionFilter.selectedCity.city} ${county}`;
-
-                    const isAllSelected =
-                      county ===
-                        `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체` &&
-                      regionFilter.selectedCity &&
-                      regionFilter.selectedCity.county
-                        .filter(
-                          (c) =>
-                            c !==
-                            `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체`
-                        )
-                        .every((c) =>
-                          regionFilter.selectedCounties.includes(
-                            `${regionFilter.selectedCity && regionFilter.selectedCity.city} ${c}`
-                          )
-                        );
-
-                    return (
-                      <li key={county} className="flex items-center">
-                        <input
-                          type="checkbox"
-                          id={`county ${countyLabel}`}
-                          checked={
-                            county === `${regionFilter.selectedCity?.city} 전체`
-                              ? (isAllSelected ?? false)
-                              : regionFilter.selectedCounties.includes(
-                                  countyLabel
-                                )
-                          }
-                          onChange={() =>
-                            regionFilter.selectedCity && toggleCounty(county)
-                          }
-                        />
-                        <label
-                          htmlFor={`county ${countyLabel}`}
-                          className="ml-2"
-                        >
-                          {county}
-                        </label>
-                      </li>
-                    );
-                  })}
+                  {REGIONS.map((region) => (
+                    <li key={region.id} className="flex items-center">
+                      <input
+                        type="radio"
+                        id={`city ${region.id}`}
+                        name="city"
+                        checked={regionFilter.selectedCity?.id === region.id}
+                        onChange={() => handleCitySelect(region)}
+                      />
+                      <label htmlFor={`city ${region.id}`} className="ml-2">
+                        {region.city}
+                      </label>
+                    </li>
+                  ))}
                 </ul>
               </div>
-            ) : (
-              <div className="flex items-center justify-center border p-4 w-full max-h-72 overflow-auto rounded">
-                시/도를 선택해 주세요.
-              </div>
-            )}
-          </div>
 
-          <div className="flex flex-wrap gap-2 mt-4">
-            {regionFilter.allSelectedCities.map((city) => (
-              <div
-                key={`${city} 전체`}
-                className="w-fit px-2 py-2 bg-[#4C71C0] rounded text-white"
-              >
-                {`${city} 전체`}
-              </div>
-            ))}
+              {/* County selection */}
+              {regionFilter.selectedCity ? (
+                <div className="border p-4 w-full max-h-72 overflow-auto rounded">
+                  <ul>
+                    {regionFilter.selectedCity.county.map((county) => {
+                      const countyLabel =
+                        county ===
+                        `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체`
+                          ? county
+                          : `${regionFilter.selectedCity && regionFilter.selectedCity.city} ${county}`;
 
-            {regionFilter.selectedCounties
-              .filter((county) => {
-                const cityName = county.split('-')[0];
-                return !regionFilter.allSelectedCities.includes(cityName);
-              })
-              .map((county) => (
-                <div key={county} className="w-fit px-2 py-2 border rounded">
-                  {county}
+                      const isAllSelected =
+                        county ===
+                          `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체` &&
+                        regionFilter.selectedCity &&
+                        regionFilter.selectedCity.county
+                          .filter(
+                            (c) =>
+                              c !==
+                              `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체`
+                          )
+                          .every((c) =>
+                            regionFilter.selectedCounties.includes(
+                              `${regionFilter.selectedCity && regionFilter.selectedCity.city} ${c}`
+                            )
+                          );
+
+                      return (
+                        <li key={county} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id={`county ${countyLabel}`}
+                            checked={
+                              county ===
+                              `${regionFilter.selectedCity?.city} 전체`
+                                ? (isAllSelected ?? false)
+                                : regionFilter.selectedCounties.includes(
+                                    countyLabel
+                                  )
+                            }
+                            onChange={() =>
+                              regionFilter.selectedCity && toggleCounty(county)
+                            }
+                          />
+                          <label
+                            htmlFor={`county ${countyLabel}`}
+                            className="ml-2"
+                          >
+                            {county}
+                          </label>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center border p-4 w-full max-h-72 overflow-auto rounded">
+                  시/도를 선택해 주세요.
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-4">
+              {regionFilter.allSelectedCities.map((city) => (
+                <div
+                  key={`${city} 전체`}
+                  className="w-fit px-2 py-2 bg-[#4C71C0] rounded text-white"
+                >
+                  {`${city} 전체`}
                 </div>
               ))}
-          </div>
 
-          <Dialog.Close asChild>
-            <Image
-              src="/svg/close.svg"
-              alt="close"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              className="absolute right-4 top-4 cursor-pointer"
-              aria-label="Close"
-              width={25}
-              height={25}
-              priority={true}
-            />
-          </Dialog.Close>
-        </Dialog.Content>
+              {regionFilter.selectedCounties
+                .filter((county) => {
+                  const cityName = county.split('-')[0];
+                  return !regionFilter.allSelectedCities.includes(cityName);
+                })
+                .map((county) => (
+                  <div key={county} className="w-fit px-2 py-2 border rounded">
+                    {county}
+                  </div>
+                ))}
+            </div>
+
+            <Dialog.Close asChild>
+              <Image
+                src="/svg/close.svg"
+                alt="close"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                className="absolute right-4 top-4 cursor-pointer"
+                aria-label="Close"
+                width={25}
+                height={25}
+                priority={true}
+              />
+            </Dialog.Close>
+          </Dialog.Content>
+        </div>
       </Dialog.Portal>
     </Dialog.Root>
   );

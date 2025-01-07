@@ -1,6 +1,10 @@
 'use client';
 
-import { useGetHiring, useUpdateHiringVisibility } from '@/actions/hiring';
+import {
+  useDeleteHiring,
+  useGetHiring,
+  useUpdateHiringVisibility,
+} from '@/actions/hiring';
 import GlobalSpinner from '@/components/common/global-spinner';
 import Image from 'next/image';
 import { HiringDataResponse } from '@/types/hiring/hiring';
@@ -12,10 +16,19 @@ import * as Switch from '@radix-ui/react-switch';
 import Spinner from '@/components/common/spinner';
 import { useRouter } from 'next/navigation';
 import HiringResumeReceivedModal from '@/components/my-page/hiring/hiring-resume-received-modal';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 const HiringPosts = () => {
   const router = useRouter();
 
+  const [deleteHiringId, setDeleteHiringId] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [page, setPage] = useState(0);
 
@@ -28,12 +41,14 @@ const HiringPosts = () => {
     pageSize: 12,
   });
   const { mutate: updateHiringVisibility } = useUpdateHiringVisibility();
+  const { mutate: deleteHiring, status: deleteHiringStatus } =
+    useDeleteHiring();
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [page]);
 
-  if (hiringDataIsLoading) {
+  if (hiringDataIsLoading || deleteHiringStatus === 'pending') {
     return <GlobalSpinner />;
   }
 
@@ -133,7 +148,7 @@ const HiringPosts = () => {
                       className="w-full flex items-center justify-center gap-1 border rounded px-2 py-1"
                       onClick={(e) => {
                         e.stopPropagation();
-                        console.log('delete');
+                        setDeleteHiringId(x.id);
                       }}
                     >
                       <Image
@@ -200,6 +215,44 @@ const HiringPosts = () => {
               </div>
             );
           })}
+
+        <Dialog
+          open={deleteHiringId !== null}
+          onOpenChange={(isOpen) => !isOpen && setDeleteHiringId(null)}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>채용공고 삭제</DialogTitle>
+              <DialogDescription>
+                {`채용공고 삭제 시 접수된 지원자의 모든 정보와 함께 삭제됩니다.
+채용공고를 삭제하시겠습니까?`}
+              </DialogDescription>
+            </DialogHeader>
+
+            <DialogFooter>
+              <div className="flex items-center justify-center gap-2">
+                <button
+                  className="px-4 py-2 text-sm border rounded"
+                  onClick={() => setDeleteHiringId(null)}
+                >
+                  취소
+                </button>
+
+                <button
+                  className="px-4 py-2 text-sm text-white bg-[#4C71C0] rounded"
+                  onClick={() => {
+                    if (deleteHiringId) {
+                      deleteHiring(deleteHiringId);
+                      setDeleteHiringId(null);
+                    }
+                  }}
+                >
+                  삭제
+                </button>
+              </div>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       {(hiringData?.count ?? 0) > 12 && (
