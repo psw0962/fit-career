@@ -5,8 +5,8 @@ import Image from 'next/image';
 const Footer = (): React.ReactElement => {
   return (
     <div className="max-w-full border">
-      <div className="max-w-7xl mx-auto px-10 py-10">
-        <div className="flex gap-2 items-center my-5">
+      <div className="max-w-7xl mx-auto px-10 py-12">
+        <div className="flex gap-2 items-center">
           <div className="relative w-10 h-10">
             <Image
               src="/svg/logo.svg"
@@ -21,17 +21,17 @@ const Footer = (): React.ReactElement => {
           <p className="text-2xl font-bold">FIT Career</p>
         </div>
 
-        <p className="text-base text-stone-400">
+        <p className="text-base text-stone-400 mt-2">
           Email | psw92640962@gmail.com
         </p>
 
-        <div className="flex gap-3 my-2">
+        <div className="flex gap-3 mt-3">
           <p className="text-base text-stone-400">개인정보 처리방침</p>
           <div className="text-stone-400">|</div>
           <p className="text-base text-stone-400">이용약관</p>
         </div>
 
-        <p className="text-base text-stone-400">
+        <p className="text-base text-stone-400 mt-1">
           © 2024-2025 FIT Career. All rights reserved.
         </p>
       </div>

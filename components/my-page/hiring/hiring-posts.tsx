@@ -224,8 +224,9 @@ const HiringPosts = () => {
             <DialogHeader>
               <DialogTitle>채용공고 삭제</DialogTitle>
               <DialogDescription>
-                {`채용공고 삭제 시 접수된 지원자의 모든 정보와 함께 삭제됩니다.
-채용공고를 삭제하시겠습니까?`}
+                채용공고 삭제 시 접수된 지원자의 모든 정보와 함께 삭제됩니다.
+                <br />
+                채용공고를 삭제하시겠습니까?
               </DialogDescription>
             </DialogHeader>
 

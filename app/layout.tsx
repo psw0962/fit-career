@@ -25,7 +25,7 @@ const RootLayout = ({
           <div className="flex flex-col min-w-[350px] min-h-screen">
             <Nav />
 
-            <main className="flex-grow w-full max-w-7xl mx-auto px-10 py-32">
+            <main className="flex-grow w-full max-w-7xl mx-auto px-10 pt-32 pb-16">
               {children}
             </main>
 

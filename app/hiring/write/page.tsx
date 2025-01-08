@@ -21,6 +21,21 @@ import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useSessionStorage } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
+import {
+  DndContext,
+  closestCenter,
+  DragEndEvent,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  TouchSensor,
+} from '@dnd-kit/core';
+import {
+  SortableContext,
+  arrayMove,
+  horizontalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -106,6 +121,22 @@ const HiringWrite = () => {
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
     useGetEnterpriseProfile(userData?.id ?? '');
+
+  const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor));
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over) return;
+
+    if (active.id !== over.id) {
+      setImages((items) => {
+        const oldIndex = Number(active.id);
+        const newIndex = Number(over.id);
+        return arrayMove(items, oldIndex, newIndex);
+      });
+    }
+  };
 
   const daumPostCodeHandler = (data: Address) => {
     setAddress({
@@ -582,14 +613,25 @@ const HiringWrite = () => {
 
       {/* images */}
       <div className="flex flex-col">
-        <p className="text-2xl font-bold mb-2">
-          회사 이미지
-          <span className="text-xs text-red-500 align-bottom ml-2">
-            * 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.
-          </span>
-        </p>
+        <p className="text-2xl font-bold mb-2">회사 이미지</p>
 
-        <label className="relative py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
+        <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
+          <p className="font-bold text-sm">
+            • 이미지는 최대 5개까지 업로드 가능해요
+          </p>
+          <p className="text-sm">
+            • 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.
+          </p>
+          <p className="text-sm">
+            • 첫 번째 이미지가 채용공고 대표 이미지로 사용돼요.
+          </p>
+          <p className="text-sm">
+            • 드래그 아이콘을 눌러 드래그하면 업로드될 이미지 순서를 변경할 수
+            있어요.
+          </p>
+        </div>
+
+        <label className="relative mt-3 py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
           <div className="flex gap-2 items-center justify-center">
             <Image
               src="/svg/upload.svg"
@@ -614,26 +656,36 @@ const HiringWrite = () => {
 
       {images.length > 0 && <div className="border border-gray-300 my-4"></div>}
 
-      <div className="flex flex-wrap gap-3">
-        {images.map((image, index) => (
-          <div key={index} className="relative w-32 h-32 border rounded">
-            <img
-              src={URL.createObjectURL(image)}
-              alt={`uploaded ${index}`}
-              className="w-full h-full object-cover rounded"
-            />
-            <button
-              onClick={() => removeImage(index)}
-              className="absolute top-1 right-1 bg-[#4C71C0] text-white rounded px-1"
-            >
-              &times;
-            </button>
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={handleDragEnd}
+      >
+        <SortableContext
+          items={images.map((_, index) => index)}
+          strategy={horizontalListSortingStrategy}
+        >
+          <div className="flex flex-wrap gap-3">
+            {images.map((image, index) => (
+              <div key={index} className="flex flex-col items-center gap-2">
+                <SortableImageDnd
+                  id={index}
+                  index={index}
+                  image={image}
+                  onRemove={removeImage}
+                />
+
+                {index === 0 && (
+                  <p className="text-sm font-bold">대표 이미지</p>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        </SortableContext>
+      </DndContext>
 
       <button
-        className="mx-auto mt-20 px-4 py-2 bg-[#4C71C0] text-white rounded w-fit"
+        className="mx-auto mt-20 px-8 py-3 bg-[#4C71C0] text-white rounded w-fit"
         onClick={() => onSubmit()}
       >
         등록하기
