@@ -1,6 +1,6 @@
 import HiringDetailView from './hiring-detail-view';
 
-const HiringPage = async ({
+const HiringDetailPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -9,4 +9,4 @@ const HiringPage = async ({
   return <HiringDetailView hiringId={id} />;
 };
 
-export default HiringPage;
+export default HiringDetailPage;

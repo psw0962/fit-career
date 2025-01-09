@@ -12,6 +12,7 @@ import { useGetResume } from '@/actions/resume';
 import ResumeSelectModal from '@/components/my-page/resume/resume-select-modal';
 import { useState } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
+import { formatPeriod } from '@/functions/formatPeriod';
 
 const OPTIONS: EmblaOptionsType = {};
 
@@ -95,8 +96,7 @@ const HiringDetailView = ({
               ∙ {hiringData.data[0].short_address}
             </p>
             <p className="text-sm text-gray-500">
-              ∙ 경력 {hiringData.data[0].period[0]}년 ~{' '}
-              {hiringData.data[0].period[1]}년
+              ∙ 경력 {formatPeriod(hiringData.data[0].period)}
             </p>
           </div>
         </div>

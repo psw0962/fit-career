@@ -239,6 +239,41 @@ export const useGetHiring = (
 };
 
 // =========================================
+// ============== get hiring by id
+// =========================================
+const getHiringById = async (hiringId: string) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const { data, error } = await supabase
+    .from('hiring')
+    .select(
+      `
+      *,
+      enterprise_profile:enterprise_profile!user_id(*)
+    `
+    )
+    .eq('id', hiringId)
+    .single();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data as HiringDataResponse;
+};
+
+export const useGetHiringById = (
+  hiringId: string,
+  options?: UseQueryOptions<HiringDataResponse, Error>
+) => {
+  return useQuery<HiringDataResponse, Error>({
+    queryKey: ['hiring', hiringId],
+    queryFn: () => getHiringById(hiringId),
+    ...options,
+  });
+};
+
+// =========================================
 // ============== get hirings by user submission
 // =========================================
 const getHiringByUserSubmission = async (
@@ -437,6 +472,111 @@ export const useDeleteHiring = (
       console.error('채용 공고 삭제 중 에러 발생:', error);
       toast({
         title: '채용 공고 삭제에 실패했습니다.',
+        description: '네트워크 에러, 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
+    },
+    ...options,
+  });
+};
+
+// =========================================
+// ============== patch hiring
+// =========================================
+const patchHiring = async (data: HiringData) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const imageUrls: string[] = [];
+
+  const { data: hiringData, error: hiringDataError } = await supabase
+    .from('hiring')
+    .select('images')
+    .eq('id', data.id)
+    .single();
+
+  if (hiringDataError) throw new Error(hiringDataError.message);
+
+  // Delete removed images from storage
+  const existingImages = hiringData?.images || [];
+  const newFileImages = data.images.filter(
+    (img): img is File => img instanceof File
+  );
+  const keptImageUrls = data.images.filter(
+    (img: string | File): img is string => typeof img === 'string'
+  );
+
+  for (const imageUrl of existingImages) {
+    if (!keptImageUrls.includes(imageUrl)) {
+      const path = imageUrl.split('/').slice(-1)[0];
+      await supabase.storage.from('hiring').remove([`hiring/${path}`]);
+    }
+  }
+
+  // Upload new images
+  for (const image of newFileImages) {
+    const { data: uploadData, error } = await supabase.storage
+      .from('hiring')
+      .upload(`hiring/${Date.now()}-${image.name}`, image);
+
+    if (error) throw new Error(error.message);
+
+    const url = supabase.storage.from('hiring').getPublicUrl(uploadData.path);
+    imageUrls.push(url.data.publicUrl);
+  }
+
+  const makeShortAddress = data.address.zoneAddress.split(' ');
+  const shortAddress =
+    makeShortAddress[0] === '세종특별자치시'
+      ? makeShortAddress[0].slice(0, 2)
+      : `${makeShortAddress[0].slice(0, 2)} ${makeShortAddress[1]}`;
+
+  const { error } = await supabase
+    .from('hiring')
+    .update({
+      address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
+      position:
+        data.position.job === '기타' ? data.position.etc : data.position.job,
+      position_etc: data.position.job === '기타',
+      period: data.periodValue,
+      title: data.title,
+      content: data.content,
+      dead_line: data.deadLine,
+      images: [...keptImageUrls, ...imageUrls],
+      short_address: shortAddress,
+      updated_at: formatKRTime(),
+    })
+    .eq('id', data.id);
+
+  if (error) throw new Error(error.message);
+};
+
+export const usePatchHiring = (
+  options?: UseMutationOptions<void, Error, HiringData, void>
+) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { toast } = useToast();
+
+  return useMutation<void, Error, HiringData, void>({
+    mutationFn: patchHiring,
+    onSuccess: () => {
+      router.push('/auth/my-page');
+
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+
+      toast({
+        title: '채용공고가 수정되었습니다.',
+        variant: 'default',
+      });
+    },
+    onError: (error: Error) => {
+      console.error('채용 공고 수정 중 에러 발생:', error);
+      toast({
+        title: '채용 공고 수정에 실패했습니다.',
         description: '네트워크 에러, 잠시 후 다시 시도해주세요.',
         variant: 'warning',
       });

@@ -130,7 +130,7 @@ const HiringPosts = () => {
                     className="w-full flex items-center gap-1"
                     onClick={(e) => {
                       e.stopPropagation();
-                      console.log('edit');
+                      router.push(`/hiring/edit/${x.id}`);
                     }}
                   >
                     <div className="w-full flex items-center justify-center gap-1 border rounded px-2 py-1">

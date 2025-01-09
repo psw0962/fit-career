@@ -50,12 +50,12 @@ const Nav = (): React.ReactElement => {
 
   return (
     <nav
-      className={`overflow-x-auto fixed top-0 w-full shadow bg-white z-10 transition-all duration-300 z-30`}
+      className={`overflow-x-auto fixed top-0 w-full shadow bg-white transition-all duration-300 z-30`}
     >
       {/* desktop */}
       <div
         className={`min-w-[350px] flex justify-between max-w-7xl mx-auto px-10 ${
-          isScrolled ? 'py-3' : 'py-7'
+          isScrolled ? 'py-3' : 'py-5'
         } transition-all duration-300`}
       >
         <div className="flex gap-24">

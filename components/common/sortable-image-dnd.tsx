@@ -1,22 +1,22 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
-type SortableImageDndProps = {
+
+interface SortableImageDndProps {
   id: number;
   index: number;
-  image: File;
+  image: File | string;
   onRemove: (index: number) => void;
-};
+  isUrl?: boolean;
+}
 
 export const SortableImageDnd = ({
   id,
   index,
   image,
   onRemove,
+  isUrl,
 }: SortableImageDndProps) => {
-  const [imageUrl, setImageUrl] = useState<string>('');
-
   const {
     attributes,
     listeners,
@@ -26,18 +26,16 @@ export const SortableImageDnd = ({
     isDragging,
   } = useSortable({ id });
 
-  useEffect(() => {
-    const url = URL.createObjectURL(image);
-    setImageUrl(url);
-    return () => URL.revokeObjectURL(url);
-  }, [image]);
-
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
     cursor: 'grab',
   };
+
+  const imageUrl: string = isUrl
+    ? (image as string)
+    : URL.createObjectURL(image as File);
 
   return (
     <div
@@ -53,19 +51,17 @@ export const SortableImageDnd = ({
         <Image
           src="/svg/draggable.svg"
           alt="draggable"
-          width={14}
+          width={16}
           height={16}
           draggable={false}
         />
       </div>
 
-      {imageUrl && (
-        <img
-          src={imageUrl}
-          alt={`uploaded ${id}`}
-          className="w-full h-full object-cover rounded"
-        />
-      )}
+      <img
+        src={imageUrl}
+        alt={`uploaded ${id}`}
+        className="w-full h-full object-cover rounded"
+      />
 
       <button
         onClick={(e) => {
@@ -77,7 +73,7 @@ export const SortableImageDnd = ({
         <Image
           src="/svg/close.svg"
           alt="close"
-          width={14}
+          width={16}
           height={16}
           className="invert brightness-0"
           draggable={false}

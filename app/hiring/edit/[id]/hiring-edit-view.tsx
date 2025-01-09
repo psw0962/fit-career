@@ -1,6 +1,6 @@
 'use client';
 
-import { usePostHiring } from '@/actions/hiring';
+import { useGetHiringById, usePatchHiring } from '@/actions/hiring';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
 import { format, parse } from 'date-fns';
@@ -36,6 +36,7 @@ import {
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
+import withAuth from '@/hoc/withAuth';
 
 const FroalaEditor = dynamic(
   async () => {
@@ -78,7 +79,7 @@ const DAUMPOSTCODESTYLE = {
   border: '1.4px solid #333333',
 };
 
-const HiringWrite = () => {
+const HiringEditView = ({ hiringId }: { hiringId: string }) => {
   const router = useRouter();
   const { toast } = useToast();
 
@@ -103,20 +104,15 @@ const HiringWrite = () => {
   });
   const [periodValue, setPeriodValue] = useState<number[]>([0, 10]);
   const [title, setTitle] = useState('');
-  const [content, setContent] = useState(`
-    <p>근무형태 : 오후 근무(14시 ~ 23시) / 주5일(월~금)</p>
-    <p>주요업무 : 회원관리, 센터관리</p>
-    <p>자격요건 : 생활스포츠지도사2급</p>
-    <p>우대사항 : NASM, NSCA 등 관련 자격</p>
-    <p>혜택 및 복지 : 4대 보험, 하계 휴가, 교육 비용 지원 등</p>
-    <p>채용 절차 : 서류 전형 &gt; 대면 면접 &gt; 처우 협의 &gt; 최종 합격</p>
-  `);
+  const [content, setContent] = useState('');
   const [deadLine, setDeadLine] = useState<string>(
     format(new Date(), 'yyyy-MM-dd')
   );
-  const [images, setImages] = useState<File[]>([]);
+  const [images, setImages] = useState<(File | string)[]>([]);
 
-  const { mutate: postHring, status: postHringStatus } = usePostHiring();
+  const { mutate: patchHiring, status: patchHiringStatus } = usePatchHiring();
+  const { data: hiringData, isLoading: hiringDataLoading } =
+    useGetHiringById(hiringId);
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
     useGetEnterpriseProfile(userData?.id ?? '');
@@ -277,14 +273,15 @@ const HiringWrite = () => {
       return;
     }
 
-    postHring({
+    patchHiring({
+      id: hiringId,
       address,
       position,
       periodValue,
       title,
       content,
       deadLine,
-      images,
+      images: images as File[],
     });
   };
 
@@ -310,13 +307,42 @@ const HiringWrite = () => {
     userDataLoading,
     enterpriseProfileLoading,
     router,
+    hiringId,
     setActiveTab,
   ]);
 
+  useEffect(() => {
+    if (hiringData) {
+      const fullAddress = hiringData.address.split(' ');
+      const zoneCode = fullAddress[0];
+      const zoneAddress = fullAddress.slice(1, -1).join(' ');
+      const detailAddress = fullAddress[fullAddress.length - 1];
+
+      setAddress({
+        findAddressModal: false,
+        zoneCode,
+        zoneAddress,
+        detailAddress,
+      });
+
+      setPosition({
+        job: hiringData.position_etc ? '기타' : hiringData.position,
+        etc: hiringData.position_etc ? hiringData.position : '',
+      });
+
+      setPeriodValue(hiringData.period);
+      setTitle(hiringData.title);
+      setContent(hiringData.content);
+      setDeadLine(hiringData.dead_line);
+      setImages(hiringData.images);
+    }
+  }, [hiringData]);
+
   if (
-    postHringStatus === 'pending' ||
+    patchHiringStatus === 'pending' ||
     enterpriseProfileLoading ||
-    userDataLoading
+    userDataLoading ||
+    hiringDataLoading
   ) {
     return <GlobalSpinner />;
   }
@@ -324,7 +350,7 @@ const HiringWrite = () => {
   return (
     <div className="flex flex-col">
       <p className="text-3xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]">
-        채용공고 등록
+        채용공고 수정
       </p>
 
       <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
@@ -354,7 +380,6 @@ const HiringWrite = () => {
       <div className="flex flex-col mt-10">
         <div className="flex flex-col md:flex-row gap-2 text-2xl font-bold mb-2 md:items-end">
           <p className="text-2xl font-bold leading-none">기업 프로필</p>
-
           <p className="text-xs font-bold leading-none">
             * 기업 프로필은 마이페이지에서 변경 가능합니다.
           </p>
@@ -505,6 +530,7 @@ const HiringWrite = () => {
             type="text"
             className="appearance-none border py-3 px-2 mb-4 rounded"
             placeholder="직무를 입력해 주세요"
+            value={position.etc}
             onChange={(e) => {
               setPosition({
                 ...position,
@@ -577,9 +603,6 @@ const HiringWrite = () => {
           model={content}
           onModelChange={(event) => setContent(event)}
           config={{
-            // placeholderText: '',
-            // charCounterCount: true,
-            // charCounterMax: 1000,
             fontSize: ['1', '1.2', '1.4', '1.6', '1.8', '2'],
             fontSizeDefaultSelection: '20px',
             fontSizeUnit: 'rem',
@@ -670,8 +693,9 @@ const HiringWrite = () => {
                 <SortableImageDnd
                   id={index}
                   index={index}
-                  image={image}
+                  image={image as File}
                   onRemove={removeImage}
+                  isUrl={typeof image === 'string'}
                 />
 
                 {index === 0 && (
@@ -687,10 +711,10 @@ const HiringWrite = () => {
         className="mx-auto mt-20 px-8 py-3 bg-[#4C71C0] text-white rounded w-fit"
         onClick={() => onSubmit()}
       >
-        등록하기
+        수정하기
       </button>
     </div>
   );
 };
 
-export default HiringWrite;
+export default withAuth(HiringEditView);

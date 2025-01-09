@@ -1,4 +1,5 @@
 export type HiringData = {
+  id?: string;
   address: {
     zoneCode: string;
     zoneAddress: string;
