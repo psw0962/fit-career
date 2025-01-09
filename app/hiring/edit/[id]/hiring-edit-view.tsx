@@ -653,7 +653,7 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
           </p>
         </div>
 
-        <label className="relative mt-3 py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
+        <label className="relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
           <div className="flex gap-2 items-center justify-center">
             <Image
               src="/svg/upload.svg"
