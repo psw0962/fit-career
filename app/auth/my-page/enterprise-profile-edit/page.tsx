@@ -252,7 +252,7 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
   return (
     <div>
       {/* logo */}
-      <div className="flex flex-col mb-20 mt-10">
+      <div className="flex flex-col mb-20">
         <label className="text-2xl font-bold mb-2">회사 로고</label>
 
         <div>

@@ -281,7 +281,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
   }
 
   return (
-    <div className="flex flex-col mb-20 mt-10">
+    <div className="flex flex-col mb-20">
       <div className="flex flex-col mb-20">
         <p className="text-2xl font-bold mb-2">이력서 작성 TIP</p>
 

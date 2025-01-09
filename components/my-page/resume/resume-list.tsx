@@ -60,9 +60,11 @@ const Resume = (): React.ReactElement => {
             ${uploadResumeStatus === 'pending' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         >
           <Image src="/svg/upload.svg" alt="upload" width={20} height={20} />
+
           <span className="text-sm whitespace-nowrap">
             {uploadResumeStatus === 'pending' ? <Spinner /> : '이력서 업로드'}
           </span>
+
           <input
             type="file"
             accept=".pdf,.hwp,.xlsx,.xls,.docx,.pptx"

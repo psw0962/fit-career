@@ -7,7 +7,7 @@ import NavAuth from './nav-auth';
 import Link from 'next/link';
 
 const MENU_LIST = [
-  { id: 1, name: '채용정보', path: '/hiring' },
+  { id: 1, name: '채용정보', path: '/' },
   { id: 2, name: '커뮤니티', path: '/community' },
   { id: 3, name: '대회정보', path: '/competition' },
 ];

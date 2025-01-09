@@ -50,36 +50,38 @@ const Auth = () => {
   if (isLoading) return <GlobalSpinner />;
 
   return (
-    <div className="w-fit m-auto">
-      <div className="flex flex-col gap-4 justify-center items-center mt-20">
-        <p className="text-center text-3xl font-bold">
+    <div className="w-full mx-auto h-[60vh] flex flex-col justify-center">
+      <div className="flex flex-col gap-2 justify-center items-center">
+        <p className="text-center text-2xl font-bold break-keep">
           피트니스의 모든 정보, FIT Career
         </p>
 
-        <p className="flex items-center text-center text-[#8F9091] font-bold">
+        <p className="flex items-center text-base text-center text-[#8F9091] font-bold break-keep">
           취업, 이직, 커리어 콘텐츠까지
           <br />
           피트니스 커리어 성장의 모든 것
         </p>
       </div>
 
-      <button
+      <div
+        className="w-full flex justify-center cursor-pointer"
         onClick={() => mutate()}
-        className="w-full flex items-center justify-center bg-[#FEE500] text-black font-bold py-2 px-4 mt-10 rounded"
       >
-        <div className="relative w-10 h-10 mr-1">
-          <Image
-            src="/svg/kakao-logo.svg"
-            alt="kakao-logo"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            fill
-            style={{ objectFit: 'cover' }}
-            priority
-          />
-        </div>
+        <div className="w-[250px] flex items-center justify-center bg-[#FEE500] text-black font-bold py-2 px-4 mt-5 rounded">
+          <div className="relative w-8 sm:w-10 h-8 sm:h-10 mr-1">
+            <Image
+              src="/svg/kakao-logo.svg"
+              alt="kakao-logo"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              fill
+              style={{ objectFit: 'cover' }}
+              priority
+            />
+          </div>
 
-        <p>카카오 계정으로 계속하기</p>
-      </button>
+          <p className="text-sm sm:text-base">카카오 로그인</p>
+        </div>
+      </div>
     </div>
   );
 };
