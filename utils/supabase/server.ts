@@ -8,6 +8,8 @@ export const createServerSupabaseClient = async (
   cookieStore: ReturnType<typeof cookies> = cookies(),
   admin: boolean = false
 ) => {
+  const cookieInstance = await cookieStore;
+
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     admin
@@ -16,11 +18,11 @@ export const createServerSupabaseClient = async (
     {
       cookies: {
         get(name: string) {
-          return cookieStore.get(name)?.value;
+          return cookieInstance.get(name)?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
-            cookieStore.set({ name, value, ...options });
+            cookieInstance.set({ name, value, ...options });
           } catch (error) {
             console.log('error', error);
             // The `set` method was called from a Server Component.
@@ -30,7 +32,7 @@ export const createServerSupabaseClient = async (
         },
         remove(name: string, options: CookieOptions) {
           try {
-            cookieStore.set({ name, value: '', ...options });
+            cookieInstance.set({ name, value: '', ...options });
           } catch (error) {
             console.log('error', error);
             // The `delete` method was called from a Server Component.

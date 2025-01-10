@@ -50,7 +50,7 @@ const Auth = () => {
   if (isLoading) return <GlobalSpinner />;
 
   return (
-    <div className="w-full mx-auto h-[60vh] flex flex-col justify-center">
+    <div className="w-full mx-auto min-h-[50vh] flex flex-col justify-center">
       <div className="flex flex-col gap-2 justify-center items-center">
         <p className="text-center text-2xl font-bold break-keep">
           피트니스의 모든 정보, FIT Career
@@ -63,11 +63,13 @@ const Auth = () => {
         </p>
       </div>
 
-      <div
-        className="w-full flex justify-center cursor-pointer"
-        onClick={() => mutate()}
-      >
-        <div className="w-[250px] flex items-center justify-center bg-[#FEE500] text-black font-bold py-2 px-4 mt-5 rounded">
+      <div className="w-full flex justify-center ">
+        <div
+          className="w-[250px] flex items-center justify-center bg-[#FEE500] text-black font-bold py-2 px-4 mt-5 rounded cursor-pointer"
+          onClick={() => {
+            mutate();
+          }}
+        >
           <div className="relative w-8 sm:w-10 h-8 sm:h-10 mr-1">
             <Image
               src="/svg/kakao-logo.svg"
