@@ -1,12 +1,28 @@
+import { createServerSupabaseClient } from '@/utils/supabase/server';
+import { notFound } from 'next/navigation';
 import HiringDetailView from './hiring-detail-view';
 
-const HiringDetailPage = async ({
+export default async function HiringDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
-}): Promise<React.ReactElement> => {
+}) {
   const { id } = await params;
-  return <HiringDetailView hiringId={id} />;
-};
+  const supabase = await createServerSupabaseClient();
 
-export default HiringDetailPage;
+  try {
+    const { data: hiring, error } = await supabase
+      .from('hiring')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (error || !hiring) {
+      notFound();
+    }
+
+    return <HiringDetailView hiringId={id} />;
+  } catch (error) {
+    notFound();
+  }
+}

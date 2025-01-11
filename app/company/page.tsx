@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Map } from 'react-kakao-maps-sdk';
 import CustomMapMaker from '@/components/common/kakao-map/custom-map-maker';
 import { formatPeriod } from '@/functions/formatPeriod';
-import useKakaoLoader from '@/hooks/useKakaoLoader';
+import useKakaoLoader from '@/hooks/use-kakao-loader';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-const NotFound = () => {
+export default function NotFound() {
   const router = useRouter();
 
   return (
@@ -63,38 +63,6 @@ const NotFound = () => {
           </p>
         </div>
       </div>
-
-      {/* <div className="w-full flex flex-col gap-2 justify-center items-center border rounded p-10 sm:p-20 mt-10">
-        <p className="text-center text-lg sm:text-2xl font-bold break-keep">
-          요청하신 페이지를 찾을 수 없습니다.
-        </p>
-
-        <p className="text-center text-sm sm:text-base text-[#8F9091] break-keep">
-          요청 하신 페이지가 삭제되었거나
-          <br />
-          주소가 변경되었을 수 있습니다.
-          <br />
-          확인 후 다시 시도해주세요.
-        </p>
-
-        <div className="flex flex-col items-center justify-center gap-2 mt-5 sm:flex-row">
-          <p
-            className="w-[150px] text-center text-base font-bold border rounded px-6 py-2 cursor-pointer"
-            onClick={() => router.back()}
-          >
-            이전 페이지로
-          </p>
-
-          <p
-            className="w-[150px] text-center text-base font-bold rounded px-6 py-2 bg-[#4C71C0] text-white cursor-pointer"
-            onClick={() => router.push('/')}
-          >
-            홈으로
-          </p>
-        </div>
-      </div> */}
     </div>
   );
-};
-
-export default NotFound;
+}

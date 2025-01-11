@@ -621,6 +621,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
                     <div className="flex items-center gap-1">
                       <input
                         id={`currentlyEnrolled-${edu.id}`}
+                        name={`currentlyEnrolled-${edu.id}`}
                         type="radio"
                         checked={
                           edu.isCurrentlyEnrolled === 'currentlyEnrolled'
@@ -645,6 +646,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
                     <div className="flex items-center gap-1">
                       <input
                         id={`graduated-${edu.id}`}
+                        name={`graduated-${edu.id}`}
                         type="radio"
                         checked={edu.isCurrentlyEnrolled === 'graduated'}
                         onChange={() => {
@@ -667,6 +669,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
                     <div className="flex items-center gap-1">
                       <input
                         id={`etc-${edu.id}`}
+                        name={`etc-${edu.id}`}
                         type="radio"
                         checked={edu.isCurrentlyEnrolled === 'etc'}
                         onChange={() => {
@@ -692,6 +695,8 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
                   className={`flex flex-col gap-2 ${education.length > 1 ? 'w-[75%]' : 'w-[80%]'} [@media(max-width:1150px)]:w-full`}
                 >
                   <input
+                    id={`schoolName-${edu.id}`}
+                    name={`schoolName-${edu.id}`}
                     type="text"
                     placeholder="학교명"
                     value={edu.schoolName}
@@ -707,6 +712,8 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
                   />
 
                   <input
+                    id={`majorAndDegree-${edu.id}`}
+                    name={`majorAndDegree-${edu.id}`}
                     type="text"
                     placeholder="전공 및 학위 ex) 체육학 학사"
                     value={edu.majorAndDegree}
@@ -834,6 +841,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
                   <div className="flex items-center gap-1">
                     <input
                       id={`currentlyEmployed-${exp.id}`}
+                      name={`currentlyEmployed-${exp.id}`}
                       type="checkbox"
                       checked={exp.isCurrentlyEmployed}
                       onChange={() => {

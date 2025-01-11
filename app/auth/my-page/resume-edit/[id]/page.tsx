@@ -1,31 +1,37 @@
 import { createServerSupabaseClient } from '@/utils/supabase/server';
 import NoAuthority from '@/components/common/no-authority';
 import ResumeEditView from './resume-edit-view';
+import { notFound } from 'next/navigation';
 
-const ResumeEditPage = async ({
+export default async function ResumeEditPage({
   params,
 }: {
   params: Promise<{ id: string }>;
-}): Promise<React.ReactElement> => {
+}) {
   const { id } = await params;
-
   const supabase = await createServerSupabaseClient();
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-  const { data: resumeData, error: resumeError } = await supabase
-    .from('resume')
-    .select('*')
-    .eq('id', id)
-    .single();
+    const { data: resumeData, error: resumeError } = await supabase
+      .from('resume')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-  if (resumeError || !user || resumeData?.user_id !== user.id) {
-    return <NoAuthority />;
+    if (resumeError || !resumeData) {
+      notFound();
+    }
+
+    if (!user || resumeData.user_id !== user.id) {
+      return <NoAuthority />;
+    }
+
+    return <ResumeEditView resumeId={id} />;
+  } catch (error) {
+    notFound();
   }
-
-  return <ResumeEditView resumeId={id} />;
-};
-
-export default ResumeEditPage;
+}

@@ -411,9 +411,9 @@ const HiringWrite = () => {
 
       {/* address */}
       <div className="flex flex-col mb-20" ref={addressRef}>
-        <label htmlFor="address" className="text-2xl font-bold mb-2">
+        <p className="text-2xl font-bold mb-2">
           근무 지역 <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         <button
           className="py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2"
@@ -474,9 +474,9 @@ const HiringWrite = () => {
 
       {/* job position */}
       <div className="flex flex-col mb-20" ref={positionRef}>
-        <label htmlFor="job-position" className="text-2xl font-bold mb-2">
+        <p className="text-2xl font-bold mb-2">
           채용 직무<span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         <select
           name="job-position"
@@ -517,9 +517,9 @@ const HiringWrite = () => {
 
       {/* employment period */}
       <div className="flex flex-col mb-20" ref={periodRef}>
-        <label htmlFor="employment-period" className="text-2xl font-bold mb-2">
+        <p className="text-2xl font-bold mb-2">
           필요 경력 <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         {formatPeriod(periodValue)}
 
@@ -549,10 +549,10 @@ const HiringWrite = () => {
 
       {/* title */}
       <div className="flex flex-col mb-20" ref={titleRef}>
-        <label htmlFor="title" className="text-2xl font-bold mb-2">
-          채용공고 제목{' '}
+        <p className="text-2xl font-bold mb-2">
+          채용공고 제목
           <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
         <input
           id="title"
           className="border p-2 mb-4 rounded"
@@ -567,10 +567,10 @@ const HiringWrite = () => {
 
       {/* content */}
       <div className="flex flex-col mb-20" ref={contentRef}>
-        <label htmlFor="content" className="text-2xl font-bold mb-2">
-          채용공고 내용{' '}
+        <p className="text-2xl font-bold mb-2">
+          채용공고 내용
           <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         <FroalaEditor
           tag="textarea"
@@ -591,9 +591,9 @@ const HiringWrite = () => {
 
       {/* deadline */}
       <div className="flex flex-col mb-20" ref={deadLineRef}>
-        <label htmlFor="deadline" className="text-2xl font-bold mb-2">
+        <p className="text-2xl font-bold mb-2">
           마감일 <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         <DatePicker
           className="px-2 py-2 border rounded"

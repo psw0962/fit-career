@@ -356,13 +356,13 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
 
       {/* insudtry */}
       <div className="flex flex-col mb-20" ref={industryRef}>
-        <label htmlFor="industry" className="text-2xl font-bold mb-2">
+        <p className="text-2xl font-bold mb-2">
           업종 <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         <select
-          name="industry"
           id="industry"
+          name="industry"
           className={`appearance-none border p-2 mb-4 rounded ${
             industry.job === '' ? 'text-gray-400' : 'text-black'
           }`}

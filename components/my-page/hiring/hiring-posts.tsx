@@ -24,15 +24,19 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { useSessionStorage } from 'usehooks-ts';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 
 const HiringPosts = () => {
   const router = useRouter();
 
   const [deleteHiringId, setDeleteHiringId] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useSessionStorage('hiring-posts-current-page', 0);
 
   const timeoutRef = useRef<NodeJS.Timeout>();
+
+  useScrollRestoration('hiring-posts-list');
 
   const { data: userData } = useGetUserData();
   const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({

@@ -23,6 +23,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useSessionStorage } from 'usehooks-ts';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 
 const ResumeSubmitted = () => {
   const columns: ColumnDef<HiringDataResponse>[] = [
@@ -137,7 +139,9 @@ const ResumeSubmitted = () => {
   const router = useRouter();
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<string | null>(null);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useSessionStorage('resume-submitted-current-page', 0);
+
+  useScrollRestoration('resume-submitted-current-page');
 
   const { data: userData } = useGetUserData();
   const { mutate: deleteResumeFromHiring } = useDeleteResumeFromHiring();

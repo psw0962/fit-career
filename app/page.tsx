@@ -1,20 +1,24 @@
-'use client';
-
 import dynamic from 'next/dynamic';
-import { useEffect, useState } from 'react';
 
-const HiringMain = dynamic(() => import('@/app/hiring-main'), { ssr: false });
+const HiringMain = dynamic(() => import('@/components/hiring/hiring-main'));
 
-export default function HiringWrapper() {
-  const [isMounted, setIsMounted] = useState(false);
+// export const metadata = {
+//   title: 'HOME',
+//   description: 'HOME',
+// };
 
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+// export async function generateMetadata({ params, searchParams }) {
+//   const movie = await getMovie(params.id);
 
-  if (!isMounted) {
-    return null;
-  }
+//   return {
+//     title: movie.title,
+//     description: movie.overview,
+//     openGraph: {
+//       images: [movie.image_url],
+//     },
+//   };
+// }
 
+export default function Home() {
   return <HiringMain />;
 }

@@ -67,6 +67,7 @@ const Resume = (): React.ReactElement => {
 
           <input
             type="file"
+            name="file-upload"
             accept=".pdf,.hwp,.xlsx,.xls,.docx,.pptx"
             onChange={handleFileChange}
             className="hidden"

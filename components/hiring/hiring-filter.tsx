@@ -3,19 +3,23 @@
 import { useGetHiring } from '@/actions/hiring';
 import Image from 'next/image';
 import { HiringFilterProps } from '@/types/hiring/filter-type';
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { formatPeriod } from '@/functions/formatPeriod';
 import Link from 'next/link';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 import GlobalSpinner from '@/components/common/global-spinner';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 
 const HiringFilter: React.FC<HiringFilterProps> = ({
   regionFilter,
   positionFilter,
   periodValueFilter,
+  currentPage,
+  setCurrentPage,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
+
+  useScrollRestoration('hiring-list');
 
   const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiring({
     page: currentPage - 1,
@@ -43,8 +47,11 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
   };
 
   useEffect(() => {
-    setCurrentPage(1);
-  }, [regionFilter, positionFilter, periodValueFilter]);
+    const savedPage = sessionStorage.getItem('hiring-current-page');
+    if (savedPage) {
+      setCurrentPage(Number(savedPage));
+    }
+  }, [setCurrentPage]);
 
   if (hiringDataIsLoading) {
     return <GlobalSpinner />;
@@ -108,6 +115,12 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
             );
           })}
       </div>
+
+      {hiringData?.count === 0 && (
+        <div className="flex justify-center items-center mt-32">
+          <p className="text-lg">검색 결과가 없습니다.</p>
+        </div>
+      )}
 
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-2 mt-4">

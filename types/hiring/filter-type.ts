@@ -5,29 +5,35 @@ export type City = {
   county: string[];
 };
 
-export type RegionsFilterProps = {
-  regionFilter: RegionFilter;
-  setRegionFilter: React.Dispatch<React.SetStateAction<RegionFilter>>;
-};
-
 export type RegionFilter = {
   selectedCity: City | null;
   selectedCounties: string[];
   allSelectedCities: string[];
 };
 
+export type RegionsFilterProps = {
+  regionFilter: RegionFilter;
+  setRegionFilter: (
+    value: RegionFilter | ((prev: RegionFilter) => RegionFilter)
+  ) => void;
+};
+
 export type PositionFilterProps = {
   positionFilter: string[];
-  setPositionFilter: React.Dispatch<React.SetStateAction<string[]>>;
+  setPositionFilter: (value: string[] | ((prev: string[]) => string[])) => void;
 };
 
 export type PeriodFilterProps = {
   periodValueFilter: number[];
-  setPeriodValueFilter: React.Dispatch<React.SetStateAction<number[]>>;
+  setPeriodValueFilter: (
+    value: number[] | ((prev: number[]) => number[])
+  ) => void;
 };
 
 export type HiringFilterProps = {
   regionFilter: RegionFilter;
   positionFilter: string[];
   periodValueFilter: number[];
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 };

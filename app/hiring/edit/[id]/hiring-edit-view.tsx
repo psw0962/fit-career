@@ -436,9 +436,9 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
       {/* address */}
       <div className="flex flex-col mb-20" ref={addressRef}>
-        <label htmlFor="address" className="text-2xl font-bold mb-2">
+        <p className="text-2xl font-bold mb-2">
           근무 지역 <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         <button
           className="py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2"
@@ -451,7 +451,8 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
           <>
             <input
               type="text"
-              id="address"
+              id="address-zone"
+              name="address-zone"
               value={
                 address.zoneCode && address.zoneAddress
                   ? `[${address.zoneCode}] ${address.zoneAddress}`
@@ -464,7 +465,8 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
             <input
               type="text"
-              id="address"
+              id="address-detail"
+              name="address-detail"
               onChange={(e) =>
                 setAddress({ ...address, detailAddress: e.target.value })
               }
@@ -499,13 +501,13 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
       {/* job position */}
       <div className="flex flex-col mb-20" ref={positionRef}>
-        <label htmlFor="job-position" className="text-2xl font-bold mb-2">
+        <p className="text-2xl font-bold mb-2">
           채용 직무<span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         <select
-          name="job-position"
           id="job-position"
+          name="job-position"
           className={`appearance-none border p-2 mb-4 rounded ${
             position.job === '' ? 'text-gray-400' : 'text-black'
           }`}
@@ -527,6 +529,8 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
         {position.job === '기타' && (
           <input
+            id="job-position-etc"
+            name="job-position-etc"
             type="text"
             className="appearance-none border py-3 px-2 mb-4 rounded"
             placeholder="직무를 입력해 주세요"
@@ -543,14 +547,15 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
       {/* employment period */}
       <div className="flex flex-col mb-20" ref={periodRef}>
-        <label htmlFor="employment-period" className="text-2xl font-bold mb-2">
+        <p className="text-2xl font-bold mb-2">
           필요 경력 <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         {formatPeriod(periodValue)}
 
         <Slider.Root
           id="employment-period"
+          name="employment-period"
           className="relative flex h-5 w-[300px] mt-2 touch-none select-none items-center"
           value={periodValue}
           onValueChange={periodValueHandleChange}
@@ -575,12 +580,13 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
       {/* title */}
       <div className="flex flex-col mb-20" ref={titleRef}>
-        <label htmlFor="title" className="text-2xl font-bold mb-2">
-          채용공고 제목{' '}
+        <p className="text-2xl font-bold mb-2">
+          채용공고 제목
           <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
         <input
           id="title"
+          name="title"
           className="border p-2 mb-4 rounded"
           type="text"
           placeholder="채용 글 제목을 입력해 주세요"
@@ -593,10 +599,10 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
       {/* content */}
       <div className="flex flex-col mb-20" ref={contentRef}>
-        <label htmlFor="content" className="text-2xl font-bold mb-2">
-          채용공고 내용{' '}
+        <p className="text-2xl font-bold mb-2">
+          채용공고 내용
           <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         <FroalaEditor
           tag="textarea"
@@ -614,9 +620,9 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
       {/* deadline */}
       <div className="flex flex-col mb-20" ref={deadLineRef}>
-        <label htmlFor="deadline" className="text-2xl font-bold mb-2">
+        <p className="text-2xl font-bold mb-2">
           마감일 <span className="text-sm text-red-500 align-top">*</span>
-        </label>
+        </p>
 
         <DatePicker
           className="px-2 py-2 border rounded"
@@ -653,7 +659,7 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
           </p>
         </div>
 
-        <label className="relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
+        <div className="relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
           <div className="flex gap-2 items-center justify-center">
             <Image
               src="/svg/upload.svg"
@@ -673,7 +679,7 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
             accept="image/jpeg, image/jpg, image/png, image/webp"
             onChange={handleImageUpload}
           />
-        </label>
+        </div>
       </div>
 
       {images.length > 0 && <div className="border border-gray-300 my-4"></div>}

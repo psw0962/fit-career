@@ -133,9 +133,9 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                 {REGIONS.map((region) => (
                   <li key={region.id} className="flex items-center">
                     <input
-                      type="radio"
                       id={`city ${region.id}`}
-                      name="city"
+                      name={`city ${region.id}`}
+                      type="radio"
                       checked={regionFilter.selectedCity?.id === region.id}
                       onChange={() => handleCitySelect(region)}
                     />
@@ -177,8 +177,9 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                     return (
                       <li key={county} className="flex items-center">
                         <input
-                          type="checkbox"
                           id={`county ${countyLabel}`}
+                          name={`county ${countyLabel}`}
+                          type="checkbox"
                           checked={
                             county === `${regionFilter.selectedCity?.city} 전체`
                               ? (isAllSelected ?? false)

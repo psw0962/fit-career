@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import RegionsFilter from '@/components/hiring/regions-filter';
 import { RegionFilter } from '@/types/hiring/filter-type';
 import PositionFilter from '@/components/hiring/position-filter';
@@ -9,27 +8,10 @@ import HiringFilter from '@/components/hiring/hiring-filter';
 import Link from 'next/link';
 import Image from 'next/image';
 import useDebounce from '@/hooks/use-debounce';
-import { useLocalStorage } from 'usehooks-ts';
-
-// export const metadata = {
-//   title: 'HOME',
-//   description: 'HOME',
-// };
-
-// export async function generateMetadata({ params, searchParams }) {
-//   const movie = await getMovie(params.id);
-
-//   return {
-//     title: movie.title,
-//     description: movie.overview,
-//     openGraph: {
-//       images: [movie.image_url],
-//     },
-//   };
-// }
+import { useSessionStorage } from 'usehooks-ts';
 
 const HiringMain = () => {
-  const [regionFilter, setRegionFilter] = useLocalStorage<RegionFilter>(
+  const [regionFilter, setRegionFilter] = useSessionStorage<RegionFilter>(
     'regionFilter',
     {
       selectedCity: null,
@@ -37,19 +19,41 @@ const HiringMain = () => {
       selectedCounties: [],
     }
   );
-  const [positionFilter, setPositionFilter] = useLocalStorage<string[]>(
+  const [positionFilter, setPositionFilter] = useSessionStorage<string[]>(
     'positionFilter',
     []
   );
 
-  const [periodValueFilter, setPeriodValueFilter] = useLocalStorage<number[]>(
+  const [periodValueFilter, setPeriodValueFilter] = useSessionStorage<number[]>(
     'periodValueFilter',
     [0, 10]
+  );
+
+  const [currentPage, setCurrentPage] = useSessionStorage(
+    'hiring-current-page',
+    1
   );
 
   const debouncedRegionFilter = useDebounce(regionFilter);
   const debouncedPositionFilter = useDebounce(positionFilter);
   const debouncedPeriodValueFilter = useDebounce(periodValueFilter);
+
+  const handleFilterChange = {
+    region: (
+      newFilter: RegionFilter | ((prev: RegionFilter) => RegionFilter)
+    ) => {
+      setRegionFilter(newFilter);
+      setCurrentPage(1);
+    },
+    position: (newFilter: string[] | ((prev: string[]) => string[])) => {
+      setPositionFilter(newFilter);
+      setCurrentPage(1);
+    },
+    period: (newFilter: number[] | ((prev: number[]) => number[])) => {
+      setPeriodValueFilter(newFilter);
+      setCurrentPage(1);
+    },
+  };
 
   const resetFilters = () => {
     setRegionFilter({
@@ -59,6 +63,7 @@ const HiringMain = () => {
     });
     setPositionFilter([]);
     setPeriodValueFilter([0, 10]);
+    setCurrentPage(1);
   };
 
   return (
@@ -95,17 +100,15 @@ const HiringMain = () => {
 
         <RegionsFilter
           regionFilter={regionFilter}
-          setRegionFilter={setRegionFilter}
+          setRegionFilter={handleFilterChange.region}
         />
-
         <PositionFilter
           positionFilter={positionFilter}
-          setPositionFilter={setPositionFilter}
+          setPositionFilter={handleFilterChange.position}
         />
-
         <PeriodFilter
           periodValueFilter={periodValueFilter}
-          setPeriodValueFilter={setPeriodValueFilter}
+          setPeriodValueFilter={handleFilterChange.period}
         />
       </div>
 
@@ -115,6 +118,8 @@ const HiringMain = () => {
         regionFilter={debouncedRegionFilter}
         positionFilter={debouncedPositionFilter}
         periodValueFilter={debouncedPeriodValueFilter}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
       />
     </div>
   );

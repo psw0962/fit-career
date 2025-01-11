@@ -5,7 +5,7 @@ import ThumbnailCarousel from '@/components/carousel/thumbnail-carousel';
 import { useGetHiring } from '@/actions/hiring';
 import Image from 'next/image';
 import { Map } from 'react-kakao-maps-sdk';
-import useKakaoLoader from '@/hooks/useKakaoLoader';
+import useKakaoLoader from '@/hooks/use-kakao-loader';
 import CustomMapMaker from '@/components/common/kakao-map/custom-map-maker';
 import { useRouter } from 'next/navigation';
 import { useGetResume } from '@/actions/resume';

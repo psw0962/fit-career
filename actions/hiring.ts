@@ -81,7 +81,7 @@ export const usePostHiring = (
         description: '이제부터 지원자가 해당 채용공고를 볼 수 있어요.',
         variant: 'default',
       });
-      router.push('/hiring');
+      router.push('/');
     },
     onError: (error: Error) => {
       console.error('채용 공고 등록 중 에러 발생:', error);
