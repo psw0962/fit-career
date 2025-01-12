@@ -1,20 +1,10 @@
-'use client';
+import LottieAnimation from '@/components/common/lottie-animation';
 
-import Lottie from 'lottie-react';
-import updating from '@/public/svg/updating.json';
-
-const Community = () => {
+export default function Community() {
   return (
     <div className="flex flex-col items-center justify-center h-[50vh]">
-      <Lottie
-        animationData={updating}
-        loop={true}
-        className="w-[200px] h-[200px]"
-      />
-
+      <LottieAnimation />
       <p className="text-xl font-bold">업데이트 중입니다.</p>
     </div>
   );
-};
-
-export default Community;
+}
