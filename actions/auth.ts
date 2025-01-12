@@ -5,7 +5,7 @@ import {
   useQueryClient,
   UseMutationOptions,
 } from '@tanstack/react-query';
-import { User, Provider } from '@supabase/supabase-js';
+import { User } from '@supabase/supabase-js';
 import { EnterpriseProfile, SignInResponse } from '@/types/auth/auth';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
@@ -16,12 +16,15 @@ import { useToast } from '@/hooks/use-toast';
 const signInWithKakao = async (): Promise<SignInResponse> => {
   const supabase = createBrowserSupabaseClient();
 
+  const redirectUrl =
+    process.env.NODE_ENV === 'production'
+      ? 'https://fit-career.vercel.app/auth/callback'
+      : 'http://localhost:3000/auth/callback';
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'kakao',
     options: {
-      redirectTo: process.env.NEXT_PUBLIC_VERCEL_URL
-        ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}/auth/callback`
-        : 'http://localhost:3000/auth/callback',
+      redirectTo: redirectUrl,
     },
   });
 
