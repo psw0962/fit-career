@@ -619,6 +619,10 @@ const HiringWrite = () => {
             • 이미지는 최대 5개까지 업로드 가능해요
           </p>
           <p className="text-sm">
+            • <span className="font-bold">가로 방향</span>의 사진이 회사의
+            전체적인 모습을 더 잘 보여줄 수 있습니다.
+          </p>
+          <p className="text-sm">
             • 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.
           </p>
           <p className="text-sm">

@@ -1,7 +1,6 @@
 'use client';
 
-import { EmblaOptionsType } from 'embla-carousel';
-import ThumbnailCarousel from '@/components/carousel/thumbnail-carousel';
+import BasicCarousel from '@/components/carousel/basic-carousel';
 import { useGetHiring } from '@/actions/hiring';
 import Image from 'next/image';
 import { Map } from 'react-kakao-maps-sdk';
@@ -13,8 +12,6 @@ import ResumeSelectModal from '@/components/my-page/resume/resume-select-modal';
 import { useState } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { formatPeriod } from '@/functions/formatPeriod';
-
-const OPTIONS: EmblaOptionsType = {};
 
 const HiringDetailView = ({
   hiringId,
@@ -54,10 +51,7 @@ const HiringDetailView = ({
   return (
     <div>
       {hiringData.data[0].images.length > 0 ? (
-        <ThumbnailCarousel
-          slides={hiringData.data[0].images}
-          options={OPTIONS}
-        />
+        <BasicCarousel slides={hiringData.data[0].images} />
       ) : (
         <div className="text-xl h-60 p-10 border rounded flex items-center justify-center">
           업로드된 회사 이미지가 없습니다.

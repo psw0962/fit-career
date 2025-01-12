@@ -11,6 +11,7 @@ import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
+import BasicCarousel from '@/components/carousel/basic-carousel';
 
 const Company = (): React.ReactElement => {
   useKakaoLoader();
@@ -48,19 +49,15 @@ const Company = (): React.ReactElement => {
 
   return (
     <div className="flex flex-col">
-      <div className="relative w-full h-36">
-        <Image
-          src={hiringData.data[0]?.images?.[0] ?? '/svg/logo.svg'}
-          alt="enterprise images"
-          fill
-          style={{ objectFit: 'contain' }}
-          priority
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-        />
-      </div>
+      {hiringData.data[0].images.length > 0 ? (
+        <BasicCarousel slides={hiringData.data[0].images} />
+      ) : (
+        <div className="text-xl h-60 p-10 border rounded flex items-center justify-center">
+          업로드된 회사 이미지가 없습니다.
+        </div>
+      )}
 
-      <div className="flex flex-col gap-2 mt-2 sm:flex-row">
+      <div className="flex flex-col gap-2 mt-2 sm:flex-row mt-[50px]">
         <div className="flex items-center gap-2">
           <div className="relative w-8 h-8">
             <Image
@@ -119,16 +116,17 @@ const Company = (): React.ReactElement => {
 
       <p className="mt-14 mb-4 text-xl font-bold">채용중인 포지션</p>
 
-      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-1 min-[530px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {hiringDataByUserId.data.map((x) => (
           <Link key={x.id} href={`/hiring/${x.id}`} passHref>
             <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
-              <div className="relative w-10 h-10 mx-auto mb-4">
+              <div className="relative w-full h-48 mx-auto mb-4">
                 <Image
                   src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
                   alt={`image ${x.id}`}
-                  fill
                   style={{ objectFit: 'cover' }}
+                  className="rounded"
+                  fill
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="

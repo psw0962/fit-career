@@ -58,7 +58,7 @@ const HiringPosts = () => {
 
   return (
     <div className="mt-5">
-      <div className="grid gap-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-1 min-[530px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {hiringData !== undefined &&
           hiringData.data.map((x: HiringDataResponse) => {
             return (
@@ -68,14 +68,15 @@ const HiringPosts = () => {
               >
                 <Link href={`/hiring/${x.id}`} passHref>
                   <div className="flex flex-col gap-0">
-                    <div className="relative w-10 h-10 mx-auto mb-4">
+                    <div className="relative w-full h-48 mx-auto mb-4">
                       <Image
                         src={
                           x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
                         }
                         alt={`image ${x.id}`}
-                        fill
                         style={{ objectFit: 'cover' }}
+                        className="rounded"
+                        fill
                         priority
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
