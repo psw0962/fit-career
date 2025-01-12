@@ -1,18 +1,16 @@
 'use client';
 
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
 import updating from '@/public/svg/updating.json';
+
+const LottieComponent = dynamic(() => import('lottie-react'), { ssr: false });
 
 export default function LottieAnimation() {
   return (
-    <div className="flex flex-col items-center justify-center h-[50vh]">
-      <Lottie
-        animationData={updating}
-        loop={true}
-        className="w-[200px] h-[200px]"
-      />
-
-      <p className="text-xl font-bold">업데이트 중입니다.</p>
-    </div>
+    <LottieComponent
+      animationData={updating}
+      loop={true}
+      className="w-[200px] h-[200px]"
+    />
   );
 }

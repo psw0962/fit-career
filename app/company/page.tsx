@@ -57,7 +57,7 @@ const Company = (): React.ReactElement => {
         </div>
       )}
 
-      <div className="flex flex-col gap-2 mt-2 sm:flex-row mt-[50px]">
+      <div className="flex flex-col gap-2 mt-[50px] sm:flex-row">
         <div className="flex items-center gap-2">
           <div className="relative w-8 h-8">
             <Image
