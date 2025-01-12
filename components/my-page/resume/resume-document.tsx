@@ -8,7 +8,8 @@ import {
   Image as PDFImage,
 } from '@react-pdf/renderer';
 import { ResumeDataResponse } from '@/types/resume/resume';
-import ReactHtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
+import { DOMNode, HTMLReactParserOptions, Element } from 'html-react-parser';
 import * as React from 'react';
 
 type HtmlNode = {
@@ -55,22 +56,27 @@ const pdfStyles = StyleSheet.create({
 
 const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
   const renderHtmlToPdf = (html: string) => {
-    return ReactHtmlParser(html, {
-      transform: (node: HtmlNode, index: number) => {
-        if (node.type === 'tag' && node.name === 'p') {
+    return parse(html, {
+      transform: (
+        reactNode: React.ReactNode,
+        domNode: DOMNode,
+        index: number
+      ) => {
+        if (domNode.type === 'tag' && domNode.name === 'p') {
           return (
             <Text key={`p-${index}`} style={pdfStyles.text}>
-              {node.children?.[0]?.data}
+              {reactNode}
             </Text>
           );
         }
-        if (node.type === 'tag' && node.name === 'strong') {
+        if (domNode.type === 'tag' && domNode.name === 'strong') {
           return (
             <Text key={`strong-${index}`} style={{ ...pdfStyles.text }}>
-              {node.children?.[0]?.data}
+              {reactNode}
             </Text>
           );
         }
+        return null;
       },
     });
   };
