@@ -17,8 +17,6 @@ import { useRouter } from 'next/navigation';
 const postHiring = async (data: HiringData) => {
   const supabase = createBrowserSupabaseClient();
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   const imageUrls: string[] = [];
 
   for (const image of data.images) {
@@ -52,6 +50,7 @@ const postHiring = async (data: HiringData) => {
       dead_line: data.deadLine,
       images: imageUrls,
       short_address: shortAddres,
+      address_search_key: data.address.zoneAddress,
       created_at: formatKRTime(),
     },
   ]);
@@ -413,8 +412,6 @@ export const useUpdateHiringVisibility = (
 const deleteHiring = async (hiringId: string) => {
   const supabase = createBrowserSupabaseClient();
 
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
   const { data: hiringData, error: hiringError } = await supabase
     .from('hiring')
     .select('*')
@@ -543,6 +540,7 @@ const patchHiring = async (data: HiringData) => {
       dead_line: data.deadLine,
       images: [...keptImageUrls, ...imageUrls],
       short_address: shortAddress,
+      address_search_key: data.address.zoneAddress,
       updated_at: formatKRTime(),
     })
     .eq('id', data.id);

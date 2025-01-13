@@ -21,6 +21,7 @@ export type HiringDataResponse = {
   updated_at: string;
   created_at: string;
   address: string;
+  address_search_key: string;
   position: string;
   title: string;
   content: string;
@@ -37,6 +38,7 @@ export type HiringDataResponse = {
     user_id: string;
     name: string;
     address: string;
+    address_search_key: string;
     description: string;
     logo: string[];
     establishment: string;

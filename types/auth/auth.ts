@@ -1,4 +1,4 @@
-import { User, Provider } from '@supabase/supabase-js';
+import { Provider } from '@supabase/supabase-js';
 
 export type SignInResponse = { provider: Provider; url: string };
 
@@ -14,6 +14,7 @@ export type EnterpriseProfile = {
     zoneAddress: string;
     detailAddress: string;
   };
+  address_search_key: string;
   description: string;
   settingLogo?: File[];
   currentLogo?: string;

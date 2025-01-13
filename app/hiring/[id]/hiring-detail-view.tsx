@@ -156,7 +156,7 @@ const HiringDetailView = ({
           level={4}
         >
           <CustomMapMaker
-            address={hiringData.data[0].address.split(' ').slice(1).join(' ')}
+            address={hiringData.data[0].address_search_key ?? ''}
           />
         </Map>
 

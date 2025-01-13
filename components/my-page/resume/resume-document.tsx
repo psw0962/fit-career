@@ -9,15 +9,8 @@ import {
 } from '@react-pdf/renderer';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import parse from 'html-react-parser';
-import { DOMNode, HTMLReactParserOptions, Element } from 'html-react-parser';
+import { DOMNode } from 'html-react-parser';
 import * as React from 'react';
-
-type HtmlNode = {
-  type: 'tag' | 'text';
-  name?: string;
-  children?: Array<HtmlNode | { data?: string }>;
-  data?: string;
-};
 
 Font.register({
   family: 'PretendardMedium',

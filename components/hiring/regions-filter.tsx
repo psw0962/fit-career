@@ -96,7 +96,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
         </button>
       </DialogTrigger>
 
-      <DialogContent className="w-full max-w-[500px] min-w-[300px]">
+      <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
         <DialogHeader>
           <DialogTitle>지역필터</DialogTitle>
           <DialogDescription></DialogDescription>
@@ -203,9 +203,9 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                 </ul>
               </div>
             ) : (
-              <div className="flex items-center justify-center border p-4 w-full max-h-72 overflow-auto rounded">
+              <p className="flex items-center justify-center border p-4 w-full max-h-72 overflow-auto rounded break-keep">
                 시/도를 선택해 주세요.
-              </div>
+              </p>
             )}
           </div>
 

@@ -93,7 +93,7 @@ const ResumeSelectIdModal = ({
       </DialogTrigger>
 
       {userData && (
-        <DialogContent className="w-full max-w-[500px] min-w-[300px]">
+        <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
           <div className="flex flex-col gap-4">
             <DialogHeader>
               <DialogTitle className="mb-4 font-bold">이력서 선택</DialogTitle>

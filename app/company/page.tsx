@@ -216,10 +216,7 @@ const Company = (): React.ReactElement => {
         >
           <CustomMapMaker
             address={
-              hiringData.data[0].enterprise_profile?.address
-                ?.split(' ')
-                .slice(1)
-                .join(' ') ?? ''
+              hiringData.data[0].enterprise_profile?.address_search_key ?? ''
             }
           />
         </Map>

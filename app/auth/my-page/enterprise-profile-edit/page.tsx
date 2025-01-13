@@ -199,6 +199,7 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
         industry,
         establishment,
         address,
+        address_search_key: address.zoneAddress,
         description,
         settingLogo,
       });
@@ -208,6 +209,7 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
         industry,
         establishment,
         address,
+        address_search_key: address.zoneAddress,
         description,
         settingLogo,
         currentLogo,
