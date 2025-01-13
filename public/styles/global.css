@@ -29,10 +29,6 @@
 body, html {
   overflow-x: hidden;
   font-family: 'Pretendard';
-
-  /* android 환경 클릭 시 highlight 제거 */
-  outline: none;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 html[data-theme="dark"] {
@@ -51,10 +47,24 @@ a {
 }
 
 input, textarea {
-  -moz-user-select: auto;
-  -webkit-user-select: auto;
-  -ms-user-select: auto;
-  user-select: auto;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  outline: none;
+
+  :focus {
+    outline: none;
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  input,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 /* data picker */

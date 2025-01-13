@@ -55,17 +55,19 @@ const Nav = (): React.ReactElement => {
       >
         {/* desktop */}
         <div className="flex gap-24">
-          <Link href="/" passHref className="flex items-center">
-            <div
-              className="flex gap-2 items-center cursor-pointer"
-              onClick={(e: React.MouseEvent) => {
-                // Control, Command, 또는 새 탭으로 열기 위한 클릭인 경우
-                if (e.ctrlKey || e.metaKey || e.button === 1) return;
+          <Link
+            href="/"
+            passHref
+            className="flex items-center"
+            onClick={(e: React.MouseEvent) => {
+              if (e.ctrlKey || e.metaKey || e.button === 1) return;
 
-                setIsMobileMenuOpen(false);
-                window.location.href = '/';
-              }}
-            >
+              e.preventDefault();
+              setIsMobileMenuOpen(false);
+              window.location.href = '/';
+            }}
+          >
+            <div className="flex gap-2 items-center cursor-pointer">
               <div className="relative w-32 h-6">
                 <Image
                   className=""
