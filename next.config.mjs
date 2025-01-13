@@ -3,17 +3,27 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'fit-career.com',
-        pathname: '/**',
-      },
-      {
         protocol: 'http',
         hostname: 'localhost',
         port: '3000',
         pathname: '/**',
       },
       {
+        protocol: 'https',
+        hostname: 'fit-career.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'fit-career.vercel.app',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'cgrwvmaglmelswmojclc.supabase.co',
+        pathname: '/**',
+      },
+      {
         protocol: 'http',
         hostname: 'k.kakaocdn.net',
         pathname: '/**',
@@ -21,11 +31,6 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'k.kakaocdn.net',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cgrwvmaglmelswmojclc.supabase.co',
         pathname: '/**',
       },
     ],
