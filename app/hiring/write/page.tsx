@@ -300,6 +300,11 @@ const HiringWrite = () => {
       enterpriseProfile !== undefined &&
       (!enterpriseProfile || enterpriseProfile.length === 0)
     ) {
+      toast({
+        title: '기업 프로필을 등록해주세요.',
+        description: '채용공고 등록은 기업 프로필 작성 후 가능합니다.',
+        variant: 'warning',
+      });
       router.replace('/auth/my-page?message=enterprise_profile_required');
       setActiveTab('enterprise');
       return;
