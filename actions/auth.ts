@@ -16,15 +16,32 @@ import { useToast } from '@/hooks/use-toast';
 const signInWithKakao = async (): Promise<SignInResponse> => {
   const supabase = createBrowserSupabaseClient();
 
-  const redirectUrl =
-    process.env.NODE_ENV === 'production'
-      ? 'https://fit-career.vercel.app/auth/callback'
-      : 'http://localhost:3000/auth/callback';
+  // const redirectUrl =
+  //   process.env.NODE_ENV === 'production'
+  //     ? 'https://fit-career.vercel.app/auth/callback'
+  //     : 'http://localhost:3000/auth/callback';
+
+  const getRedirectUrl = () => {
+    const developmentUrls = [
+      'http://localhost:3000/auth/callback',
+      'http://127.0.0.1:3000/auth/callback',
+    ];
+
+    if (process.env.NODE_ENV === 'development') {
+      const currentOrigin = window.location.origin;
+      return (
+        developmentUrls.find((url) => url.startsWith(currentOrigin)) ||
+        developmentUrls[0]
+      );
+    }
+
+    return 'https://fit-career.vercel.app/auth/callback';
+  };
 
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'kakao',
     options: {
-      redirectTo: redirectUrl,
+      redirectTo: getRedirectUrl(),
     },
   });
 
