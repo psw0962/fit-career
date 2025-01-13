@@ -116,11 +116,11 @@ const Company = (): React.ReactElement => {
 
       <p className="mt-14 mb-4 text-xl font-bold">채용중인 포지션</p>
 
-      <div className="grid gap-3 grid-cols-1 min-[530px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {hiringDataByUserId.data.map((x) => (
           <Link key={x.id} href={`/hiring/${x.id}`} passHref>
             <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
-              <div className="relative w-full h-48 mx-auto mb-4">
+              <div className="relative w-full aspect-[4/3] mx-auto mb-4">
                 <Image
                   src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
                   alt={`image ${x.id}`}
