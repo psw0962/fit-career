@@ -51,7 +51,7 @@ const MyPage = () => {
         defaultValue={activeTab}
         onValueChange={(value) => setActiveTab(value)}
       >
-        <Tabs.List className="relative flex whitespace-nowrap overflow-auto pb-1">
+        <Tabs.List className="relative flex whitespace-nowrap overflow-auto pb-2">
           <Tabs.Trigger
             ref={(el) => {
               tabRefs.current['profile'] = el;
