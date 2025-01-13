@@ -96,7 +96,7 @@ const ResumeSubmitted = () => {
               onOpenChange={() => setOpenDeleteDialog(null)}
             >
               <DialogContent
-                className="w-full max-w-[500px] min-w-[300px]"
+                className="w-[90vw] max-w-[500px] min-w-[300px]"
                 onClick={(e) => e.stopPropagation()}
               >
                 <DialogHeader>

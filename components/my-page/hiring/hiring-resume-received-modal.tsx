@@ -35,7 +35,7 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
       </DialogTrigger>
 
       <DialogContent
-        className={`w-full max-w-[900px] min-w-[300px] ${
+        className={`w-[90vw] max-w-[900px] min-w-[300px] ${
           showPreview ? 'h-full' : 'h-fit'
         }`}
         onInteractOutside={() => {

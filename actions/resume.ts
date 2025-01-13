@@ -79,8 +79,6 @@ const patchResume = async (data: {
     throw new Error(resumeError.message);
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
   const currentImages: string[] = resumeData?.resume_image || [];
   const newImages: string[] = [];
 
@@ -202,8 +200,6 @@ export const usePatchResume = (
 // =========================================
 const postNewResume = async () => {
   const supabase = createBrowserSupabaseClient();
-
-  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   const { data: userData, error: userDataError } =
     await supabase.auth.getUser();

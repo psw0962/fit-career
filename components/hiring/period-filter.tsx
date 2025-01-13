@@ -38,7 +38,7 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
         </button>
       </DialogTrigger>
 
-      <DialogContent className="w-full max-w-[500px] min-w-[300px]">
+      <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
         <DialogHeader>
           <DialogTitle>경력필터</DialogTitle>
           <DialogDescription></DialogDescription>

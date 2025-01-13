@@ -148,8 +148,6 @@ export const useGetUserData = () => {
 const postEnterpriseProfile = async (data: EnterpriseProfile) => {
   const supabase = createBrowserSupabaseClient();
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
   const imageUrls: string[] = [];
 
   for (const image of data?.settingLogo || []) {
@@ -173,6 +171,7 @@ const postEnterpriseProfile = async (data: EnterpriseProfile) => {
       industry_etc: data.industry.job === '기타' ? true : false,
       establishment: data.establishment,
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
+      address_search_key: data.address_search_key,
       description: data.description,
       logo: imageUrls,
     },
@@ -241,8 +240,6 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
     throw new Error(enterpriseError.message);
   }
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-
   const currentLogos: string[] = enterpriseData?.logo || [];
   const newLogos: string[] = [];
 
@@ -288,6 +285,7 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
       industry_etc: data.industry.job === '기타' ? true : false,
       establishment: data.establishment,
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
+      address_search_key: data.address_search_key,
       description: data.description,
       logo: logosChanged ? newLogos : currentLogos,
     })

@@ -225,7 +225,7 @@ const HiringPosts = () => {
           open={deleteHiringId !== null}
           onOpenChange={(isOpen) => !isOpen && setDeleteHiringId(null)}
         >
-          <DialogContent className="w-full max-w-[500px] min-w-[300px]">
+          <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
             <DialogHeader>
               <DialogTitle>채용공고 삭제</DialogTitle>
               <DialogDescription>

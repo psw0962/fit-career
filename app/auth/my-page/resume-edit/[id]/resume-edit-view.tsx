@@ -443,7 +443,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
               }
             }}
             placeholder="010"
-            className="border p-2 rounded w-1/6"
+            className="border p-2 rounded w-20"
           />
 
           <input
@@ -456,7 +456,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
               }
             }}
             placeholder="0000"
-            className="border p-2 rounded w-1/6"
+            className="border p-2 rounded w-20"
           />
 
           <input
@@ -469,7 +469,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
               }
             }}
             placeholder="0000"
-            className="border p-2 rounded w-1/6"
+            className="border p-2 rounded w-20"
           />
         </div>
       </div>
