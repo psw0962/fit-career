@@ -10,7 +10,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'fit-career.com',
+        hostname: 'fitcareer.com',
         pathname: '/**',
       },
       {
@@ -32,6 +32,16 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'k.kakaocdn.net',
         pathname: '/**',
+      },
+      {
+        protocol: 'http',
+        hostname: '*.kakaocdn.net',
+        pathname: '/dn/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.kakaocdn.net',
+        pathname: '/dn/**',
       },
     ],
     disableStaticImages: true,
