@@ -389,38 +389,39 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
           <div>
             <div className="flex flex-col">
               <div className="mt-2 flex gap-2 items-center">
-                <div className="relative w-8 h-8">
-                  <Image
-                    src={
-                      enterpriseProfile[0]?.logo?.length !== 0
-                        ? enterpriseProfile[0]?.logo[0]
-                        : '/svg/logo.svg'
-                    }
-                    alt="enterprise logo"
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                  />
-                </div>
+                <div className="flex gap-1 items-center">
+                  <div className="relative w-6 h-6">
+                    <Image
+                      src={
+                        enterpriseProfile[0]?.logo?.length !== 0
+                          ? enterpriseProfile[0]?.logo[0]
+                          : '/svg/logo.svg'
+                      }
+                      alt="enterprise logo"
+                      fill
+                      style={{ objectFit: 'contain' }}
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                    />
+                  </div>
 
-                <p>
-                  {enterpriseProfile[0]?.name} /{' '}
-                  {enterpriseProfile[0]?.industry} /{' '}
-                  {calculateYearsInBusiness(
-                    enterpriseProfile[0]?.establishment
-                  )}
-                  년차 (
-                  {parseInt(
-                    enterpriseProfile[0]?.establishment.split('-')[0],
-                    10
-                  )}
-                  )
-                </p>
+                  <p>{enterpriseProfile[0]?.name}</p>
+                </div>
               </div>
 
-              <div className="mt-2 text-[#707173]">
+              <p className="mt-2 text-sm">
+                {enterpriseProfile[0]?.industry} /{' '}
+                {calculateYearsInBusiness(enterpriseProfile[0]?.establishment)}
+                년차 (
+                {parseInt(
+                  enterpriseProfile[0]?.establishment.split('-')[0],
+                  10
+                )}
+                )
+              </p>
+
+              <div className="mt-2 text-[#707173] text-sm">
                 <div
                   dangerouslySetInnerHTML={{
                     __html: enterpriseProfile[0]?.description,
@@ -709,7 +710,7 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
                 />
 
                 {index === 0 && (
-                  <p className="text-sm font-bold">대표 이미지</p>
+                  <p className="text-xs sm:text-sm font-bold">대표 이미지</p>
                 )}
               </div>
             ))}

@@ -57,7 +57,7 @@ const Company = (): React.ReactElement => {
         </div>
       )}
 
-      <div className="flex flex-col gap-2 mt-[50px] sm:flex-row">
+      <div className="flex flex-col gap-2 mt-[50px] [@media(min-width:701px)]:flex-row">
         <div className="flex items-center gap-2">
           <div className="relative w-8 h-8">
             <Image
@@ -68,7 +68,7 @@ const Company = (): React.ReactElement => {
               }
               alt="enterprise logo"
               fill
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: 'contain' }}
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
@@ -119,12 +119,12 @@ const Company = (): React.ReactElement => {
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {hiringDataByUserId.data.map((x) => (
           <Link key={x.id} href={`/hiring/${x.id}`} passHref>
-            <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
+            <div className="h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
               <div className="relative w-full aspect-[4/3] mx-auto mb-4">
                 <Image
                   src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
                   alt={`image ${x.id}`}
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: 'contain' }}
                   className="rounded"
                   fill
                   priority
@@ -148,14 +148,16 @@ const Company = (): React.ReactElement => {
                       }
                       alt={`image ${x.id}`}
                       fill
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'contain' }}
                       priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                     />
                   </div>
 
-                  <p>{hiringData.data[0].enterprise_profile?.name}</p>
+                  <p className="text-sm break-words line-clamp-1 flex-1">
+                    {hiringData.data[0].enterprise_profile?.name}
+                  </p>
                 </div>
 
                 <p className="text-xs text-gray-500 mt-2">{x.short_address}</p>

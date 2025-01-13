@@ -73,7 +73,7 @@ const HiringDetailView = ({
                 }
                 alt="enterprise logo"
                 fill
-                style={{ objectFit: 'cover' }}
+                style={{ objectFit: 'contain' }}
                 priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
@@ -116,17 +116,17 @@ const HiringDetailView = ({
 
         <div className="flex flex-col gap-0 mt-6">
           <p className="text-lg font-bold">채용 정보</p>
-          <p className="text-lg break-keep">
+          <p className="break-keep">
             - 근무장소 : {hiringData.data[0].address}
           </p>
-          <p className="text-lg break-keep">
+          <p className="break-keep">
             - 필요 경력 : {hiringData.data[0].period[0]}년 ~{' '}
             {hiringData.data[0].period[1]}년
           </p>
-          <p className="text-lg break-keep">
+          <p className="break-keep">
             - 채용 포지션 : {hiringData.data[0].position}
           </p>
-          <p className="text-lg break-keep">
+          <p className="break-keep">
             - 채용 마감일 : {hiringData.data[0].dead_line}
           </p>
         </div>

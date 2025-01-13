@@ -41,12 +41,12 @@ export const SortableImageDnd = ({
     <div
       ref={setNodeRef}
       style={style}
-      className="relative w-32 h-32 border rounded touch-none"
+      className="relative w-16 sm:w-24 h-16 sm:h-24 border rounded touch-none"
     >
       <div
         {...attributes}
         {...listeners}
-        className="absolute top-1 left-1 cursor-move bg-gray-200 p-1 rounded touch-none"
+        className="absolute top-1 left-1 cursor-move bg-white/80 hover:bg-white p-1 rounded-md shadow-sm z-10 touch-none"
       >
         <Image
           src="/svg/draggable.svg"
@@ -57,10 +57,15 @@ export const SortableImageDnd = ({
         />
       </div>
 
-      <img
+      <Image
         src={imageUrl}
         alt={`uploaded ${id}`}
-        className="w-full h-full object-cover rounded"
+        className="w-full h-full rounded"
+        style={{ objectFit: 'cover' }}
+        fill
+        priority
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
       />
 
       <button

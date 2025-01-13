@@ -296,18 +296,26 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
                   src={URL.createObjectURL(settingLogo[0])}
                   alt="enterprise logo"
                   fill
-                  style={{ objectFit: 'cover' }}
+                  style={{ objectFit: 'contain' }}
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                  className="rounded"
                 />
               </div>
 
               <button
                 onClick={() => removeImage(0)}
-                className="absolute top-2 right-2 bg-[#4C71C0] text-white rounded px-1"
+                className="absolute top-0 right-0 bg-[#000] text-white rounded p-1"
               >
-                &times;
+                <Image
+                  src="/svg/close.svg"
+                  alt="close"
+                  width={12}
+                  height={12}
+                  className="invert brightness-0"
+                  draggable={false}
+                />
               </button>
             </div>
           )}
@@ -322,18 +330,26 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
                     src={currentLogo}
                     alt="enterprise logo"
                     fill
-                    style={{ objectFit: 'cover' }}
+                    style={{ objectFit: 'contain' }}
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                    className="rounded"
                   />
                 </div>
 
                 <button
                   onClick={() => setCurrentLogo('')}
-                  className="absolute top-2 right-2 bg-[#4C71C0] text-white rounded px-1"
+                  className="absolute top-0 right-0 bg-[#000] text-white rounded p-1"
                 >
-                  &times;
+                  <Image
+                    src="/svg/close.svg"
+                    alt="close"
+                    width={12}
+                    height={12}
+                    className="invert brightness-0"
+                    draggable={false}
+                  />
                 </button>
               </div>
             )}
