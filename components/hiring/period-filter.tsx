@@ -31,7 +31,7 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
           className="flex items-center gap-0.5 py-2 px-2 border rounded"
           onClick={() => setIsModalOpen(true)}
         >
-          <p>경력필터</p>
+          <p className="text-sm">경력필터</p>
           <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">
             {formatPeriod(periodValueFilter)}
           </p>

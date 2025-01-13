@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import NavAuth from './nav-auth';
 import Link from 'next/link';
 
@@ -13,7 +12,6 @@ const MENU_LIST = [
 ];
 
 const Nav = (): React.ReactElement => {
-  const router = useRouter();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -52,23 +50,27 @@ const Nav = (): React.ReactElement => {
     <nav
       className={`overflow-x-auto fixed top-0 w-full shadow bg-white transition-all duration-300 z-30`}
     >
-      {/* desktop */}
       <div
-        className={`min-w-[350px] flex justify-between max-w-7xl mx-auto px-10 ${
-          isScrolled ? 'py-3' : 'py-5'
-        } transition-all duration-300`}
+        className={`min-w-[350px] flex justify-between max-w-7xl mx-auto px-3 sm:px-10 py-3`}
       >
+        {/* desktop */}
         <div className="flex gap-24">
-          <Link href="/" passHref>
+          <Link href="/" passHref className="flex items-center">
             <div
               className="flex gap-2 items-center cursor-pointer"
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={(e: React.MouseEvent) => {
+                // Control, Command, 또는 새 탭으로 열기 위한 클릭인 경우
+                if (e.ctrlKey || e.metaKey || e.button === 1) return;
+
+                setIsMobileMenuOpen(false);
+                window.location.href = '/';
+              }}
             >
-              <div className="relative w-10 h-10 ">
+              <div className="relative w-32 h-6">
                 <Image
                   className=""
-                  src="/svg/logo.svg"
-                  alt="logo"
+                  src="/svg/full-logo.svg"
+                  alt="full-logo"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   fill
                   style={{ objectFit: 'cover' }}
@@ -76,8 +78,6 @@ const Nav = (): React.ReactElement => {
                   blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                 />
               </div>
-
-              <p className="text-2xl font-bold">FIT Career</p>
             </div>
           </Link>
 
@@ -85,7 +85,7 @@ const Nav = (): React.ReactElement => {
             {MENU_LIST.map((menu) => (
               <li key={menu.id} className="text-lg font-bold">
                 <Link href={menu.path} passHref>
-                  <span className="cursor-pointer">{menu.name}</span>
+                  <span className="text-base cursor-pointer">{menu.name}</span>
                 </Link>
               </li>
             ))}
@@ -96,28 +96,28 @@ const Nav = (): React.ReactElement => {
         <div className="flex md:hidden items-center">
           {!isMobileMenuOpen && (
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-              <Image src="/svg/menu.svg" alt="menu" width={35} height={35} />
+              <Image src="/svg/menu.svg" alt="menu" width={20} height={20} />
             </button>
           )}
 
           {isMobileMenuOpen && (
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-              <Image src="/svg/close.svg" alt="close" width={35} height={35} />
+              <Image src="/svg/close.svg" alt="close" width={20} height={20} />
             </button>
           )}
         </div>
 
         <div
-          className={`overflow-x-auto fixed inset-0 px-6 ${
-            isScrolled ? 'top-16' : 'top-24'
-          } bg-white z-40 transition-all duration-300 ${
+          className={`overflow-x-auto fixed inset-0 px-3 bg-[#fff] top-12 z-40 transition-all duration-300 ${
             isMobileMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
           }`}
         >
-          <div className="min-w-[350px]">
-            <ul className="md:flex gap-10">
+          <div className="min-w-[350px] pt-4">
+            <ul
+              className={`flex flex-col md:flex-row ${isMobileMenuOpen ? 'gap-5' : 'gap-10'}`}
+            >
               {MENU_LIST.map((menu) => (
-                <li key={menu.id} className="p-4 text-lg font-bold">
+                <li key={menu.id} className="text-base font-bold">
                   <Link href={menu.path} passHref>
                     <span
                       className="cursor-pointer"
@@ -130,7 +130,9 @@ const Nav = (): React.ReactElement => {
               ))}
             </ul>
 
-            <div className="border-t-2 p-4 flex justify-end">
+            <div className="border-t-2 my-4"></div>
+
+            <div className="flex justify-end">
               <NavAuth
                 isMobile={true}
                 setIsMobileMenuOpen={setIsMobileMenuOpen}

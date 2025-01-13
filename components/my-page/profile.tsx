@@ -19,7 +19,11 @@ const Profile = (): React.ReactElement => {
         <div className="relative w-20 h-20">
           <Image
             className="rounded-full"
-            src={data.user_metadata?.avatar_url}
+            src={
+              data.user_metadata?.avatar_url
+                ? data.user_metadata?.avatar_url
+                : '/svg/logo.svg'
+            }
             alt="logo"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             fill

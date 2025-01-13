@@ -42,7 +42,7 @@ const MyPage = () => {
 
   return (
     <div>
-      <p className="text-3xl font-bold underline underline-offset-4 decoration-[#4C71C0]">
+      <p className="text-2xl font-bold underline underline-offset-4 decoration-[#4C71C0]">
         마이페이지
       </p>
 

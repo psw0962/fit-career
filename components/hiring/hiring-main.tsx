@@ -69,12 +69,12 @@ const HiringMain = () => {
   return (
     <div>
       <div className="flex justify-between items-center">
-        <p className="text-3xl font-bold underline underline-offset-4 decoration-[#4C71C0]">
+        <p className="text-2xl font-bold underline underline-offset-4 decoration-[#4C71C0]">
           채용정보
         </p>
 
         <Link href="/hiring/write" passHref>
-          <p className="w-fit bg-[#4C71C0] rounded px-4 py-2 text-white cursor-pointer">
+          <p className="w-fit px-4 py-2 text-white text-sm bg-[#4C71C0] rounded  cursor-pointer">
             채용공고 등록
           </p>
         </Link>
@@ -95,7 +95,7 @@ const HiringMain = () => {
               priority
             />
           </div>
-          <p>전체 초기화</p>
+          <p className="text-sm">전체 초기화</p>
         </button>
 
         <RegionsFilter
