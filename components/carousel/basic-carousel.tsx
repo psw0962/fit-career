@@ -31,14 +31,14 @@ const BasicCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
   }, [emblaMainApi, onSelect]);
 
   return (
-    <div className="w-full max-w-[900px] mx-auto">
+    <div className="w-full max-w-[600px] mx-auto">
       <div className="relative rounded overflow-hidden">
         <div className="overflow-hidden" ref={emblaMainRef}>
           <div className="flex">
             {slides &&
               slides.map((imageUrl, index) => (
                 <div key={index} className="flex-shrink-0 w-full">
-                  <div className="relative w-full h-[40vh] overflow-hidden">
+                  <div className="relative w-full aspect-[4/3] overflow-hidden">
                     <Image
                       src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
                       className="rounded"

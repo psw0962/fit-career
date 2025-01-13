@@ -64,14 +64,14 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
           hiringData.data.map((x: HiringDataResponse) => {
             return (
               <Link key={x.id} href={`/hiring/${x.id}`} passHref>
-                <div className="h-full flex flex-col gap-2 p-5 border rounded cursor-pointer">
+                <div className="h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
                   <div className="relative w-full aspect-[4/3] mx-auto mb-4">
                     <Image
                       src={
                         x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
                       }
                       alt={`image ${x.id}`}
-                      style={{ objectFit: 'cover' }}
+                      style={{ objectFit: 'contain' }}
                       className="rounded"
                       fill
                       priority
@@ -91,7 +91,7 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
                           src={x.enterprise_profile?.logo[0] ?? '/svg/logo.svg'}
                           alt={`image ${x.id}`}
                           fill
-                          style={{ objectFit: 'cover' }}
+                          style={{ objectFit: 'contain' }}
                           priority
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                           blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="

@@ -64,7 +64,7 @@ const HiringPosts = () => {
             return (
               <div
                 key={x.id}
-                className="relative h-full flex flex-col justify-between gap-2 px-5 pt-14 pb-5 border rounded cursor-pointer"
+                className="relative h-full flex flex-col justify-between gap-2 pt-12 px-2 pb-2 sm:px-3 sm:pb-3 border rounded cursor-pointer"
               >
                 <Link href={`/hiring/${x.id}`} passHref>
                   <div className="flex flex-col gap-0">
@@ -74,7 +74,7 @@ const HiringPosts = () => {
                           x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
                         }
                         alt={`image ${x.id}`}
-                        style={{ objectFit: 'cover' }}
+                        style={{ objectFit: 'contain' }}
                         className="rounded"
                         fill
                         priority
@@ -96,7 +96,7 @@ const HiringPosts = () => {
                             }
                             alt={`image ${x.id}`}
                             fill
-                            style={{ objectFit: 'cover' }}
+                            style={{ objectFit: 'contain' }}
                             priority
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
@@ -170,7 +170,7 @@ const HiringPosts = () => {
                   <HiringResumeReceivedModal data={x} />
                 </div>
 
-                <div className="absolute top-4 right-4 cursor-pointer">
+                <div className="absolute top-3 right-3 cursor-pointer">
                   <div className="flex items-center gap-1">
                     {x.is_visible ? (
                       <Image

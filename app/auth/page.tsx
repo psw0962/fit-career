@@ -70,13 +70,13 @@ const Auth = () => {
             mutate();
           }}
         >
-          <div className="relative w-8 sm:w-10 h-8 sm:h-10 mr-1">
+          <div className="relative w-8 h-8 mr-1">
             <Image
               src="/svg/kakao-logo.svg"
               alt="kakao-logo"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               fill
-              style={{ objectFit: 'cover' }}
+              style={{ objectFit: 'contain' }}
               priority
             />
           </div>
