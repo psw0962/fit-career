@@ -3,10 +3,8 @@
 import { useGetUserData } from '@/actions/auth';
 import Image from 'next/image';
 import GlobalSpinner from '@/components/common/global-spinner';
-import { useRouter } from 'next/navigation';
 
 const Profile = (): React.ReactElement => {
-  const router = useRouter();
   const { data, isLoading } = useGetUserData();
 
   if (isLoading || !data) {
@@ -24,7 +22,7 @@ const Profile = (): React.ReactElement => {
                 ? data.user_metadata?.avatar_url
                 : '/svg/logo.svg'
             }
-            alt="logo"
+            alt="user-avatar"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             fill
             style={{ objectFit: 'cover' }}
