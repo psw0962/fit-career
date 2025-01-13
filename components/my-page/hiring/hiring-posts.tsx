@@ -58,7 +58,7 @@ const HiringPosts = () => {
 
   return (
     <div className="mt-5">
-      <div className="grid gap-3 grid-cols-1 min-[530px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {hiringData !== undefined &&
           hiringData.data.map((x: HiringDataResponse) => {
             return (
@@ -68,7 +68,7 @@ const HiringPosts = () => {
               >
                 <Link href={`/hiring/${x.id}`} passHref>
                   <div className="flex flex-col gap-0">
-                    <div className="relative w-full h-48 mx-auto mb-4">
+                    <div className="relative w-full aspect-[4/3] mx-auto mb-4">
                       <Image
                         src={
                           x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
@@ -132,7 +132,7 @@ const HiringPosts = () => {
 
                 <div className=" w-full flex flex-col items-center gap-1">
                   <div
-                    className="w-full flex items-center gap-1"
+                    className="w-full flex flex-col sm:flex-row items-center gap-1"
                     onClick={(e) => {
                       e.stopPropagation();
                       router.push(`/hiring/edit/${x.id}`);
