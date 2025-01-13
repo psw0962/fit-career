@@ -89,7 +89,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
           className="flex items-center gap-0.5 py-2 px-2 border rounded"
           onClick={() => setIsModalOpen(true)}
         >
-          <p>지역필터</p>
+          <p className="text-sm">지역필터</p>
           <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">
             {regionFilter.selectedCounties.length}
           </p>

@@ -323,7 +323,7 @@ const HiringWrite = () => {
 
   return (
     <div className="flex flex-col">
-      <p className="text-3xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]">
+      <p className="text-2xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]">
         채용공고 등록
       </p>
 

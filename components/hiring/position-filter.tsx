@@ -34,7 +34,7 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
           className="flex items-center gap-0.5 py-2 px-2 border rounded"
           onClick={() => setIsModalOpen(true)}
         >
-          <p>직무필터</p>
+          <p className="text-sm">직무필터</p>
           <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">
             {positionFilter.length}
           </p>
