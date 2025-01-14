@@ -65,7 +65,7 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
           </p>
         </div>
 
-        <div className="flex flex-col gap-3 whitespace-nowrap overflow-x-auto">
+        <div className="flex flex-col gap-3 whitespace-nowrap overflow-auto max-h-[400px]">
           {!showPreview && !selectedResume && (
             <table className="border-collapse">
               <thead>
@@ -168,7 +168,7 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
         {showPreview && selectedResume && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-[50] flex items-center justify-center">
             <div
-              className={`bg-white p-12 relative w-full max-w-[900px] min-w-[300px] ${
+              className={`relative w-full max-w-[900px] min-w-[300px] p-12 bg-white ${
                 showPreview ? 'h-full' : 'h-fit'
               }`}
             >
