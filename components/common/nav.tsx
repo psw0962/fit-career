@@ -67,19 +67,17 @@ const Nav = (): React.ReactElement => {
               window.location.href = '/';
             }}
           >
-            <div className="flex gap-2 items-center cursor-pointer">
-              <div className="relative w-32 h-6">
-                <Image
-                  className=""
-                  src="/svg/full-logo.svg"
-                  alt="full-logo"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  fill
-                  style={{ objectFit: 'cover' }}
-                  priority
-                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                />
-              </div>
+            <div className="relative w-32 h-6 cursor-pointer">
+              <Image
+                className=""
+                src="/svg/full-logo.svg"
+                alt="full-logo"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                fill
+                style={{ objectFit: 'contain' }}
+                priority
+                blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+              />
             </div>
           </Link>
 

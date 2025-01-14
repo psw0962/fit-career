@@ -88,8 +88,8 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
             서류 합격률 UP!
           </p>
 
-          <p className="mt-4 text-xs text-gray-500">
-            최근 수정일 : {data.updated_at}
+          <p className="mt-4 text-[10px] text-gray-500">
+            최근 수정일 {data.updated_at}
           </p>
 
           <div

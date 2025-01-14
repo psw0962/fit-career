@@ -61,7 +61,7 @@ export const SortableImageDnd = ({
         src={imageUrl}
         alt={`uploaded ${id}`}
         className="w-full h-full rounded"
-        style={{ objectFit: 'cover' }}
+        style={{ objectFit: 'contain' }}
         fill
         priority
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
