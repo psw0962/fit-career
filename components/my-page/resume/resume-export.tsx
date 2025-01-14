@@ -44,7 +44,7 @@ const ResumeExport = ({
 
           {showPreview && (
             <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-              <div className="w-[95vw] h-[95vh] bg-white p-12 relative">
+              <div className="relative w-full min-w-[300px] max-w-[900px] h-full max-h-[70vh] p-12 bg-white">
                 <PDFViewer width="100%" height="100%">
                   <ResumeDocument data={data} />
                 </PDFViewer>

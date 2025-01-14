@@ -36,12 +36,12 @@ const nextConfig = {
       {
         protocol: 'http',
         hostname: '*.kakaocdn.net',
-        pathname: '/dn/**',
+        pathname: '/thumb/**',
       },
       {
         protocol: 'https',
         hostname: '*.kakaocdn.net',
-        pathname: '/dn/**',
+        pathname: '/thumb/**',
       },
     ],
     disableStaticImages: false,

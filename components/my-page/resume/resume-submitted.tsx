@@ -29,53 +29,6 @@ import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 const ResumeSubmitted = () => {
   const columns: ColumnDef<HiringDataResponse>[] = [
     {
-      accessorKey: 'enterprise_profile.name',
-      header: '기업명',
-      cell: ({ row }) => {
-        const name = row.original.enterprise_profile?.name ?? '-';
-        return name.length > 15 ? `${name.slice(0, 15)}...` : name;
-      },
-    },
-    {
-      accessorKey: 'title',
-      header: '채용공고',
-      cell: ({ row }) => {
-        const title = row.original.title;
-        return title.length > 50 ? `${title.slice(0, 50)}...` : title;
-      },
-    },
-    {
-      accessorKey: 'resume_received[0].submitted_at',
-      header: '지원일',
-      cell: ({ row }) => {
-        const submittedAt = (
-          row.original.resume_received as {
-            submitted_at: string;
-            title: string;
-            is_fitcareer_resume: boolean;
-          }[]
-        )[0];
-
-        return (
-          <div className="flex flex-col gap-1">
-            <span className="text-gray-500 text-xs">
-              {submittedAt?.submitted_at || '-'}
-            </span>
-
-            <span className="mx-auto text-gray-500 text-[12px] max-w-[200px] break-words line-clamp-1">
-              {submittedAt.is_fitcareer_resume
-                ? submittedAt.title.length > 15
-                  ? `${submittedAt.title.slice(0, 15)}...`
-                  : submittedAt.title
-                : submittedAt.title.length > 15
-                  ? `${convertBase64Unicode(submittedAt.title, 'decode').split('.')[0].slice(0, 15)}...${convertBase64Unicode(submittedAt.title, 'decode').split('.')[1]}`
-                  : `${convertBase64Unicode(submittedAt.title, 'decode').split('.')[0]}.${convertBase64Unicode(submittedAt.title, 'decode').split('.')[1]}`}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
       accessorKey: 'cancel',
       header: '지원취소',
       cell: ({ row }) => {
@@ -131,6 +84,53 @@ const ResumeSubmitted = () => {
               </DialogContent>
             </Dialog>
           </>
+        );
+      },
+    },
+    {
+      accessorKey: 'enterprise_profile.name',
+      header: '기업명',
+      cell: ({ row }) => {
+        const name = row.original.enterprise_profile?.name ?? '-';
+        return name.length > 15 ? `${name.slice(0, 15)}...` : name;
+      },
+    },
+    {
+      accessorKey: 'title',
+      header: '채용공고',
+      cell: ({ row }) => {
+        const title = row.original.title;
+        return title.length > 20 ? `${title.slice(0, 20)}...` : title;
+      },
+    },
+    {
+      accessorKey: 'resume_received[0].submitted_at',
+      header: '지원일',
+      cell: ({ row }) => {
+        const submittedAt = (
+          row.original.resume_received as {
+            submitted_at: string;
+            title: string;
+            is_fitcareer_resume: boolean;
+          }[]
+        )[0];
+
+        return (
+          <div className="flex flex-col gap-1">
+            <span className="text-gray-500 text-xs">
+              {submittedAt?.submitted_at || '-'}
+            </span>
+
+            <span className="mx-auto text-gray-500 text-[12px] max-w-[200px] break-words line-clamp-1">
+              {submittedAt.is_fitcareer_resume
+                ? submittedAt.title.length > 15
+                  ? `${submittedAt.title.slice(0, 15)}...`
+                  : submittedAt.title
+                : submittedAt.title.length > 15
+                  ? `${convertBase64Unicode(submittedAt.title, 'decode').split('.')[0].slice(0, 15)}...${convertBase64Unicode(submittedAt.title, 'decode').split('.')[1]}`
+                  : `${convertBase64Unicode(submittedAt.title, 'decode').split('.')[0]}.${convertBase64Unicode(submittedAt.title, 'decode').split('.')[1]}`}
+            </span>
+          </div>
         );
       },
     },
