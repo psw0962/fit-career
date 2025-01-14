@@ -13,7 +13,7 @@ const Auth = () => {
   const searchParams = useSearchParams();
 
   const { toast } = useToast();
-  const { mutate, status } = useSignInWithKakao();
+  const { mutate, isPending } = useSignInWithKakao();
   const { data, isLoading } = useGetUserData();
 
   useEffect(() => {
@@ -47,8 +47,7 @@ const Auth = () => {
     }
   }, [searchParams, toast]);
 
-  if (status === 'pending') return <GlobalSpinner />;
-  if (isLoading) return <GlobalSpinner />;
+  if (isPending || isLoading) return <GlobalSpinner />;
 
   return (
     <div className="w-full mx-auto min-h-[50vh] flex flex-col justify-center">

@@ -5,15 +5,11 @@ import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
 import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import dynamic from 'next/dynamic';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import DaumPostcode, { Address } from 'react-daum-postcode';
-import 'froala-editor/css/froala_editor.pkgd.min.css';
-import 'froala-editor/css/froala_style.min.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import Spinner from '@/components/common/spinner';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { POSITIONS } from '@/constant/position';
@@ -21,6 +17,11 @@ import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useSessionStorage } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
+import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
+import withAuth from '@/hoc/withAuth';
+import { THEMEOBJ, DAUMPOSTCODESTYLE } from '@/constant/daum-post-style';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 import {
   DndContext,
   closestCenter,
@@ -35,49 +36,6 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
-import withAuth from '@/hoc/withAuth';
-
-const FroalaEditor = dynamic(
-  async () => {
-    const values = await Promise.all([
-      import('react-froala-wysiwyg'),
-      import('froala-editor/js/plugins.pkgd.min.js'),
-    ]);
-    return values[0];
-  },
-  {
-    loading: () => <Spinner />,
-    ssr: false,
-  }
-);
-
-const FroalaEditorView = dynamic(
-  import('react-froala-wysiwyg/FroalaEditorView'),
-  {
-    loading: () => <></>,
-    ssr: false,
-  }
-);
-
-// daum post code
-const THEMEOBJ = {
-  bgColor: '', // 바탕 배경색
-  searchBgColor: '', // 검색창 배경색
-  contentBgColor: '', // 본문 배경색(검색결과,결과없음,첫화면,검색서제스트)
-  pageBgColor: '', // 페이지 배경색
-  textColor: '', // 기본 글자색
-  queryTextColor: '', // 검색창 글자색
-  postcodeTextColor: '', // 우편번호 글자색
-  emphTextColor: '', // 강조 글자색
-  outlineColor: '', // 테두리
-};
-
-const DAUMPOSTCODESTYLE = {
-  width: '400px',
-  height: '600px',
-  border: '1.4px solid #333333',
-};
 
 const HiringEditView = ({ hiringId }: { hiringId: string }) => {
   const router = useRouter();
@@ -109,6 +67,20 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
     format(new Date(), 'yyyy-MM-dd')
   );
   const [images, setImages] = useState<(File | string)[]>([]);
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: content,
+    onUpdate: ({ editor }) => {
+      setContent(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class: 'min-h-[200px] border p-2 rounded focus:outline-none',
+      },
+    },
+    immediatelyRender: false,
+  });
 
   const { mutate: patchHiring, status: patchHiringStatus } = usePatchHiring();
   const { data: hiringData, isLoading: hiringDataLoading } =
@@ -284,6 +256,12 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
       images: images as File[],
     });
   };
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(content);
+    }
+  }, [content, editor]);
 
   useEffect(() => {
     if (!userDataLoading && !userData) {
@@ -605,18 +583,7 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
           <span className="text-sm text-red-500 align-top">*</span>
         </p>
 
-        <FroalaEditor
-          tag="textarea"
-          model={content}
-          onModelChange={(event) => setContent(event)}
-          config={{
-            fontSize: ['1', '1.2', '1.4', '1.6', '1.8', '2'],
-            fontSizeDefaultSelection: '20px',
-            fontSizeUnit: 'rem',
-          }}
-        />
-
-        <FroalaEditorView model={content} />
+        <EditorContent editor={editor} />
       </div>
 
       {/* deadline */}

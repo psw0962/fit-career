@@ -67,9 +67,8 @@ const Nav = (): React.ReactElement => {
               window.location.href = '/';
             }}
           >
-            <div className="relative w-32 h-6 cursor-pointer">
+            <div className="relative w-28 h-6 cursor-pointer">
               <Image
-                className=""
                 src="/svg/full-logo.svg"
                 alt="full-logo"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
