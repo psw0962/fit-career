@@ -1,15 +1,16 @@
 'use client';
 
+import React from 'react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { validateInput } from '@/functions/validateInput';
-import dynamic from 'next/dynamic';
-import Spinner from '@/components/common/spinner';
 import GlobalSpinner from '@/components/common/global-spinner';
-
-import { v4 as uuidv4 } from 'uuid';
-import React from 'react';
 import { useGetResume, usePatchResume } from '@/actions/resume';
+import { v4 as uuidv4 } from 'uuid';
+import withAuth from '@/hoc/withAuth';
+import { useToast } from '@/hooks/use-toast';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
 import {
   Education,
   Experience,
@@ -17,32 +18,6 @@ import {
   Award,
   LinkData,
 } from '@/types/resume/resume';
-import 'froala-editor/css/froala_editor.pkgd.min.css';
-import 'froala-editor/css/froala_style.min.css';
-import withAuth from '@/hoc/withAuth';
-import { useToast } from '@/hooks/use-toast';
-
-const FroalaEditor = dynamic(
-  async () => {
-    const values = await Promise.all([
-      import('react-froala-wysiwyg'),
-      import('froala-editor/js/plugins.pkgd.min.js'),
-    ]);
-    return values[0];
-  },
-  {
-    loading: () => <Spinner />,
-    ssr: false,
-  }
-);
-
-const FroalaEditorView = dynamic(
-  import('react-froala-wysiwyg/FroalaEditorView'),
-  {
-    loading: () => <></>,
-    ssr: false,
-  }
-);
 
 const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
   const titleRef = useRef<HTMLInputElement>(null);
@@ -72,6 +47,20 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [awards, setAwards] = useState<Award[]>([]);
   const [links, setLinks] = useState<LinkData[]>([]);
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: introduction,
+    onUpdate: ({ editor }) => {
+      setIntroduction(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class: 'min-h-[200px] border p-2 rounded focus:outline-none',
+      },
+    },
+    immediatelyRender: false,
+  });
 
   const { toast } = useToast();
 
@@ -179,6 +168,12 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
       resumeId: resumeId,
     });
   };
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(introduction);
+    }
+  }, [introduction, editor]);
 
   useEffect(() => {
     if (
@@ -525,21 +520,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
           <p>• 3~5줄로 요약하여 작성하는 것을 추천해요.</p>
         </div>
 
-        <FroalaEditor
-          tag="textarea"
-          model={introduction}
-          onModelChange={(event) => setIntroduction(event)}
-          config={{
-            // charCounterCount: true,
-            // charCounterMax: 1000,
-            // placeholderText: ``,
-            fontSize: ['1', '1.2', '1.4', '1.6', '1.8', '2'],
-            fontSizeDefaultSelection: '20px',
-            fontSizeUnit: 'rem',
-          }}
-        />
-
-        <FroalaEditorView model={introduction} />
+        <EditorContent editor={editor} />
       </div>
 
       <div className="flex flex-col mb-20">

@@ -3,15 +3,10 @@
 import { usePostHiring } from '@/actions/hiring';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
-import { format, parse } from 'date-fns';
-import { ko } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import DaumPostcode, { Address } from 'react-daum-postcode';
-import 'froala-editor/css/froala_editor.pkgd.min.css';
-import 'froala-editor/css/froala_style.min.css';
-import 'react-datepicker/dist/react-datepicker.css';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { POSITIONS } from '@/constant/position';
@@ -19,6 +14,13 @@ import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useSessionStorage } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
+import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
+import { THEMEOBJ, DAUMPOSTCODESTYLE } from '@/constant/daum-post-style';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { format, parse } from 'date-fns';
+import { ko } from 'date-fns/locale';
+import 'react-datepicker/dist/react-datepicker.css';
 import {
   DndContext,
   closestCenter,
@@ -33,10 +35,6 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import { THEMEOBJ, DAUMPOSTCODESTYLE } from '@/constant/daum-post-style';
 
 const HiringWrite = () => {
   const router = useRouter();

@@ -1,19 +1,9 @@
 'use client';
 
-import dynamic from 'next/dynamic';
 import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import DaumPostcode, { Address } from 'react-daum-postcode';
 import GlobalSpinner from '@/components/common/global-spinner';
-import Spinner from '@/components/common/spinner';
-import 'froala-editor/css/froala_editor.pkgd.min.css';
-import 'froala-editor/css/froala_style.min.css';
-import {
-  useGetEnterpriseProfile,
-  useGetUserData,
-  usePatchEnterpriseProfile,
-  usePostEnterpriseProfile,
-} from '@/actions/auth';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
@@ -21,47 +11,15 @@ import { format, parse } from 'date-fns';
 import { POSITIONS } from '@/constant/position';
 import withAuth from '@/hoc/withAuth';
 import { useToast } from '@/hooks/use-toast';
-
-const FroalaEditor = dynamic(
-  async () => {
-    const values = await Promise.all([
-      import('react-froala-wysiwyg'),
-      import('froala-editor/js/plugins.pkgd.min.js'),
-    ]);
-    return values[0];
-  },
-  {
-    loading: () => <Spinner />,
-    ssr: false,
-  }
-);
-
-const FroalaEditorView = dynamic(
-  import('react-froala-wysiwyg/FroalaEditorView'),
-  {
-    loading: () => <></>,
-    ssr: false,
-  }
-);
-
-// daum post code
-const THEMEOBJ = {
-  bgColor: '', // 바탕 배경색
-  searchBgColor: '', // 검색창 배경색
-  contentBgColor: '', // 본문 배경색(검색결과,결과없음,첫화면,검색서제스트)
-  pageBgColor: '', // 페이지 배경색
-  textColor: '', // 기본 글자색
-  queryTextColor: '', // 검색창 글자색
-  postcodeTextColor: '', // 우편번호 글자색
-  emphTextColor: '', // 강조 글자색
-  outlineColor: '', // 테두리
-};
-
-const DAUMPOSTCODESTYLE = {
-  width: '400px',
-  height: '600px',
-  border: '1.4px solid #333333',
-};
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import { THEMEOBJ, DAUMPOSTCODESTYLE } from '@/constant/daum-post-style';
+import {
+  useGetEnterpriseProfile,
+  useGetUserData,
+  usePatchEnterpriseProfile,
+  usePostEnterpriseProfile,
+} from '@/actions/auth';
 
 const EnterpriseProfileEdit = (): React.ReactElement => {
   const { toast } = useToast();
@@ -88,6 +46,20 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
   const [description, setDescription] = useState<string>('');
   const [settingLogo, setSettingLogo] = useState<File[]>([]);
   const [currentLogo, setCurrentLogo] = useState<string>('');
+
+  const editor = useEditor({
+    extensions: [StarterKit],
+    content: description,
+    onUpdate: ({ editor }) => {
+      setDescription(editor.getHTML());
+    },
+    editorProps: {
+      attributes: {
+        class: 'min-h-[200px] border p-2 rounded focus:outline-none',
+      },
+    },
+    immediatelyRender: false,
+  });
 
   const daumPostCodeHandler = (data: Address) => {
     setAddress({
@@ -216,6 +188,12 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
       });
     }
   };
+
+  useEffect(() => {
+    if (editor) {
+      editor.commands.setContent(description);
+    }
+  }, [description, editor]);
 
   useEffect(() => {
     if (
@@ -508,21 +486,7 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
           회사 소개 <span className="text-sm text-red-500 align-top">*</span>
         </label>
 
-        <FroalaEditor
-          tag="textarea"
-          model={description}
-          onModelChange={(event) => setDescription(event)}
-          config={{
-            // charCounterCount: true,
-            // charCounterMax: 1000,
-            placeholderText: '회사 소개를 입력해 주세요',
-            fontSize: ['1', '1.2', '1.4', '1.6', '1.8', '2'],
-            fontSizeDefaultSelection: '20px',
-            fontSizeUnit: 'rem',
-          }}
-        />
-
-        <FroalaEditorView model={description} />
+        <EditorContent editor={editor} />
       </div>
 
       <div className="flex justify-center mt-10">
