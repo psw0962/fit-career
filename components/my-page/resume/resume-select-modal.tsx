@@ -45,6 +45,10 @@ const ResumeSelectIdModal = ({
   const { mutate: postResumeToHiring } = usePostResumeToHiring();
 
   const confirmSubmitted = () => {
+    if (hiringData?.[0].is_visible === false) {
+      return true;
+    }
+
     const resumeReceived = hiringData?.[0].resume_received as ResumeReceived[];
     const selectedResume = resumeData?.find(
       (resume) => resume.id === selectedResumeId
@@ -192,7 +196,21 @@ const ResumeSelectIdModal = ({
               onClick={() => handlePostResumeToHiring()}
               disabled={confirmSubmitted()}
             >
-              {confirmSubmitted() ? '이미 지원한 채용공고입니다.' : '제출하기'}
+              {confirmSubmitted() &&
+                hiringData?.[0].is_visible &&
+                '이미 지원한 채용공고입니다.'}
+
+              {confirmSubmitted() === false &&
+                hiringData?.[0].is_visible &&
+                '제출하기'}
+
+              {hiringData?.[0].is_visible === false && (
+                <>
+                  <span>숨김 처리된 채용공고입니다.</span>
+                  <br />
+                  <span>지금은 지원할 수 없어요.</span>
+                </>
+              )}
             </button>
 
             {confirmSubmitted() && (

@@ -6,17 +6,15 @@ const Footer = (): React.ReactElement => {
   return (
     <div className="max-w-full border">
       <div className="max-w-7xl mx-auto px-3 sm:px-10 py-5">
-        <div className="flex gap-2 items-center">
-          <div className="relative w-32 h-6">
-            <Image
-              src="/svg/full-logo.svg"
-              alt="full-logo"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              fill
-              style={{ objectFit: 'cover' }}
-              priority
-            />
-          </div>
+        <div className="relative w-32 h-6">
+          <Image
+            src="/svg/full-logo.svg"
+            alt="full-logo"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            fill
+            style={{ objectFit: 'contain' }}
+            priority
+          />
         </div>
 
         <p className="text-sm text-stone-400 mt-2">
