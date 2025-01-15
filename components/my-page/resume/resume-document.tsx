@@ -92,7 +92,12 @@ const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
           {data.resume_image[0] && (
             <PDFImage
               src={convertImageToBase64(data.resume_image[0])}
-              style={{ width: 100, height: 100 }}
+              style={{
+                width: 100,
+                height: 100,
+                objectFit: 'cover',
+                borderRadius: '10px',
+              }}
             />
           )}
         </View>

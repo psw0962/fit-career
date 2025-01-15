@@ -50,7 +50,7 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
           <DialogTitle>
             {`[${data.title}] 채용공고의 접수된 이력서`}
           </DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogDescription className="hidden"></DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-0 mb-4">

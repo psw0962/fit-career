@@ -98,10 +98,10 @@ const ResumeSelectIdModal = ({
 
       {userData && (
         <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-3">
             <DialogHeader>
-              <DialogTitle className="mb-4 font-bold">이력서 선택</DialogTitle>
-              <DialogDescription></DialogDescription>
+              <DialogTitle className="font-bold">이력서 선택</DialogTitle>
+              <DialogDescription className="hidden"></DialogDescription>
             </DialogHeader>
 
             {resumeData && resumeData.length === 0 && (
@@ -187,31 +187,35 @@ const ResumeSelectIdModal = ({
               ))}
             </div>
 
-            <button
-              className={`w-full mt-4 rounded px-8 py-2 text-white cursor-pointer ${
-                confirmSubmitted()
-                  ? 'bg-gray-400 cursor-not-allowed'
-                  : 'bg-[#4C71C0]'
-              }`}
-              onClick={() => handlePostResumeToHiring()}
-              disabled={confirmSubmitted()}
-            >
-              {confirmSubmitted() &&
-                hiringData?.[0].is_visible &&
-                '이미 지원한 채용공고입니다.'}
+            {resumeData && resumeData.length > 0 && (
+              <button
+                className={`w-fit mx-auto px-8 py-2 text-white cursor-pointer rounded ${
+                  confirmSubmitted()
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-[#4C71C0]'
+                }`}
+                onClick={() => handlePostResumeToHiring()}
+                disabled={confirmSubmitted()}
+              >
+                {resumeData && resumeData.length < 0 && '이미지 업로드'}
 
-              {confirmSubmitted() === false &&
-                hiringData?.[0].is_visible &&
-                '제출하기'}
+                {confirmSubmitted() &&
+                  hiringData?.[0].is_visible &&
+                  '이미 지원한 채용공고입니다.'}
 
-              {hiringData?.[0].is_visible === false && (
-                <>
-                  <span>숨김 처리된 채용공고입니다.</span>
-                  <br />
-                  <span>지금은 지원할 수 없어요.</span>
-                </>
-              )}
-            </button>
+                {confirmSubmitted() === false &&
+                  hiringData?.[0].is_visible &&
+                  '제출하기'}
+
+                {hiringData?.[0].is_visible === false && (
+                  <>
+                    <span>숨김 처리된 채용공고입니다.</span>
+                    <br />
+                    <span>지금은 지원할 수 없어요.</span>
+                  </>
+                )}
+              </button>
+            )}
 
             {confirmSubmitted() && (
               <p className="text-xs text-[red] mt-2">

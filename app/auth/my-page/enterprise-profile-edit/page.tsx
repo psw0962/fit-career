@@ -268,23 +268,21 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
 
           {/* 현재 상태 로고가 업로드 된 경우 */}
           {settingLogo.length > 0 && (
-            <div className="relative w-28 h-20 border-gray-300">
-              <div className="relative w-20 h-20">
-                <Image
-                  src={URL.createObjectURL(settingLogo[0])}
-                  alt="enterprise logo"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                  className="rounded"
-                />
-              </div>
+            <div className="relative w-20 h-20 border-gray-300">
+              <Image
+                src={URL.createObjectURL(settingLogo[0])}
+                alt="enterprise logo"
+                className="rounded-full"
+                style={{ objectFit: 'cover' }}
+                fill
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+              />
 
               <button
                 onClick={() => removeImage(0)}
-                className="absolute top-0 right-0 bg-[#000] text-white rounded p-1"
+                className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
               >
                 <Image
                   src="/svg/close.svg"
@@ -302,23 +300,21 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
           {enterpriseProfile &&
             enterpriseProfile[0]?.logo[0]?.length > 0 &&
             currentLogo !== '' && (
-              <div className="relative w-28 h-20 border-gray-300">
-                <div className="relative w-20 h-20">
-                  <Image
-                    src={currentLogo}
-                    alt="enterprise logo"
-                    fill
-                    style={{ objectFit: 'contain' }}
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                    className="rounded"
-                  />
-                </div>
+              <div className="relative w-20 h-20 border-gray-300">
+                <Image
+                  src={currentLogo}
+                  alt="enterprise logo"
+                  className="rounded-full"
+                  style={{ objectFit: 'cover' }}
+                  fill
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                />
 
                 <button
                   onClick={() => setCurrentLogo('')}
-                  className="absolute top-0 right-0 bg-[#000] text-white rounded p-1"
+                  className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
                 >
                   <Image
                     src="/svg/close.svg"
