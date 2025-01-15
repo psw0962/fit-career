@@ -41,7 +41,7 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
       <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
         <DialogHeader>
           <DialogTitle>경력필터</DialogTitle>
-          <DialogDescription></DialogDescription>
+          <DialogDescription className="hidden"></DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-3 mt-3">
@@ -91,6 +91,13 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
               </Slider.Root>
             </div>
           </div>
+
+          <button
+            className="w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white rounded"
+            onClick={() => setIsModalOpen(false)}
+          >
+            확인
+          </button>
         </div>
       </DialogContent>
     </Dialog>

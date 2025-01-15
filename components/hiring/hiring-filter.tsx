@@ -90,6 +90,7 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
                         <Image
                           src={x.enterprise_profile?.logo[0] ?? '/svg/logo.svg'}
                           alt={`image ${x.id}`}
+                          className="rounded"
                           fill
                           style={{ objectFit: 'contain' }}
                           priority

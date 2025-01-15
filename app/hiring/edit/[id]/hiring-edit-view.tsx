@@ -376,8 +376,9 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
                           : '/svg/logo.svg'
                       }
                       alt="enterprise logo"
-                      fill
                       style={{ objectFit: 'contain' }}
+                      className="rounded"
+                      fill
                       priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="

@@ -358,23 +358,21 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
 
           {/* 현재 상태 이미지가 업로드 된 경우 */}
           {resumeImage.length > 0 && (
-            <div className="relative w-28 h-20 border-gray-300">
-              <div className="relative w-20 h-20">
-                <Image
-                  src={URL.createObjectURL(resumeImage[0])}
-                  alt="resume image"
-                  fill
-                  style={{ objectFit: 'contain' }}
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                  className="rounded"
-                />
-              </div>
+            <div className="relative w-20 h-20 border-gray-300">
+              <Image
+                src={URL.createObjectURL(resumeImage[0])}
+                alt="resume image"
+                fill
+                style={{ objectFit: 'cover' }}
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                className="rounded"
+              />
 
               <button
                 onClick={() => removeResumeImage(0)}
-                className="absolute top-0 right-0 bg-[#000] text-white rounded p-1"
+                className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
               >
                 <Image
                   src="/svg/close.svg"
@@ -392,23 +390,21 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
           {resumeData &&
             resumeData?.[0]?.resume_image[0]?.length > 0 &&
             currentResumeImage !== '' && (
-              <div className="relative w-28 h-20 border-gray-300">
-                <div className="relative w-20 h-20">
-                  <Image
-                    src={currentResumeImage}
-                    alt="resume image"
-                    fill
-                    style={{ objectFit: 'contain' }}
-                    priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                    className="rounded"
-                  />
-                </div>
+              <div className="relative w-20 h-20 border-gray-300">
+                <Image
+                  src={currentResumeImage}
+                  alt="resume image"
+                  fill
+                  style={{ objectFit: 'cover' }}
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                  className="rounded"
+                />
 
                 <button
                   onClick={() => setCurrentResumeImage('')}
-                  className="absolute top-0 right-0 bg-[#000] text-white rounded p-1"
+                  className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
                 >
                   <Image
                     src="/svg/close.svg"

@@ -46,7 +46,7 @@ export const SortableImageDnd = ({
       <div
         {...attributes}
         {...listeners}
-        className="absolute top-1 left-1 cursor-move bg-white/80 hover:bg-white p-1 rounded-md shadow-sm z-10 touch-none"
+        className="absolute top-1 left-1 cursor-move bg-white/80 hover:bg-white p-[2px] rounded-md shadow-sm z-10 touch-none"
       >
         <Image
           src="/svg/draggable.svg"
@@ -54,6 +54,7 @@ export const SortableImageDnd = ({
           width={16}
           height={16}
           draggable={false}
+          className="w-3 h-3 sm:w-4 sm:h-4"
         />
       </div>
 
@@ -73,14 +74,14 @@ export const SortableImageDnd = ({
           e.stopPropagation();
           onRemove(index);
         }}
-        className="absolute top-1 right-1 bg-[#000] text-white rounded p-1"
+        className="absolute top-1 right-1 bg-[#000] text-white rounded p-[2px]"
       >
         <Image
           src="/svg/close.svg"
           alt="close"
           width={16}
           height={16}
-          className="invert brightness-0"
+          className="w-3 h-3 sm:w-4 sm:h-4 invert brightness-0"
           draggable={false}
         />
       </button>
