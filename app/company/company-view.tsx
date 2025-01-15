@@ -131,7 +131,7 @@ const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
               </div>
 
               <div className="w-full flex flex-col gap-0">
-                <p className="text-lg font-bold break-keep line-clamp-2">
+                <p className="text-base font-bold break-keep line-clamp-2">
                   {x.title}
                 </p>
 

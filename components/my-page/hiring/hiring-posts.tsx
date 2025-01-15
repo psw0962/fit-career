@@ -84,7 +84,7 @@ const HiringPosts = () => {
                     </div>
 
                     <div className="w-full flex flex-col gap-0">
-                      <p className="text-lg font-bold break-keep line-clamp-2">
+                      <p className="text-base font-bold break-keep line-clamp-2">
                         {x.title}
                       </p>
 
@@ -104,7 +104,7 @@ const HiringPosts = () => {
                           />
                         </div>
 
-                        <p className="break-words line-clamp-1 flex-1">
+                        <p className="text-sm break-words line-clamp-1 flex-1">
                           {x.enterprise_profile?.name}
                         </p>
                       </div>

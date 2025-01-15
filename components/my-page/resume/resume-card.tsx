@@ -67,7 +67,7 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
     <>
       {/* fit career resume */}
       {data && data.is_fitcareer_resume && (
-        <div className="relative flex flex-col justify-center items-center gap-3 w-full h-full border rounded p-10">
+        <div className="relative flex flex-col justify-center items-center gap-3 w-full h-full border rounded p-5">
           <div className="relative w-10 h-10">
             <Image
               src="/svg/logo.svg"
