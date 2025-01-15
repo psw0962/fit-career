@@ -111,7 +111,7 @@ const HiringDetailView = ({
       <div className="my-4 border"></div>
 
       <div>
-        <p className="text-2xl font-bold break-keep">
+        <p className="text-xl font-bold break-keep">
           {hiringData.data[0].title}
         </p>
 
