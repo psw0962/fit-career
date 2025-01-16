@@ -41,6 +41,12 @@ html[data-theme="light"] {
   color: #000;
 }
 
+/* dialogOverlay margin right override */
+body[data-scroll-locked] {
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+
 a {
   color: inherit;
   text-decoration: none;

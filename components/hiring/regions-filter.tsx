@@ -18,30 +18,37 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
   setRegionFilter,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tempFilter, setTempFilter] = useState(regionFilter);
+
+  const handleModalOpen = (open: boolean) => {
+    setIsModalOpen(open);
+    if (open) {
+      setTempFilter(regionFilter);
+    }
+  };
 
   const handleCitySelect = (city: City) => {
-    setRegionFilter((prev) => ({
+    setTempFilter((prev) => ({
       ...prev,
       selectedCity: city,
     }));
   };
 
   const toggleCounty = (county: string) => {
-    if (!regionFilter.selectedCity) return;
+    if (!tempFilter.selectedCity) return;
 
-    const cityName = regionFilter.selectedCity.city;
+    const cityName = tempFilter.selectedCity.city;
     const countyLabel = `${cityName} ${county}`;
-    const isCountySelected =
-      regionFilter.selectedCounties.includes(countyLabel);
+    const isCountySelected = tempFilter.selectedCounties.includes(countyLabel);
 
     let updatedCounties;
 
     if (county === `${cityName} 전체`) {
-      if (regionFilter.allSelectedCities.includes(cityName)) {
-        updatedCounties = regionFilter.selectedCounties.filter(
+      if (tempFilter.allSelectedCities.includes(cityName)) {
+        updatedCounties = tempFilter.selectedCounties.filter(
           (item) => !item.startsWith(`${cityName}`)
         );
-        setRegionFilter((prev) => ({
+        setTempFilter((prev) => ({
           ...prev,
           selectedCounties: updatedCounties,
           allSelectedCities: prev.allSelectedCities.filter(
@@ -50,14 +57,14 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
         }));
       } else {
         updatedCounties = [
-          ...regionFilter.selectedCounties.filter(
+          ...tempFilter.selectedCounties.filter(
             (item) => !item.startsWith(`${cityName}`)
           ),
-          ...regionFilter.selectedCity.county
+          ...tempFilter.selectedCity.county
             .filter((c) => c !== `${cityName} 전체`)
             .map((c) => `${cityName} ${c}`),
         ];
-        setRegionFilter((prev) => ({
+        setTempFilter((prev) => ({
           ...prev,
           selectedCounties: updatedCounties,
           allSelectedCities: [...prev.allSelectedCities, cityName],
@@ -65,14 +72,14 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
       }
     } else {
       updatedCounties = isCountySelected
-        ? regionFilter.selectedCounties.filter((item) => item !== countyLabel)
-        : [...regionFilter.selectedCounties, countyLabel];
+        ? tempFilter.selectedCounties.filter((item) => item !== countyLabel)
+        : [...tempFilter.selectedCounties, countyLabel];
 
-      const allCountiesSelected = regionFilter.selectedCity.county
+      const allCountiesSelected = tempFilter.selectedCity.county
         .filter((c) => c !== `${cityName} 전체`)
         .every((c) => updatedCounties.includes(`${cityName} ${c}`));
 
-      setRegionFilter((prev) => ({
+      setTempFilter((prev) => ({
         ...prev,
         selectedCounties: updatedCounties,
         allSelectedCities: allCountiesSelected
@@ -83,7 +90,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Dialog open={isModalOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         <button
           className="flex items-center gap-0.5 py-2 px-2 border rounded"
@@ -106,7 +113,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
           <button
             className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
             onClick={() => {
-              setRegionFilter({
+              setTempFilter({
                 selectedCity: null,
                 selectedCounties: [],
                 allSelectedCities: [],
@@ -136,7 +143,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                       id={`city ${region.id}`}
                       name={`city ${region.id}`}
                       type="radio"
-                      checked={regionFilter.selectedCity?.id === region.id}
+                      checked={tempFilter.selectedCity?.id === region.id}
                       onChange={() => handleCitySelect(region)}
                     />
                     <label htmlFor={`city ${region.id}`} className="ml-2">
@@ -148,29 +155,29 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
             </div>
 
             {/* County selection */}
-            {regionFilter.selectedCity ? (
+            {tempFilter.selectedCity ? (
               <div className="border p-4 w-full max-h-72 overflow-auto rounded">
                 <ul>
-                  {regionFilter.selectedCity.county.map((county) => {
+                  {tempFilter.selectedCity.county.map((county) => {
                     const countyLabel =
                       county ===
-                      `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체`
+                      `${tempFilter.selectedCity && tempFilter.selectedCity.city} 전체`
                         ? county
-                        : `${regionFilter.selectedCity && regionFilter.selectedCity.city} ${county}`;
+                        : `${tempFilter.selectedCity && tempFilter.selectedCity.city} ${county}`;
 
                     const isAllSelected =
                       county ===
                         `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체` &&
-                      regionFilter.selectedCity &&
-                      regionFilter.selectedCity.county
+                      tempFilter.selectedCity &&
+                      tempFilter.selectedCity.county
                         .filter(
                           (c) =>
                             c !==
-                            `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체`
+                            `${tempFilter.selectedCity && tempFilter.selectedCity.city} 전체`
                         )
                         .every((c) =>
-                          regionFilter.selectedCounties.includes(
-                            `${regionFilter.selectedCity && regionFilter.selectedCity.city} ${c}`
+                          tempFilter.selectedCounties.includes(
+                            `${tempFilter.selectedCity && tempFilter.selectedCity.city} ${c}`
                           )
                         );
 
@@ -181,14 +188,14 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                           name={`county ${countyLabel}`}
                           type="checkbox"
                           checked={
-                            county === `${regionFilter.selectedCity?.city} 전체`
+                            county === `${tempFilter.selectedCity?.city} 전체`
                               ? (isAllSelected ?? false)
-                              : regionFilter.selectedCounties.includes(
+                              : tempFilter.selectedCounties.includes(
                                   countyLabel
                                 )
                           }
                           onChange={() =>
-                            regionFilter.selectedCity && toggleCounty(county)
+                            tempFilter.selectedCity && toggleCounty(county)
                           }
                         />
                         <label
@@ -210,7 +217,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
           </div>
 
           <div className="flex flex-wrap gap-2 mt-4">
-            {regionFilter.allSelectedCities.map((city) => (
+            {tempFilter.allSelectedCities.map((city) => (
               <div
                 key={`${city} 전체`}
                 className="w-fit px-2 py-2 bg-[#4C71C0] rounded text-white"
@@ -219,10 +226,10 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
               </div>
             ))}
 
-            {regionFilter.selectedCounties
+            {tempFilter.selectedCounties
               .filter((county) => {
                 const cityName = county.split('-')[0];
-                return !regionFilter.allSelectedCities.includes(cityName);
+                return !tempFilter.allSelectedCities.includes(cityName);
               })
               .map((county) => (
                 <div key={county} className="w-fit px-2 py-2 border rounded">
@@ -233,7 +240,10 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
 
           <button
             className="w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white rounded"
-            onClick={() => setIsModalOpen(false)}
+            onClick={() => {
+              setRegionFilter(tempFilter);
+              setIsModalOpen(false);
+            }}
           >
             확인
           </button>

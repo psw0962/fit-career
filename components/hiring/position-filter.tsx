@@ -18,17 +18,25 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
   setPositionFilter,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tempFilter, setTempFilter] = useState(positionFilter);
+
+  const handleModalOpen = (open: boolean) => {
+    setIsModalOpen(open);
+    if (open) {
+      setTempFilter(positionFilter);
+    }
+  };
 
   const handleCheckboxChange = (position: string) => {
-    if (positionFilter.includes(position)) {
-      setPositionFilter(positionFilter.filter((item) => item !== position));
+    if (tempFilter.includes(position)) {
+      setTempFilter(tempFilter.filter((item) => item !== position));
     } else {
-      setPositionFilter([...positionFilter, position]);
+      setTempFilter([...tempFilter, position]);
     }
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Dialog open={isModalOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         <button
           className="flex items-center gap-0.5 py-2 px-2 border rounded"
@@ -51,7 +59,7 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
           <button
             className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
             onClick={() => {
-              setPositionFilter([]);
+              setTempFilter([]);
             }}
           >
             <div className="relative w-4 h-4">
@@ -75,7 +83,7 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
               >
                 <input
                   type="checkbox"
-                  checked={positionFilter.includes(position.position)}
+                  checked={tempFilter.includes(position.position)}
                   onChange={() => handleCheckboxChange(position.position)}
                 />
                 {position.position}
@@ -85,7 +93,10 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
 
           <button
             className="w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white rounded"
-            onClick={() => setIsModalOpen(false)}
+            onClick={() => {
+              setPositionFilter(tempFilter);
+              setIsModalOpen(false);
+            }}
           >
             확인
           </button>

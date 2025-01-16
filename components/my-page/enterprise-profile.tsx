@@ -49,7 +49,7 @@ const EnterpriseProfile = () => {
                 </Link>
               </p>
 
-              <div className="flex flex-col gap-1 mt-2 sm:flex-row">
+              <div className="flex flex-row flex-wrap gap-1 mt-1 sm:mt-0">
                 <p>∙ {enterpriseProfile[0]?.industry}</p>
                 <p>
                   ∙{' '}

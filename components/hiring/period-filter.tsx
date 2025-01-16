@@ -19,13 +19,17 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
   setPeriodValueFilter,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [tempFilter, setTempFilter] = useState(periodValueFilter);
 
-  const periodValueHandleChange = (value: number[]) => {
-    setPeriodValueFilter(value);
+  const handleModalOpen = (open: boolean) => {
+    setIsModalOpen(open);
+    if (open) {
+      setTempFilter(periodValueFilter);
+    }
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Dialog open={isModalOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         <button
           className="flex items-center gap-0.5 py-2 px-2 border rounded"
@@ -48,7 +52,7 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
           <button
             className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
             onClick={() => {
-              setPeriodValueFilter([0, 10]);
+              setTempFilter([0, 10]);
             }}
           >
             <div className="relative w-4 h-4">
@@ -70,8 +74,8 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
             <div className="w-full flex flex-wrap">
               <Slider.Root
                 className="relative flex h-5 w-full mt-2 touch-none select-none items-center"
-                value={periodValueFilter}
-                onValueChange={periodValueHandleChange}
+                value={tempFilter}
+                onValueChange={setTempFilter}
                 max={10}
                 step={1}
               >
@@ -94,7 +98,10 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
 
           <button
             className="w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white rounded"
-            onClick={() => setIsModalOpen(false)}
+            onClick={() => {
+              setPeriodValueFilter(tempFilter);
+              setIsModalOpen(false);
+            }}
           >
             확인
           </button>

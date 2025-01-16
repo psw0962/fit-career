@@ -17,7 +17,6 @@ import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 import { useSessionStorage } from 'usehooks-ts';
 import { useGetUserData } from '@/actions/auth';
 import { useToast } from '@/hooks/use-toast';
-import { useState } from 'react';
 
 const ResumeSelectIdModal = ({
   hiringData,
@@ -36,7 +35,6 @@ const ResumeSelectIdModal = ({
 }) => {
   const router = useRouter();
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useSessionStorage('activeTab', '');
 
   const { toast } = useToast();
@@ -61,6 +59,13 @@ const ResumeSelectIdModal = ({
     );
   };
 
+  const isDeadlinePassed = () => {
+    if (!hiringData?.[0].dead_line) return false;
+    const deadline = new Date(hiringData[0].dead_line);
+    const now = new Date();
+    return now > deadline;
+  };
+
   const handlePostResumeToHiring = () => {
     if (!selectedResumeId) {
       toast({
@@ -79,11 +84,18 @@ const ResumeSelectIdModal = ({
   };
 
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+    <Dialog
+      open={resumeUserIdModalIsOpen}
+      onOpenChange={setResumeUserIdModalIsOpen}
+    >
       <DialogTrigger asChild>
         <button
-          className="w-fit h-fit bg-[#4C71C0] rounded px-8 py-2 text-white cursor-pointer"
+          className={`w-fit h-fit bg-[#4C71C0] ${
+            isDeadlinePassed() ? 'bg-gray-400 cursor-not-allowed' : ''
+          } rounded px-8 py-2 text-white cursor-pointer`}
           onClick={() => {
+            if (isDeadlinePassed()) return;
+
             if (!userData) {
               router.push('/auth?message=login_required');
               return;
@@ -91,8 +103,9 @@ const ResumeSelectIdModal = ({
 
             setResumeUserIdModalIsOpen(true);
           }}
+          disabled={isDeadlinePassed()}
         >
-          지원하기
+          {isDeadlinePassed() ? '채용 마감' : '지원하기'}
         </button>
       </DialogTrigger>
 
