@@ -560,8 +560,19 @@ const HiringWrite = () => {
           마감일 <span className="text-sm text-red-500 align-top">*</span>
         </p>
 
+        <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
+          <p className="text-sm">
+            • 마감일 설정은 공고를 등록하는 날짜를 기준으로
+            <span className="font-bold"> 3달 이내</span>로 설정할 수 있어요.
+          </p>
+          <p className="text-sm">
+            • 마감일이 지난 공고에는 지원자가 지원할 수 없어요.
+            <span className="font-bold"> 마감일 확인이 수시로 필요해요.</span>
+          </p>
+        </div>
+
         <DatePicker
-          className="px-2 py-2 border rounded"
+          className="px-2 py-2 mt-2 border rounded"
           selected={parse(deadLine, 'yyyy-MM-dd', new Date())}
           onChange={(date: Date | null) => {
             if (date) {
@@ -572,6 +583,7 @@ const HiringWrite = () => {
           dateFormat="yyyy년 MM월 dd일"
           placeholderText="마감일을 선택하세요"
           minDate={new Date()}
+          maxDate={new Date(new Date().setMonth(new Date().getMonth() + 2))}
         />
       </div>
 

@@ -53,7 +53,7 @@ const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
         </div>
       )}
 
-      <div className="flex flex-col gap-2 mt-[50px] [@media(min-width:701px)]:flex-row">
+      <div className="mt-[50px] flex flex-col flex-wrap gap-2 items-start sm:items-center sm:flex-row">
         <div className="flex items-center gap-2">
           <div className="relative w-8 h-8">
             <Image
@@ -77,16 +77,18 @@ const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
           </p>
         </div>
 
-        <div className="flex flex-col gap-1 mt-2 sm:flex-row">
-          <p>∙ {hiringData.data[0].enterprise_profile?.industry}</p>
-          <p>
+        <div className="flex flex-row flex-wrap gap-1 mt-1 sm:mt-0">
+          <p className="text-gray-500">
+            ∙ {hiringData.data[0].enterprise_profile?.industry}
+          </p>
+          <p className="text-gray-500">
             ∙{' '}
             {hiringData.data[0].enterprise_profile?.address
               .split(' ')
               .slice(1, 3)
               .join(' ')}
           </p>
-          <p>
+          <p className="text-gray-500">
             ∙{' '}
             {calculateYearsInBusiness(
               hiringData.data[0].enterprise_profile?.establishment ?? ''
@@ -96,14 +98,14 @@ const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
               hiringData.data[0].enterprise_profile?.establishment?.split(
                 '-'
               )[0] ?? '0',
-              12
+              10
             )}
             )
           </p>
         </div>
       </div>
 
-      <div className="mt-1 text-[#707173]">
+      <div className="mt-2 text-[#707173]">
         <div
           dangerouslySetInnerHTML={{
             __html: hiringData.data[0].enterprise_profile?.description ?? '',

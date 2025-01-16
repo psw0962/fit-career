@@ -86,7 +86,7 @@ const HiringDetailView = ({
             </p>
           </div>
 
-          <div className="flex flex-col gap-1 mt-2 sm:flex-row">
+          <div className="flex flex-row flex-wrap gap-1 mt-1 sm:mt-0">
             <p className="text-sm text-gray-500">
               ∙ {hiringData.data[0].short_address}
             </p>
