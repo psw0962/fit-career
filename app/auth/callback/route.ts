@@ -13,9 +13,8 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`);
     }
+    console.log(error);
   }
-
-  console.log('error');
 
   return NextResponse.redirect(`${origin}/auth/auth-code-error`);
 }

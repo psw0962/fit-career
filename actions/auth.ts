@@ -5,13 +5,85 @@ import {
   useQueryClient,
   UseMutationOptions,
 } from '@tanstack/react-query';
-import { User } from '@supabase/supabase-js';
+import { AuthResponse, User } from '@supabase/supabase-js';
 import { EnterpriseProfile, SignInResponse } from '@/types/auth/auth';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
+import { createServerSupabaseClient } from '@/utils/supabase/server';
+import { NextApiRequest, NextApiResponse } from 'next';
 
 // =========================================
-// ============== post sign in
+// ============== post email sign in
+// =========================================
+const signInWithEmail = async (
+  email: string,
+  password: string
+): Promise<AuthResponse> => {
+  const supabase = createBrowserSupabaseClient();
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return { data, error };
+};
+
+export const useSignInWithEmail = (
+  options?: UseMutationOptions<
+    AuthResponse,
+    Error,
+    { email: string; password: string },
+    void
+  >
+) => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
+  const { toast } = useToast();
+
+  return useMutation<
+    AuthResponse,
+    Error,
+    { email: string; password: string },
+    void
+  >({
+    mutationFn: ({ email, password }) => signInWithEmail(email, password),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['userData'] });
+      toast({
+        title: '로그인 되었습니다.',
+        variant: 'default',
+      });
+      router.push('/');
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
+
+      if (error.message.includes('Invalid login credentials')) {
+        toast({
+          title: '로그인 실패',
+          description: '이메일 또는 비밀번호가 일치하지 않습니다.',
+          variant: 'warning',
+        });
+      } else {
+        toast({
+          title: '로그인에 실패했습니다.',
+          description:
+            '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+          variant: 'warning',
+        });
+      }
+    },
+    ...options,
+  });
+};
+
+// =========================================
+// ============== post kakao sign in
 // =========================================
 const signInWithKakao = async (): Promise<SignInResponse> => {
   const supabase = createBrowserSupabaseClient();
@@ -376,5 +448,113 @@ export const useGetEnterpriseProfile = (userId: string) => {
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
     // staleTime: 1000 * 60 * 5,
+  });
+};
+
+// =========================================
+// ============== delete all user data
+// =========================================
+const deleteAllUserData = async (): Promise<void> => {
+  const supabase = createBrowserSupabaseClient();
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) {
+    throw new Error(userError.message);
+  }
+
+  const tableConfig = {
+    hiring: { columns: ['images'], bucket: 'hiring', paths: ['hiring'] },
+    resume: {
+      columns: ['resume_image', 'upload_resume'],
+      bucket: 'resume',
+      paths: ['resume/resume-image', 'resume/resume-file'],
+    },
+    enterprise_profile: {
+      columns: ['logo'],
+      bucket: 'profile',
+      paths: ['profile/enterprise_profile'],
+    },
+  };
+
+  for (const [table, config] of Object.entries(tableConfig)) {
+    for (const column of config.columns) {
+      // 파일 경로 조회
+      const { data: fileRecords, error: dbError } = await supabase
+        .from(table)
+        .select(column)
+        .eq('user_id', user?.id);
+
+      if (dbError) {
+        console.error(`Error fetching file paths from ${table}:`, dbError);
+      } else {
+        const allFilePaths = fileRecords
+          .flatMap((record) => record[column] || [])
+          .filter(Boolean);
+
+        // 스토리지 파일 삭제
+        for (const path of config.paths) {
+          if (allFilePaths.length > 0) {
+            const { error: deleteFilesError } = await supabase.storage
+              .from(config.bucket)
+              .remove(
+                allFilePaths.map((filePath) => {
+                  const convertFilePath = filePath.split('/').slice(-1)[0];
+                  return `${path}/${convertFilePath}`;
+                })
+              );
+
+            if (deleteFilesError) {
+              console.error(
+                `Error deleting files from ${config.bucket}:`,
+                deleteFilesError
+              );
+            }
+          }
+        }
+      }
+    }
+
+    // 테이블 데이터 삭제
+    const { error: deleteError } = await supabase
+      .from(table)
+      .delete()
+      .eq('user_id', user?.id);
+
+    if (deleteError) {
+      console.error(`Error deleting from ${table}:`, deleteError);
+    }
+  }
+};
+
+export const useDeleteAllUserData = (
+  options?: UseMutationOptions<void, Error, void, void>
+) => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation<void, Error, void, void>({
+    mutationFn: deleteAllUserData,
+    onSuccess: () => {
+      queryClient.clear();
+
+      toast({
+        title: '활동 데이터가 모두 삭제되었습니다.',
+        variant: 'default',
+      });
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
+
+      toast({
+        title: '활동 데이터 삭제에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
+    },
+    ...options,
   });
 };

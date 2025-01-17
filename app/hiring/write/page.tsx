@@ -281,14 +281,7 @@ const HiringWrite = () => {
       setActiveTab('enterprise');
       return;
     }
-  }, [
-    userData,
-    enterpriseProfile,
-    userDataLoading,
-    enterpriseProfileLoading,
-    router,
-    setActiveTab,
-  ]);
+  }, [userData, enterpriseProfile, userDataLoading, enterpriseProfileLoading]);
 
   if (
     postHringStatus === 'pending' ||
@@ -337,7 +330,7 @@ const HiringWrite = () => {
           </p>
         </div>
 
-        {enterpriseProfile && (
+        {enterpriseProfile && enterpriseProfile[0] && (
           <div>
             <div className="flex flex-col">
               <div className="mt-2 flex gap-2 items-center">
