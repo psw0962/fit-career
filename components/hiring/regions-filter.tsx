@@ -109,7 +109,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
           <DialogDescription className="hidden"></DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col mt-3">
+        <div className="flex flex-col gap-3 mt-3">
           <button
             className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
             onClick={() => {
@@ -134,7 +134,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
           </button>
 
           {/* City selection */}
-          <div className="flex gap-1 mt-3">
+          <div className="flex gap-1">
             <div className="border p-4 w-full max-h-72 overflow-auto rounded">
               <ul>
                 {REGIONS.map((region) => (
@@ -167,7 +167,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
 
                     const isAllSelected =
                       county ===
-                        `${regionFilter.selectedCity && regionFilter.selectedCity.city} 전체` &&
+                        `${tempFilter.selectedCity && tempFilter.selectedCity.city} 전체` &&
                       tempFilter.selectedCity &&
                       tempFilter.selectedCity.county
                         .filter(
@@ -216,7 +216,7 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
             )}
           </div>
 
-          <div className="flex flex-wrap gap-2 mt-4">
+          <div className="flex flex-wrap gap-2">
             {tempFilter.allSelectedCities.map((city) => (
               <div
                 key={`${city} 전체`}
