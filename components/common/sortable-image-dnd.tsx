@@ -1,6 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import Image from 'next/image';
+import { useEffect, useMemo } from 'react';
 
 interface SortableImageDndProps {
   id: number;
@@ -24,18 +25,34 @@ export const SortableImageDnd = ({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id });
+  } = useSortable({
+    id,
+    transition: {
+      duration: 150,
+      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
+    },
+  });
 
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    opacity: isDragging ? 0.5 : 1,
-    cursor: 'grab',
-  };
+  const style = useMemo(
+    () => ({
+      transform: CSS.Transform.toString(transform),
+      transition,
+      opacity: isDragging ? 0.5 : 1,
+      cursor: 'grab',
+    }),
+    [transform, transition, isDragging]
+  );
 
-  const imageUrl: string = isUrl
-    ? (image as string)
-    : URL.createObjectURL(image as File);
+  const imageUrl = useMemo(
+    () => (isUrl ? (image as string) : URL.createObjectURL(image as File)),
+    [image, isUrl]
+  );
+
+  useEffect(() => {
+    if (!isUrl) {
+      return () => URL.revokeObjectURL(imageUrl);
+    }
+  }, [imageUrl, isUrl]);
 
   return (
     <div

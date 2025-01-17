@@ -68,13 +68,13 @@ const HiringPosts = () => {
               >
                 <Link href={`/hiring/${x.id}`} passHref>
                   <div className="flex flex-col gap-0">
-                    <div className="relative w-full aspect-[4/3] mx-auto mb-4">
+                    <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
                       <Image
                         src={
                           x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
                         }
                         alt={`image ${x.id}`}
-                        style={{ objectFit: 'contain' }}
+                        style={{ objectFit: 'cover' }}
                         className="rounded"
                         fill
                         priority
