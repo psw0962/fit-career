@@ -1,8 +1,11 @@
 'use client';
 
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 const Footer = (): React.ReactElement => {
+  const router = useRouter();
+
   return (
     <div className="max-w-full border">
       <div className="max-w-7xl mx-auto px-3 sm:px-10 py-5">
@@ -17,14 +20,22 @@ const Footer = (): React.ReactElement => {
           />
         </div>
 
-        <p className="text-sm text-stone-400 mt-2">
-          Email | psw92640962@gmail.com
-        </p>
+        <p className="text-sm text-stone-400 mt-2">문의 | psw0962@naver.com</p>
 
-        <div className="flex gap-3 mt-3">
-          <p className="text-sm text-stone-400">개인정보 처리방침</p>
+        <div className="flex gap-1 items-center mt-3">
+          <p
+            className="text-sm text-stone-400 font-bold cursor-pointer"
+            onClick={() => router.push('/policy/privacy')}
+          >
+            개인정보 처리방침
+          </p>
           <div className="text-stone-400">|</div>
-          <p className="text-sm text-stone-400">이용약관</p>
+          <p
+            className="text-sm text-stone-400 font-bold cursor-pointer"
+            onClick={() => router.push('/policy/terms')}
+          >
+            이용약관
+          </p>
         </div>
 
         <p className="text-sm text-stone-400 mt-1">

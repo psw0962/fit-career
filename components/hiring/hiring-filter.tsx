@@ -65,13 +65,13 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
             return (
               <Link key={x.id} href={`/hiring/${x.id}`} passHref>
                 <div className="h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
-                  <div className="relative w-full aspect-[4/3] mx-auto mb-4">
+                  <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
                     <Image
                       src={
                         x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
                       }
                       alt={`image ${x.id}`}
-                      style={{ objectFit: 'contain' }}
+                      style={{ objectFit: 'cover' }}
                       className="rounded"
                       fill
                       priority

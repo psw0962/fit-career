@@ -4,7 +4,7 @@ import { usePostHiring } from '@/actions/hiring';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import DaumPostcode, { Address } from 'react-daum-postcode';
 import GlobalSpinner from '@/components/common/global-spinner';
@@ -93,21 +93,31 @@ const HiringWrite = () => {
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
     useGetEnterpriseProfile(userData?.id ?? '');
 
-  const sensors = useSensors(useSensor(PointerSensor), useSensor(TouchSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8,
+      },
+    }),
+    useSensor(TouchSensor, {
+      activationConstraint: {
+        delay: 100,
+        tolerance: 5,
+      },
+    })
+  );
 
-  const handleDragEnd = (event: DragEndEvent) => {
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!over) return;
+    if (!over || active.id === over.id) return;
 
-    if (active.id !== over.id) {
-      setImages((items) => {
-        const oldIndex = Number(active.id);
-        const newIndex = Number(over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  };
+    setImages((items) => {
+      const oldIndex = Number(active.id);
+      const newIndex = Number(over.id);
+      return arrayMove(items, oldIndex, newIndex);
+    });
+  }, []);
 
   const daumPostCodeHandler = (data: Address) => {
     setAddress({
@@ -633,6 +643,11 @@ const HiringWrite = () => {
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragEnd={handleDragEnd}
+        measuring={{
+          droppable: {
+            frequency: 150,
+          },
+        }}
       >
         <SortableContext
           items={images.map((_, index) => index)}
