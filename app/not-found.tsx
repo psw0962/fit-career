@@ -26,9 +26,9 @@ export default function NotFound() {
         </p>
 
         <p className="flex items-center text-center text-[#8F9091] font-bold">
-          취업, 이직, 커리어 콘텐츠까지
+          취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보까지
           <br />
-          피트니스 커리어 성장의 모든 것
+          피트니스 정보의 모든 것
         </p>
       </div>
 

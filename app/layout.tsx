@@ -7,7 +7,8 @@ import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
   title: '피트니스의 모든 정보, FIT Career',
-  description: '취업, 이직, 커리어 콘텐츠까지 피트니스 커리어 성장의 모든 것',
+  description:
+    '취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보까지 피트니스 정보의 모든 것',
   icons: '/favicon.ico',
 };
 

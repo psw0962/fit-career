@@ -49,7 +49,7 @@ const EnterpriseProfile = () => {
                 </Link>
               </p>
 
-              <div className="flex flex-row flex-wrap gap-1 mt-1 sm:mt-0">
+              <div className="flex flex-row flex-wrap gap-1 mt-1 sm:mt-2">
                 <p>∙ {enterpriseProfile[0]?.industry}</p>
                 <p>
                   ∙{' '}
@@ -74,7 +74,7 @@ const EnterpriseProfile = () => {
             </div>
           </div>
 
-          <div className="mt-2 text-[#707173]">
+          <div className="mt-3 text-[#707173]">
             <div
               dangerouslySetInnerHTML={{
                 __html: enterpriseProfile[0]?.description,
