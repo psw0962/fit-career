@@ -15,8 +15,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
+import { useRouter } from 'next/navigation';
 
 const Profile = (): React.ReactElement => {
+  const router = useRouter();
   const { toast } = useToast();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,11 +32,11 @@ const Profile = (): React.ReactElement => {
     if (!userData?.id) return;
 
     try {
-      await deleteAllUserData();
-      await deleteUser(userData.id);
-
       setIsModalOpen(false);
       setIsAgree(false);
+
+      await deleteAllUserData();
+      await deleteUser(userData.id);
 
       window.location.href = '/';
     } catch (error) {
@@ -84,7 +86,13 @@ const Profile = (): React.ReactElement => {
         </div>
       </div>
 
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+      <Dialog
+        open={isModalOpen}
+        onOpenChange={(open) => {
+          setIsModalOpen(open);
+          if (!open) setIsAgree(false);
+        }}
+      >
         <DialogTrigger asChild>
           <button
             className="self-end text-sm ml-2 font-bold text-[#C3C4C5] underline underline-offset-4 decoration-[#C3C4C5]"

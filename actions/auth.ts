@@ -539,7 +539,7 @@ export const useDeleteAllUserData = (
   return useMutation<void, Error, void, void>({
     mutationFn: deleteAllUserData,
     onSuccess: () => {
-      queryClient.clear();
+      queryClient.invalidateQueries({ queryKey: ['userData'] });
 
       toast({
         title: '활동 데이터가 모두 삭제되었습니다.',
