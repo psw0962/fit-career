@@ -1,36 +1,73 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FIT-career (핏커리어)
 
-## Getting Started
+<div align="center">
+  <img src="public/svg/logo.svg" alt="logo" width="200"/>
+  <p>피트니스의 모든 정보, FIT Career</p>
+  <p>취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보까지<br/>피트니스 정보의 모든 것</p>
+</div>
 
-First, run the development server:
+## 🚀 프로젝트 소개
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+FIT-career는 피트니스 전용 채용 플랫폼입니다. 기존에 피트니스 채용 플랫폼은 포털사이트에서 제공하는 카페 플랫폼을 통해 이루어졌습니다. 여기서 발생하는 불편함을 해결하고자 현재 FIT-career가 제공하는 서비스는 4가지입니다.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 무분별한 도배글과 비교적 낮은 품질의 채용정보를 전달하는 문제를 해결하는 데 집중합니다. 피트니스 기업은 채용 정보를 쉽게 등록 및 관리할 수 있고 구직자는 쉽게 채용 정보를 찾을 수 있도록 도와주는 플랫폼입니다.
+- 양질의 정보를 한곳에 모아 커뮤니티를 형성하고 피트니스 관련 콘텐츠를 제공하여 커리어 성장에 도움을 주는 플랫폼입니다.
+- 형성된 커뮤니티를 기반으로 중고 거래 정보를 한곳에서 쉽고 편리하고 관리할 수 있는 플랫폼입니다.
+- 흩어져 있는 대회 일정 및 정보를 한눈에 볼 수 있도록 정보를 제공하는 플랫폼입니다.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 핵심 기능
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- 🎯 채용 공고 등록 및 관리
+- 👥 이력서 등록 및 관리
+- 💼 커뮤니티 형성을 통한 양질의 피트니스 콘텐츠 제공 (예정)
+- 💡 중고 거래 정보 등록 및 관리 (예정)
+- 🥇 대회 일정 및 정보 제공 (예정)
+- 📊 실시간 시장 트렌드 분석 (예정)
 
-## Learn More
+## 🛠 기술 스택
 
-To learn more about Next.js, take a look at the following resources:
+### Frontend
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- TypeScript
+- Next.js 15
+- React Query
+- Zustand
+- Tailwind CSS
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Backend
 
-## Deploy on Vercel
+- Supabase
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Deploy
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Vercel
+- Supabase
+
+## 📱 주요 화면
+
+#### 메인 페이지
+
+![Main](public/images/main.png)
+
+#### 채용 정보
+
+![Detail](public/images/detail.png)
+
+#### 채용공고 관리
+
+![Profile](public/images/hirings.png) ![Profile](public/images/submitted-resume.png)
+
+#### 이력서 관리
+
+![Profile](public/images/resume.png) ![Profile](public/images/submitted.png)
+
+## ✉️ 문의
+
+- Email: psw0962@naver.com
+- Web: https://fitcareer.co.kr
+
+---
+
+<div align="center">
+  <p>© 2025 FIT-career. All rights reserved.</p>
+</div>
