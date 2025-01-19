@@ -15,12 +15,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
-import { useRouter } from 'next/navigation';
 
 const Profile = (): React.ReactElement => {
-  const router = useRouter();
   const { toast } = useToast();
 
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAgree, setIsAgree] = useState(false);
 
@@ -32,6 +31,7 @@ const Profile = (): React.ReactElement => {
     if (!userData?.id) return;
 
     try {
+      setIsDeleting(true);
       setIsModalOpen(false);
       setIsAgree(false);
 
@@ -46,10 +46,17 @@ const Profile = (): React.ReactElement => {
         description: '네트워크 에러, 잠시 후 다시 시도해주세요.',
         variant: 'warning',
       });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-  if (userDataLoading || !userData || deleteAllUserDataStatus === 'pending') {
+  if (
+    userDataLoading ||
+    !userData ||
+    deleteAllUserDataStatus === 'pending' ||
+    isDeleting
+  ) {
     return <GlobalSpinner />;
   }
 

@@ -27,12 +27,7 @@ export const SortableImageDnd = ({
     isDragging,
   } = useSortable({
     id,
-    transition: {
-      duration: 150,
-      easing: 'cubic-bezier(0.25, 1, 0.5, 1)',
-    },
     animateLayoutChanges: () => false,
-    disabled: false,
   });
 
   const style = useMemo(
@@ -41,6 +36,7 @@ export const SortableImageDnd = ({
       transition,
       opacity: isDragging ? 0.5 : 1,
       cursor: 'grab',
+      touchAction: 'none',
     }),
     [transform, transition, isDragging]
   );
@@ -59,30 +55,24 @@ export const SortableImageDnd = ({
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className="relative w-16 sm:w-24 h-16 sm:h-24 border rounded select-none"
+      className="relative w-16 h-16 sm:w-24 sm:h-24 border rounded select-none touch-none"
+      style={{
+        ...style,
+        WebkitTouchCallout: 'none',
+        WebkitUserSelect: 'none',
+      }}
+      {...attributes}
+      {...listeners}
     >
-      <div
-        {...attributes}
-        {...listeners}
-        className="absolute top-1 left-1 cursor-move bg-white/80 hover:bg-white p-[2px] rounded-md shadow-sm z-10 select-none"
-        onTouchStart={(e) => e.preventDefault()}
-      >
-        <Image
-          src="/svg/draggable.svg"
-          alt="draggable"
-          width={16}
-          height={16}
-          draggable={false}
-          className="w-3 h-3 sm:w-4 sm:h-4"
-        />
-      </div>
-
       <Image
         src={imageUrl}
         alt={`uploaded ${id}`}
-        className="w-full h-full rounded"
-        style={{ objectFit: 'contain' }}
+        className="w-full h-full rounded cursor-grab select-none"
+        draggable={false}
+        style={{
+          objectFit: 'contain',
+          WebkitTouchCallout: 'none',
+        }}
         fill
         priority
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -101,7 +91,7 @@ export const SortableImageDnd = ({
           alt="close"
           width={16}
           height={16}
-          className="w-3 h-3 sm:w-4 sm:h-4 invert brightness-0"
+          className="w-4 h-4 invert brightness-0"
           draggable={false}
         />
       </button>

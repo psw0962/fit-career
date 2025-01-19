@@ -23,12 +23,11 @@ import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
   DndContext,
-  closestCenter,
   DragEndEvent,
   useSensor,
   useSensors,
-  PointerSensor,
   TouchSensor,
+  MouseSensor,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -93,19 +92,20 @@ const HiringWrite = () => {
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
     useGetEnterpriseProfile(userData?.id ?? '');
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 100,
-        tolerance: 5,
-      },
-    })
-  );
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 2,
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 150,
+      tolerance: 5,
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
@@ -609,8 +609,7 @@ const HiringWrite = () => {
             • 첫 번째 이미지가 채용공고 대표 이미지로 사용돼요.
           </p>
           <p className="text-sm">
-            • 드래그 아이콘을 눌러 드래그하면 업로드될 이미지 순서를 변경할 수
-            있어요.
+            • 이미지를 드래그하면 업로드될 이미지 순서를 변경할 수 있어요.
           </p>
         </div>
 
@@ -639,16 +638,7 @@ const HiringWrite = () => {
 
       {images.length > 0 && <div className="border border-gray-300 my-4"></div>}
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-        measuring={{
-          droppable: {
-            frequency: 150,
-          },
-        }}
-      >
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <SortableContext
           items={images.map((_, index) => index)}
           strategy={horizontalListSortingStrategy}
