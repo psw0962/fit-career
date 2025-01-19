@@ -100,12 +100,13 @@ const HiringWrite = () => {
 
   const touchSensor = useSensor(TouchSensor, {
     activationConstraint: {
-      delay: 0,
+      delay: 150,
       tolerance: 5,
     },
   });
 
   const sensors = useSensors(mouseSensor, touchSensor);
+
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -269,36 +270,36 @@ const HiringWrite = () => {
     });
   };
 
-  // useEffect(() => {
-  //   if (!userDataLoading && !userData) {
-  //     router.replace('/auth?message=login_required');
-  //     return;
-  //   }
+  useEffect(() => {
+    if (!userDataLoading && !userData) {
+      router.replace('/auth?message=login_required');
+      return;
+    }
 
-  //   if (
-  //     !enterpriseProfileLoading &&
-  //     userData &&
-  //     enterpriseProfile !== undefined &&
-  //     (!enterpriseProfile || enterpriseProfile.length === 0)
-  //   ) {
-  //     toast({
-  //       title: '기업 프로필을 등록해주세요.',
-  //       description: '채용공고 등록은 기업 프로필 작성 후 가능합니다.',
-  //       variant: 'warning',
-  //     });
-  //     router.replace('/auth/my-page?message=enterprise_profile_required');
-  //     setActiveTab('enterprise');
-  //     return;
-  //   }
-  // }, [userData, enterpriseProfile, userDataLoading, enterpriseProfileLoading]);
+    if (
+      !enterpriseProfileLoading &&
+      userData &&
+      enterpriseProfile !== undefined &&
+      (!enterpriseProfile || enterpriseProfile.length === 0)
+    ) {
+      toast({
+        title: '기업 프로필을 등록해주세요.',
+        description: '채용공고 등록은 기업 프로필 작성 후 가능합니다.',
+        variant: 'warning',
+      });
+      router.replace('/auth/my-page?message=enterprise_profile_required');
+      setActiveTab('enterprise');
+      return;
+    }
+  }, [userData, enterpriseProfile, userDataLoading, enterpriseProfileLoading]);
 
-  // if (
-  //   postHringStatus === 'pending' ||
-  //   enterpriseProfileLoading ||
-  //   userDataLoading
-  // ) {
-  //   return <GlobalSpinner />;
-  // }
+  if (
+    postHringStatus === 'pending' ||
+    enterpriseProfileLoading ||
+    userDataLoading
+  ) {
+    return <GlobalSpinner />;
+  }
 
   return (
     <div className="flex flex-col">
@@ -608,8 +609,7 @@ const HiringWrite = () => {
             • 첫 번째 이미지가 채용공고 대표 이미지로 사용돼요.
           </p>
           <p className="text-sm">
-            • 드래그 아이콘을 눌러 드래그하면 업로드될 이미지 순서를 변경할 수
-            있어요.
+            • 이미지를 드래그하면 업로드될 이미지 순서를 변경할 수 있어요.
           </p>
         </div>
 
