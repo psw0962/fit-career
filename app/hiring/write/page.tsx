@@ -23,12 +23,11 @@ import { ko } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
 import {
   DndContext,
-  closestCenter,
   DragEndEvent,
   useSensor,
   useSensors,
-  PointerSensor,
   TouchSensor,
+  MouseSensor,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -93,20 +92,20 @@ const HiringWrite = () => {
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
     useGetEnterpriseProfile(userData?.id ?? '');
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 8,
-      },
-    }),
-    useSensor(TouchSensor, {
-      activationConstraint: {
-        delay: 100,
-        tolerance: 5,
-      },
-    })
-  );
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 2,
+    },
+  });
 
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 0,
+      tolerance: 5,
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
   const handleDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
 
@@ -270,36 +269,36 @@ const HiringWrite = () => {
     });
   };
 
-  useEffect(() => {
-    if (!userDataLoading && !userData) {
-      router.replace('/auth?message=login_required');
-      return;
-    }
+  // useEffect(() => {
+  //   if (!userDataLoading && !userData) {
+  //     router.replace('/auth?message=login_required');
+  //     return;
+  //   }
 
-    if (
-      !enterpriseProfileLoading &&
-      userData &&
-      enterpriseProfile !== undefined &&
-      (!enterpriseProfile || enterpriseProfile.length === 0)
-    ) {
-      toast({
-        title: '기업 프로필을 등록해주세요.',
-        description: '채용공고 등록은 기업 프로필 작성 후 가능합니다.',
-        variant: 'warning',
-      });
-      router.replace('/auth/my-page?message=enterprise_profile_required');
-      setActiveTab('enterprise');
-      return;
-    }
-  }, [userData, enterpriseProfile, userDataLoading, enterpriseProfileLoading]);
+  //   if (
+  //     !enterpriseProfileLoading &&
+  //     userData &&
+  //     enterpriseProfile !== undefined &&
+  //     (!enterpriseProfile || enterpriseProfile.length === 0)
+  //   ) {
+  //     toast({
+  //       title: '기업 프로필을 등록해주세요.',
+  //       description: '채용공고 등록은 기업 프로필 작성 후 가능합니다.',
+  //       variant: 'warning',
+  //     });
+  //     router.replace('/auth/my-page?message=enterprise_profile_required');
+  //     setActiveTab('enterprise');
+  //     return;
+  //   }
+  // }, [userData, enterpriseProfile, userDataLoading, enterpriseProfileLoading]);
 
-  if (
-    postHringStatus === 'pending' ||
-    enterpriseProfileLoading ||
-    userDataLoading
-  ) {
-    return <GlobalSpinner />;
-  }
+  // if (
+  //   postHringStatus === 'pending' ||
+  //   enterpriseProfileLoading ||
+  //   userDataLoading
+  // ) {
+  //   return <GlobalSpinner />;
+  // }
 
   return (
     <div className="flex flex-col">
@@ -639,16 +638,7 @@ const HiringWrite = () => {
 
       {images.length > 0 && <div className="border border-gray-300 my-4"></div>}
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-        measuring={{
-          droppable: {
-            frequency: 150,
-          },
-        }}
-      >
+      <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <SortableContext
           items={images.map((_, index) => index)}
           strategy={horizontalListSortingStrategy}

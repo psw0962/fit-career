@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { validateInput } from '@/functions/validateInput';
@@ -168,6 +168,16 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
       resumeId: resumeId,
     });
   };
+
+  const resumeImageUrl = useMemo(() => {
+    return resumeImage.length > 0 ? URL.createObjectURL(resumeImage[0]) : null;
+  }, [resumeImage]);
+
+  useEffect(() => {
+    return () => {
+      if (resumeImageUrl) URL.revokeObjectURL(resumeImageUrl);
+    };
+  }, [resumeImageUrl]);
 
   useEffect(() => {
     if (editor) {
@@ -360,7 +370,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
           {resumeImage.length > 0 && (
             <div className="relative w-20 h-20 border-gray-300">
               <Image
-                src={URL.createObjectURL(resumeImage[0])}
+                src={resumeImageUrl ?? ''}
                 alt="resume image"
                 fill
                 style={{ objectFit: 'cover' }}

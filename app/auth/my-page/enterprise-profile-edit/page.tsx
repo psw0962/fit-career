@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import DaumPostcode, { Address } from 'react-daum-postcode';
 import GlobalSpinner from '@/components/common/global-spinner';
@@ -189,6 +189,16 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
     }
   };
 
+  const logoUrl = useMemo(() => {
+    return settingLogo.length > 0 ? URL.createObjectURL(settingLogo[0]) : null;
+  }, [settingLogo]);
+
+  useEffect(() => {
+    return () => {
+      if (logoUrl) URL.revokeObjectURL(logoUrl);
+    };
+  }, [logoUrl]);
+
   useEffect(() => {
     if (editor) {
       editor.commands.setContent(description);
@@ -270,7 +280,7 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
           {settingLogo.length > 0 && (
             <div className="relative w-20 h-20 border-gray-300">
               <Image
-                src={URL.createObjectURL(settingLogo[0])}
+                src={logoUrl ?? ''}
                 alt="enterprise logo"
                 className="rounded-full"
                 style={{ objectFit: 'cover' }}

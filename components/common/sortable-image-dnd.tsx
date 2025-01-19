@@ -66,7 +66,7 @@ export const SortableImageDnd = ({
         {...attributes}
         {...listeners}
         className="absolute top-1 left-1 cursor-move bg-white/80 hover:bg-white p-[2px] rounded-md shadow-sm z-10 select-none"
-        onTouchStart={(e) => e.preventDefault()}
+        onTouchStart={(e) => e.stopPropagation()}
       >
         <Image
           src="/svg/draggable.svg"
@@ -74,7 +74,7 @@ export const SortableImageDnd = ({
           width={16}
           height={16}
           draggable={false}
-          className="w-3 h-3 sm:w-4 sm:h-4"
+          className="w-3 h-3 sm:w-4 sm:h-4 pointer-events-none"
         />
       </div>
 
