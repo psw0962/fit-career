@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 
 type DotSpinnerProps = {
@@ -11,8 +13,21 @@ const GlobalSpinner: React.FC<DotSpinnerProps> = ({
   height = '1.5rem',
   dotColor = '#114784',
 }) => {
+  React.useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, []);
+
   return (
-    <div className="absolute inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+    <div
+      className="absolute inset-0 flex items-center justify-center z-50"
+      onClick={(e) => e.preventDefault()}
+      onTouchStart={(e) => e.preventDefault()}
+      style={{ cursor: 'not-allowed' }}
+    >
       <div className="flex space-x-2">
         <div
           className="rounded-full animate-bounce"

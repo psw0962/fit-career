@@ -93,7 +93,9 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
     <Dialog open={isModalOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         <button
-          className="flex items-center gap-0.5 py-2 px-2 border rounded"
+          className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded"
+          aria-haspopup="dialog"
+          aria-expanded="false"
           onClick={() => setIsModalOpen(true)}
         >
           <p className="text-sm">지역필터</p>

@@ -10,14 +10,16 @@ import { Suspense } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
 
 export const metadata: Metadata = {
-  title: '피트니스의 모든 정보, FIT Career',
+  title: '핏커리어(FIT Career) - 피트니스의 모든 정보',
   description:
-    '취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보까지 피트니스 정보의 모든 것',
+    '핏커리어(FIT Career)에서 피트니스 취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보를 확인하세요.',
+  keywords:
+    '핏커리어, fitcareer, 취업, 이직, 커리어, 중고 거래, 대회, 피트니스 정보, 피트니스 커리어, 피트니스 취업, 피트니스 이직, 피트니스 커리어 콘텐츠, 피트니스 중고 거래, 피트니스 대회 정보',
   metadataBase: new URL('https://fitcareer.co.kr'),
   openGraph: {
-    title: '피트니스의 모든 정보, FIT Career',
+    title: '핏커리어(FIT Career) - 피트니스의 모든 정보',
     description:
-      '취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보까지 피트니스 정보의 모든 것',
+      '핏커리어(FIT Career)에서 피트니스 취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보를 확인하세요.',
     images: [
       {
         url: '/svg/logo.svg',
@@ -52,6 +54,16 @@ export const metadata: Metadata = {
   icons: '/favicon.ico',
 };
 
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: '핏커리어(FIT Career)',
+  alternateName: 'fitcareer',
+  url: 'https://fitcareer.co.kr',
+  description:
+    '핏커리어(FIT Career)에서 피트니스 취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보를 확인하세요.',
+};
+
 const RootLayout = ({
   children,
 }: Readonly<{
@@ -73,6 +85,10 @@ const RootLayout = ({
             name="google-site-verification"
             content="ndn4FMya7bUSd8ctl7COuwNbihONM0hLrXvacHiHPX4"
           />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
           <link rel="icon" href="/favicon.ico" />
         </head>
 
@@ -84,7 +100,13 @@ const RootLayout = ({
             <Nav />
 
             <Suspense fallback={<GlobalSpinner />}>
-              <main className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16">
+              <main
+                className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16"
+                style={{
+                  containIntrinsicSize: '0 500px',
+                  contentVisibility: 'auto',
+                }}
+              >
                 {children}
               </main>
             </Suspense>

@@ -82,7 +82,9 @@ const HiringMain = () => {
 
       <div className="flex gap-1.5 mt-4 overflow-x-auto scrollbar-hide whitespace-nowrap">
         <button
-          className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
+          className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-2 cursor-pointer"
+          aria-haspopup="dialog"
+          aria-expanded="false"
           onClick={() => resetFilters()}
         >
           <div className="relative w-4 h-4">
