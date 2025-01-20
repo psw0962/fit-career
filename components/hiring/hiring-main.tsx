@@ -93,6 +93,8 @@ const HiringMain = () => {
               fill
               style={{ objectFit: 'cover' }}
               priority
+              loading="lazy"
+              quality={75}
             />
           </div>
           <p className="text-sm">전체 초기화</p>

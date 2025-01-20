@@ -158,6 +158,8 @@ const ResumeSelectIdModal = ({
                             fill
                             style={{ objectFit: 'contain' }}
                             priority={true}
+                            loading="lazy"
+                            quality={75}
                           />
                         </div>
 
@@ -183,6 +185,8 @@ const ResumeSelectIdModal = ({
                             fill
                             style={{ objectFit: 'contain' }}
                             priority={true}
+                            loading="lazy"
+                            quality={75}
                           />
                         </div>
 

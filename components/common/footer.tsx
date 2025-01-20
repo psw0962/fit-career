@@ -17,6 +17,8 @@ const Footer = (): React.ReactElement => {
             fill
             style={{ objectFit: 'contain' }}
             priority
+            loading="lazy"
+            quality={75}
           />
         </div>
 

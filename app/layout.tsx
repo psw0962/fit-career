@@ -5,6 +5,7 @@ import Footer from '@/components/common/footer';
 import ReactQueryClientProvider from '@/config/ReactQueryClientProvider';
 import { Toaster } from '@/components/ui/toaster';
 import { Analytics } from '@vercel/analytics/react';
+import { pretendard } from './fonts';
 
 export const metadata: Metadata = {
   title: '피트니스의 모든 정보, FIT Career',
@@ -56,7 +57,7 @@ const RootLayout = ({
 }>) => {
   return (
     <ReactQueryClientProvider>
-      <html lang="en">
+      <html lang="ko" className={pretendard.variable}>
         <head>
           <meta
             name="viewport"
@@ -73,7 +74,10 @@ const RootLayout = ({
           <link rel="icon" href="/favicon.ico" />
         </head>
 
-        <body className="overflow-x-auto" suppressHydrationWarning={true}>
+        <body
+          className="overflow-x-auto font-sans antialiased"
+          suppressHydrationWarning={true}
+        >
           <div className="flex flex-col min-w-[350px] min-h-screen">
             <Nav />
 
