@@ -10,12 +10,7 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'fitcareer.com',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'fit-career.vercel.app',
+        hostname: 'fitcareer.co.kr',
         pathname: '/**',
       },
       {
