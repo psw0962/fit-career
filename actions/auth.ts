@@ -90,7 +90,7 @@ const signInWithKakao = async (): Promise<SignInResponse> => {
 
   const redirectUrl =
     process.env.NODE_ENV === 'production'
-      ? 'https://fit-career.vercel.app/auth/callback'
+      ? 'https://www.fitcareer.co.kr/auth/callback'
       : 'http://localhost:3000/auth/callback';
 
   const { data, error } = await supabase.auth.signInWithOAuth({
