@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
+/* @font-face {
   font-family: 'Pretendard';
   font-weight: 300;
   font-style: normal;
@@ -24,11 +24,17 @@
   font-style: normal;
   src: url('/fonts/PretendardBold.ttf') format('ttf'),
        url('/fonts/PretendardBold.woff2') format('woff2');
+} */
+
+@layer base {
+  :root {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 body, html {
   overflow-x: hidden;
-  font-family: 'Pretendard';
 }
 
 html[data-theme="dark"] {
