@@ -128,7 +128,6 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
                 fill
                 style={{ objectFit: 'cover' }}
                 priority
-                loading="lazy"
                 quality={75}
               />
             </div>

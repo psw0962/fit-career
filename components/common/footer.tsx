@@ -17,30 +17,31 @@ const Footer = (): React.ReactElement => {
             fill
             style={{ objectFit: 'contain' }}
             priority
-            loading="lazy"
             quality={75}
           />
         </div>
 
-        <p className="text-sm text-stone-400 mt-2">문의 | psw0962@naver.com</p>
+        <p className="text-sm text-[#000] font-bold mt-2">
+          문의 | psw0962@naver.com
+        </p>
 
-        <div className="flex gap-1 items-center mt-3">
+        <div className="flex gap-1 items-center mt-4">
           <p
-            className="text-sm text-stone-400 font-bold cursor-pointer"
+            className="text-sm text-[#000] font-bold cursor-pointer"
             onClick={() => router.push('/policy/privacy')}
           >
             개인정보 처리방침
           </p>
-          <div className="text-stone-400">|</div>
+          <div className="text-[#000]">|</div>
           <p
-            className="text-sm text-stone-400 font-bold cursor-pointer"
+            className="text-sm text-[#000] font-bold cursor-pointer"
             onClick={() => router.push('/policy/terms')}
           >
             이용약관
           </p>
         </div>
 
-        <p className="text-sm text-stone-400 mt-1">
+        <p className="text-sm text-[#000]">
           © 2024-2025 FIT Career. All rights reserved.
         </p>
       </div>
