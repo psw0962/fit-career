@@ -93,7 +93,6 @@ const HiringMain = () => {
               fill
               style={{ objectFit: 'cover' }}
               priority
-              loading="lazy"
               quality={75}
             />
           </div>

@@ -78,7 +78,6 @@ const Auth = () => {
               fill
               style={{ objectFit: 'contain' }}
               priority
-              loading="lazy"
               quality={75}
             />
           </div>

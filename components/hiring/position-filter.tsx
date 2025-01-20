@@ -70,7 +70,6 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
                 fill
                 style={{ objectFit: 'cover' }}
                 priority
-                loading="lazy"
                 quality={75}
               />
             </div>

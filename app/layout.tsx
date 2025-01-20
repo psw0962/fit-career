@@ -6,6 +6,8 @@ import ReactQueryClientProvider from '@/config/ReactQueryClientProvider';
 import { Toaster } from '@/components/ui/toaster';
 import { Analytics } from '@vercel/analytics/react';
 import { pretendard } from './fonts';
+import { Suspense } from 'react';
+import GlobalSpinner from '@/components/common/global-spinner';
 
 export const metadata: Metadata = {
   title: '피트니스의 모든 정보, FIT Career',
@@ -81,15 +83,18 @@ const RootLayout = ({
           <div className="flex flex-col min-w-[350px] min-h-screen">
             <Nav />
 
-            <main className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16">
-              {children}
-              <Analytics />
-            </main>
+            <Suspense fallback={<GlobalSpinner />}>
+              <main className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16">
+                {children}
+              </main>
+            </Suspense>
 
             <Toaster />
 
             <Footer />
           </div>
+
+          <Analytics />
         </body>
       </html>
     </ReactQueryClientProvider>

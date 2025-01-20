@@ -77,7 +77,6 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               style={{ objectFit: 'contain' }}
               priority
               blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-              loading="lazy"
               quality={75}
             />
           </div>
@@ -155,7 +154,6 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               style={{ objectFit: 'contain' }}
               priority
               blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-              loading="lazy"
               quality={75}
             />
           </div>
