@@ -8,7 +8,7 @@ import { ko } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import DaumPostcode, { Address } from 'react-daum-postcode';
+import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import 'react-datepicker/dist/react-datepicker.css';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
@@ -19,7 +19,6 @@ import { useSessionStorage } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
 import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
 import withAuth from '@/hoc/withAuth';
-import { THEMEOBJ, DAUMPOSTCODESTYLE } from '@/constant/daum-post-style';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import {
@@ -38,6 +37,7 @@ import {
 
 const HiringEditView = ({ hiringId }: { hiringId: string }) => {
   const router = useRouter();
+  const open = useDaumPostcodePopup();
   const { toast } = useToast();
 
   const addressRef = useRef<HTMLDivElement>(null);
@@ -50,7 +50,6 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
   const [activeTab, setActiveTab] = useSessionStorage('activeTab', '');
 
   const [address, setAddress] = useState({
-    findAddressModal: false,
     zoneCode: '',
     zoneAddress: '',
     detailAddress: '',
@@ -122,7 +121,6 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
       ...address,
       zoneAddress: data.address,
       zoneCode: data.zonecode,
-      findAddressModal: false,
     });
   };
 
@@ -309,7 +307,6 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
       const detailAddress = fullAddress[fullAddress.length - 1];
 
       setAddress({
-        findAddressModal: false,
         zoneCode,
         zoneAddress,
         detailAddress,
@@ -435,7 +432,7 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
         <button
           className="py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2"
-          onClick={() => setAddress({ ...address, findAddressModal: true })}
+          onClick={() => open({ onComplete: daumPostCodeHandler })}
         >
           주소 찾기
         </button>
@@ -468,27 +465,6 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
               className="border p-2"
             />
           </>
-        )}
-
-        {address.findAddressModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="flex flex-col bg-white p-4 rounded shadow-lg">
-              <DaumPostcode
-                theme={THEMEOBJ}
-                style={DAUMPOSTCODESTYLE}
-                onComplete={daumPostCodeHandler}
-              />
-
-              <button
-                className="mt-4 py-1 px-4 bg-[#4C71C0] text-white rounded"
-                onClick={() =>
-                  setAddress({ ...address, findAddressModal: false })
-                }
-              >
-                닫기
-              </button>
-            </div>
-          </div>
         )}
       </div>
 

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useDeleteResume } from '@/actions/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
@@ -15,10 +14,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import Link from 'next/link';
 
 const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
-  const router = useRouter();
-
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -114,16 +112,13 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               <ResumeExport data={data} isPreview={true} />
               <ResumeExport data={data} isExport={true} />
 
-              <div
+              <Link
+                href={`/auth/my-page/resume-edit/${data.id}`}
                 className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
-                onClick={() =>
-                  router.push(`/auth/my-page/resume-edit/${data.id}`)
-                }
               >
                 <p className="text-sm">수정하기</p>
-
                 <Image src="/svg/edit.svg" alt="edit" width={15} height={15} />
-              </div>
+              </Link>
 
               <div
                 className="flex items-center justify-center gap-2 py-2 cursor-pointer"
