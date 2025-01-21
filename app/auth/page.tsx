@@ -30,7 +30,7 @@ const Auth = () => {
         toast({
           title: '로그인이 필요합니다.',
           description: '해당 서비스를 이용하기 위해서는 로그인이 필요합니다.',
-          variant: 'default',
+          variant: 'warning',
         });
       }, 100);
     }
@@ -41,7 +41,7 @@ const Auth = () => {
           title: '기업 프로필을 먼저 등록해주세요.',
           description:
             '해당 서비스를 이용하기 위해서는 기업 프로필을 먼저 등록해주세요.',
-          variant: 'default',
+          variant: 'warning',
         });
       }, 100);
     }
