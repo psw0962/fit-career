@@ -11,14 +11,16 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Spinner from '@/components/common/spinner';
 
 const PositionFilter: React.FC<PositionFilterProps> = ({
   positionFilter,
   setPositionFilter,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tempFilter, setTempFilter] = useState(positionFilter);
+  const [tempFilter, setTempFilter] = useState<string[]>([]);
 
   const handleModalOpen = (open: boolean) => {
     setIsModalOpen(open);
@@ -35,14 +37,26 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
     }
   };
 
+  useEffect(() => {
+    setMounted(true);
+    setTempFilter(positionFilter);
+  }, [positionFilter]);
+
+  if (!mounted) {
+    return (
+      <button className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded">
+        <Spinner width="10px" height="10px" />
+      </button>
+    );
+  }
+
   return (
     <Dialog open={isModalOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         <button
           className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded"
           aria-haspopup="dialog"
-          aria-expanded="false"
-          onClick={() => setIsModalOpen(true)}
+          aria-expanded={isModalOpen}
         >
           <p className="text-sm">직무필터</p>
           <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">

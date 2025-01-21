@@ -2,7 +2,11 @@
 
 import { REGIONS } from '@/constant/regions';
 import Image from 'next/image';
-import { City, RegionsFilterProps } from '@/types/hiring/filter-type';
+import {
+  City,
+  RegionFilter,
+  RegionsFilterProps,
+} from '@/types/hiring/filter-type';
 import {
   Dialog,
   DialogContent,
@@ -11,14 +15,20 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Spinner from '@/components/common/spinner';
 
 const RegionsFilter: React.FC<RegionsFilterProps> = ({
   regionFilter,
   setRegionFilter,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tempFilter, setTempFilter] = useState(regionFilter);
+  const [tempFilter, setTempFilter] = useState<RegionFilter>({
+    selectedCity: null,
+    selectedCounties: [],
+    allSelectedCities: [],
+  });
 
   const handleModalOpen = (open: boolean) => {
     setIsModalOpen(open);
@@ -89,14 +99,26 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
     }
   };
 
+  useEffect(() => {
+    setMounted(true);
+    setTempFilter(regionFilter);
+  }, [regionFilter]);
+
+  if (!mounted) {
+    return (
+      <button className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded">
+        <Spinner width="10px" height="10px" />
+      </button>
+    );
+  }
+
   return (
     <Dialog open={isModalOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         <button
           className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded"
           aria-haspopup="dialog"
-          aria-expanded="false"
-          onClick={() => setIsModalOpen(true)}
+          aria-expanded={isModalOpen}
         >
           <p className="text-sm">지역필터</p>
           <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">

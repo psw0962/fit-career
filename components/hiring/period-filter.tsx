@@ -12,14 +12,16 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Spinner from '@/components/common/spinner';
 
 const PeriodFilter: React.FC<PeriodFilterProps> = ({
   periodValueFilter,
   setPeriodValueFilter,
 }) => {
+  const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [tempFilter, setTempFilter] = useState(periodValueFilter);
+  const [tempFilter, setTempFilter] = useState([0, 10]);
 
   const handleModalOpen = (open: boolean) => {
     setIsModalOpen(open);
@@ -28,14 +30,26 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
     }
   };
 
+  useEffect(() => {
+    setMounted(true);
+    setTempFilter(periodValueFilter);
+  }, [periodValueFilter]);
+
+  if (!mounted) {
+    return (
+      <button className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded">
+        <Spinner width="10px" height="10px" />
+      </button>
+    );
+  }
+
   return (
     <Dialog open={isModalOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         <button
           className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded"
           aria-haspopup="dialog"
-          aria-expanded="false"
-          onClick={() => setIsModalOpen(true)}
+          aria-expanded={isModalOpen}
         >
           <p className="text-sm">경력필터</p>
           <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">
@@ -72,7 +86,7 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
           </button>
 
           <div className="flex flex-col gap-2 border rounded p-4">
-            <p className="text-base">{formatPeriod(periodValueFilter)}</p>
+            <p className="text-base">{formatPeriod(tempFilter)}</p>
 
             <div className="w-full flex flex-wrap">
               <Slider.Root
