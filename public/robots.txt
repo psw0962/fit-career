@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fitcareer.co.kr/sitemap.xml
