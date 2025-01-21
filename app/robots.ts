@@ -9,6 +9,5 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: 'https://fitcareer.co.kr/sitemap.xml',
-    host: 'https://fitcareer.co.kr',
   };
 }
