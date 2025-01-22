@@ -76,6 +76,10 @@ const RootLayout = ({
             content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
           />
           <meta
+            name="google-adsense-account"
+            content={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}
+          />
+          <meta
             name="naver-site-verification"
             content="411c6cdc24af411d5a2bac4b9e8bd58eabc8a92e"
           />

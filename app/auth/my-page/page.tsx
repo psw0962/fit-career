@@ -48,9 +48,9 @@ const MyPage = () => {
           마이페이지
         </p>
 
-        <Link href="/auth/my-page/enterprise-profile">
+        {/* <Link href="/auth/my-page/enterprise-profile">
           <p>기업 프로필</p>
-        </Link>
+        </Link> */}
       </div>
 
       <Tabs.Root
