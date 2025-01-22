@@ -10,6 +10,7 @@ import HiringPosts from '@/components/my-page/hiring/hiring-posts';
 import ResumeSubmitted from '@/components/my-page/resume/resume-submitted';
 import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { useSessionStorage } from 'usehooks-ts';
+import Link from 'next/link';
 
 const MyPage = () => {
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
@@ -42,9 +43,15 @@ const MyPage = () => {
 
   return (
     <div>
-      <p className="text-2xl font-bold underline underline-offset-4 decoration-[#4C71C0]">
-        마이페이지
-      </p>
+      <div className="flex justify-between items-center">
+        <p className="text-2xl font-bold underline underline-offset-4 decoration-[#4C71C0]">
+          마이페이지
+        </p>
+
+        {/* <Link href="/auth/my-page/enterprise-profile">
+          <p>기업 프로필</p>
+        </Link> */}
+      </div>
 
       <Tabs.Root
         className="pt-4"
