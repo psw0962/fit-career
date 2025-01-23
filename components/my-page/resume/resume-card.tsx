@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import { useDeleteResume } from '@/actions/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
@@ -14,7 +15,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import Link from 'next/link';
 
 const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);

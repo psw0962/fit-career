@@ -3,6 +3,14 @@ import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import React, { useState } from 'react';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 
 const ResumeExport = ({
   data,
@@ -43,20 +51,25 @@ const ResumeExport = ({
           </div>
 
           {showPreview && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
-              <div className="relative w-[90vw] min-w-[300px] max-w-[900px] h-full max-h-[70vh] p-12 bg-white rounded">
-                <PDFViewer width="100%" height="100%">
-                  <ResumeDocument data={data} />
-                </PDFViewer>
+            <Dialog
+              open={showPreview}
+              onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}
+            >
+              <DialogContent className="w-[80vw] min-w-[300px] h-full">
+                <DialogHeader>
+                  <DialogTitle></DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
 
-                <button
-                  onClick={() => setShowPreview(false)}
-                  className="absolute top-4 right-4 text-[#000]"
-                >
-                  닫기
-                </button>
-              </div>
-            </div>
+                <div className="mt-5 w-full h-full">
+                  <PDFViewer width="100%" height="100%">
+                    <ResumeDocument data={data} />
+                  </PDFViewer>
+                </div>
+
+                <DialogFooter></DialogFooter>
+              </DialogContent>
+            </Dialog>
           )}
         </>
       )}

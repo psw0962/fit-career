@@ -64,7 +64,8 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
 
   const { toast } = useToast();
 
-  const { data: resumeData } = useGetResume(resumeId);
+  const { data: resumeData, isLoading: isResumeLoading } =
+    useGetResume(resumeId);
   const { mutate: patchResumeMutate, status: patchStatus } = usePatchResume();
 
   const handleResumeImageUpload = (
@@ -271,7 +272,7 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
     }
   }, [resumeData]);
 
-  if (patchStatus === 'pending') {
+  if (isResumeLoading || patchStatus === 'pending') {
     return <GlobalSpinner />;
   }
 
