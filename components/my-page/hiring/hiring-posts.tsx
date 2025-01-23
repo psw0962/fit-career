@@ -14,7 +14,6 @@ import { useGetUserData } from '@/actions/auth';
 import { useEffect, useRef, useState } from 'react';
 import * as Switch from '@radix-ui/react-switch';
 import Spinner from '@/components/common/spinner';
-import { useRouter } from 'next/navigation';
 import HiringResumeReceivedModal from '@/components/my-page/hiring/hiring-resume-received-modal';
 import {
   Dialog,
@@ -28,8 +27,6 @@ import { useSessionStorage } from 'usehooks-ts';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 
 const HiringPosts = () => {
-  const router = useRouter();
-
   const [deleteHiringId, setDeleteHiringId] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [page, setPage] = useSessionStorage('hiring-posts-current-page', 0);
@@ -134,14 +131,14 @@ const HiringPosts = () => {
                 </Link>
 
                 <div className=" w-full flex flex-col items-center gap-1">
-                  <div
-                    className="w-full flex flex-col sm:flex-row items-center gap-1"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      router.push(`/hiring/edit/${x.id}`);
-                    }}
-                  >
-                    <div className="w-full flex items-center justify-center gap-1 border rounded px-2 py-1">
+                  <div className="w-full flex flex-col sm:flex-row items-center gap-1">
+                    <Link
+                      href={`/hiring/edit/${x.id}`}
+                      className="w-full flex items-center justify-center gap-1 border rounded px-2 py-1"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                      }}
+                    >
                       <Image
                         src="/svg/edit.svg"
                         alt="edit"
@@ -149,8 +146,8 @@ const HiringPosts = () => {
                         height={15}
                       />
 
-                      <button className="text-sm">수정하기</button>
-                    </div>
+                      <span className="text-sm">수정하기</span>
+                    </Link>
 
                     <div
                       className="w-full flex items-center justify-center gap-1 border rounded px-2 py-1"
@@ -294,18 +291,16 @@ const HiringPosts = () => {
 
       {hiringData?.data.length === 0 && (
         <div className="flex flex-col gap-2 items-center justify-center h-48">
-          <p className="text-lg text-gray-500">
+          <p className="text-sm text-gray-500">
             내가 등록한 채용공고가 없어요.
           </p>
 
-          <button
-            className="w-fit h-fit bg-[#4C71C0] rounded px-8 py-2 text-sm text-white cursor-pointer"
-            onClick={() => {
-              router.push('/hiring/write');
-            }}
+          <Link
+            href="/hiring/write"
+            className="w-fit h-fit bg-[#4C71C0] rounded px-6 py-3 text-sm text-white cursor-pointer"
           >
-            채용공고 등록하기
-          </button>
+            <span>채용공고 등록하기</span>
+          </Link>
         </div>
       )}
     </div>

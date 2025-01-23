@@ -10,7 +10,6 @@ import HiringPosts from '@/components/my-page/hiring/hiring-posts';
 import ResumeSubmitted from '@/components/my-page/resume/resume-submitted';
 import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { useSessionStorage } from 'usehooks-ts';
-import Link from 'next/link';
 
 const MyPage = () => {
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
@@ -23,7 +22,7 @@ const MyPage = () => {
   );
 
   const getClassName = (value: string) => {
-    return `px-2 py-1 ${
+    return `px-2 py-1 text-sm ${
       activeTab === value
         ? 'border-2 rounded border-[#4C71C0] z-10'
         : 'border-2 rounded border-transparent text-[#C3C4C5] z-0'
@@ -47,10 +46,6 @@ const MyPage = () => {
         <p className="text-2xl font-bold underline underline-offset-4 decoration-[#4C71C0]">
           마이페이지
         </p>
-
-        {/* <Link href="/auth/my-page/enterprise-profile">
-          <p>기업 프로필</p>
-        </Link> */}
       </div>
 
       <Tabs.Root
