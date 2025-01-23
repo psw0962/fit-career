@@ -55,7 +55,7 @@ const ResumeExport = ({
               open={showPreview}
               onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}
             >
-              <DialogContent className="w-[80vw] min-w-[300px] h-full">
+              <DialogContent className="w-[90vw] min-w-[300px] h-[80vh]">
                 <DialogHeader>
                   <DialogTitle></DialogTitle>
                   <DialogDescription></DialogDescription>
