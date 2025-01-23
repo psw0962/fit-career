@@ -31,15 +31,23 @@ export const metadata: Metadata = {
     locale: 'ko_KR',
     type: 'website',
   },
+  viewport: {
+    width: 'device-width',
+    initialScale: 1.0,
+    maximumScale: 1.0,
+    userScalable: false,
+  },
   verification: {
     google: 'ndn4FMya7bUSd8ctl7COuwNbihONM0hLrXvacHiHPX4',
     other: {
       'naver-site-verification': '411c6cdc24af411d5a2bac4b9e8bd58eabc8a92e',
+      'google-adsense-account': 'ca-pub-2830847395912425',
     },
   },
   alternates: {
     canonical: 'https://fitcareer.co.kr',
   },
+  manifest: '/manifest.json',
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -71,28 +79,10 @@ const RootLayout = ({
     <ReactQueryClientProvider>
       <html lang="ko" className={pretendard.variable}>
         <head>
-          <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-          />
-          <meta
-            name="google-adsense-account"
-            content={process.env.NEXT_PUBLIC_GOOGLE_ADSENSE_ID}
-          />
-          <meta
-            name="naver-site-verification"
-            content="411c6cdc24af411d5a2bac4b9e8bd58eabc8a92e"
-          />
-          <meta
-            name="google-site-verification"
-            content="ndn4FMya7bUSd8ctl7COuwNbihONM0hLrXvacHiHPX4"
-          />
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
-          <link rel="icon" href="/favicon.ico" />
-          <link rel="manifest" href="/manifest.json" />
         </head>
 
         <body
