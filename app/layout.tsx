@@ -9,6 +9,13 @@ import { pretendard } from './fonts';
 import { Suspense } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1.0,
+  maximumScale: 1.0,
+  userScalable: false,
+};
+
 export const metadata: Metadata = {
   title: '핏커리어(FIT Career) - 피트니스의 모든 정보',
   description:
@@ -30,12 +37,6 @@ export const metadata: Metadata = {
     ],
     locale: 'ko_KR',
     type: 'website',
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1.0,
-    maximumScale: 1.0,
-    userScalable: false,
   },
   verification: {
     google: 'ndn4FMya7bUSd8ctl7COuwNbihONM0hLrXvacHiHPX4',

@@ -582,3 +582,147 @@ export const usePatchHiring = (
     ...options,
   });
 };
+
+// =========================================
+// ============== toggle bookmark
+// =========================================
+type BookmarkContext = {
+  previousBookmark: unknown;
+};
+
+const toggleBookmark = async (hiringId: string): Promise<void> => {
+  const supabase = createBrowserSupabaseClient();
+
+  await new Promise((resolve) => setTimeout(resolve, 500));
+
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError) throw new Error(userError.message);
+  if (!user) throw new Error('user not found');
+
+  const { data: existingBookmark, error: checkError } = await supabase
+    .from('bookmarks_hiring')
+    .select()
+    .eq('user_id', user.id)
+    .eq('hiring_id', hiringId)
+    .maybeSingle();
+
+  if (checkError && checkError.code !== 'PGRST116') {
+    throw new Error(checkError.message);
+  }
+
+  if (existingBookmark) {
+    const { error: deleteError } = await supabase
+      .from('bookmarks_hiring')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('hiring_id', hiringId);
+
+    if (deleteError) throw new Error(deleteError.message);
+  } else {
+    const { error: insertError } = await supabase
+      .from('bookmarks_hiring')
+      .insert([{ user_id: user.id, hiring_id: hiringId }]);
+
+    if (insertError) throw new Error(insertError.message);
+  }
+};
+
+export const useToggleBookmark = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation<void, Error, string, BookmarkContext>({
+    mutationFn: toggleBookmark,
+    onMutate: async (hiringId) => {
+      await queryClient.cancelQueries({
+        queryKey: ['bookmarksHiring', hiringId],
+      });
+
+      const previousBookmark =
+        queryClient.getQueryData<boolean>(['bookmarksHiring', hiringId]) ??
+        false;
+
+      queryClient.setQueryData(
+        ['bookmarksHiring', hiringId],
+        !previousBookmark
+      );
+
+      return { previousBookmark };
+    },
+    onSuccess: async (_, hiringId) => {
+      const isBookmarked = queryClient.getQueryData<boolean>([
+        'bookmarksHiring',
+        hiringId,
+      ]);
+
+      toast({
+        title: isBookmarked
+          ? '북마크가 추가되었습니다.'
+          : '북마크가 삭제되었습니다.',
+        variant: 'default',
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: ['bookmarksHiring', hiringId],
+      });
+    },
+    onError: (error, hiringId, context) => {
+      if (context?.previousBookmark !== undefined) {
+        queryClient.setQueryData(
+          ['bookmarksHiring', hiringId],
+          context.previousBookmark
+        );
+      }
+      console.error(error.message);
+      toast({
+        title: '북마크 상태 변경에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
+    },
+  });
+};
+
+// =========================================
+// ============== check if post is bookmarked
+// =========================================
+const checkIsBookmarked = async (
+  hiringIds: string[]
+): Promise<Record<string, boolean>> => {
+  const supabase = createBrowserSupabaseClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) return {};
+
+  const { data, error } = await supabase
+    .from('bookmarks_hiring')
+    .select('hiring_id')
+    .eq('user_id', user.id)
+    .in('hiring_id', hiringIds);
+
+  if (error) throw new Error(error.message);
+
+  const bookmarkedIds = data.map(
+    (item: { hiring_id: string }) => item.hiring_id
+  );
+  const bookmarkStatus = Object.fromEntries(
+    hiringIds.map((id) => [id, bookmarkedIds.includes(id)])
+  );
+
+  return bookmarkStatus;
+};
+
+export const useCheckIsBookmarked = (hiringIds: string[]) => {
+  return useQuery({
+    queryKey: ['bookmarksHiring', ...hiringIds],
+    queryFn: () => checkIsBookmarked(hiringIds),
+    throwOnError: true,
+  });
+};
