@@ -204,7 +204,7 @@ const ResumeSelectIdModal = ({
 
             {resumeData && resumeData.length > 0 && (
               <button
-                className={`w-fit mx-auto px-8 py-2 text-white cursor-pointer rounded ${
+                className={`w-fit mx-auto px-8 py-2 text-white text-sm cursor-pointer rounded ${
                   confirmSubmitted()
                     ? 'bg-gray-400 cursor-not-allowed'
                     : 'bg-[#4C71C0]'
@@ -212,8 +212,6 @@ const ResumeSelectIdModal = ({
                 onClick={() => handlePostResumeToHiring()}
                 disabled={confirmSubmitted()}
               >
-                {resumeData && resumeData.length < 0 && '이미지 업로드'}
-
                 {confirmSubmitted() &&
                   hiringData?.[0].is_visible &&
                   '이미 지원한 채용공고입니다.'}

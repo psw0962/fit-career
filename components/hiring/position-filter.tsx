@@ -109,7 +109,7 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
           </div>
 
           <button
-            className="w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white rounded"
+            className="w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white text-sm rounded"
             onClick={() => {
               setPositionFilter(tempFilter);
               setIsModalOpen(false);

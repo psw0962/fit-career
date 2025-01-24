@@ -61,14 +61,14 @@ const ResumeSubmitted = () => {
                 <DialogFooter>
                   <div className="flex gap-2 justify-center mt-4 sm:mt-0">
                     <button
-                      className="border rounded px-4 py-2"
+                      className="border rounded px-4 py-2 text-sm"
                       onClick={() => setOpenDeleteDialog(null)}
                     >
                       취소
                     </button>
 
                     <button
-                      className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2"
+                      className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm"
                       onClick={() => {
                         deleteResumeFromHiring({
                           hiringId: row.original.id,
