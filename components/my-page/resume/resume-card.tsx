@@ -122,27 +122,13 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               <ResumeExport data={data} isPreview={true} />
               <ResumeExport data={data} isExport={true} />
 
-              <button
+              <div
+                className="flex items-center justify-center gap-2 py-2 border-b cursor-pointer"
                 onClick={handleEdit}
-                disabled={isLoading}
-                className="w-full flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
               >
-                {isLoading ? (
-                  <div className="fixed inset-0 flex items-center justify-center">
-                    <GlobalSpinner />
-                  </div>
-                ) : (
-                  <>
-                    <p className="text-sm">수정하기</p>
-                    <Image
-                      src="/svg/edit.svg"
-                      alt="edit"
-                      width={15}
-                      height={15}
-                    />
-                  </>
-                )}
-              </button>
+                <p className="text-sm">수정하기</p>
+                <Image src="/svg/edit.svg" alt="edit" width={15} height={15} />
+              </div>
 
               <div
                 className="flex items-center justify-center gap-2 py-2 cursor-pointer"
@@ -160,6 +146,8 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
           )}
         </div>
       )}
+
+      {isLoading && <GlobalSpinner />}
 
       {/* upload resume */}
       {data && !data.is_fitcareer_resume && (
