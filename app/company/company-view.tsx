@@ -1,6 +1,10 @@
 'use client';
 
-import { useGetHiring } from '@/actions/hiring';
+import {
+  useCheckIsBookmarked,
+  useGetHiring,
+  useToggleBookmark,
+} from '@/actions/hiring';
 import Image from 'next/image';
 import { Map } from 'react-kakao-maps-sdk';
 import CustomMapMaker from '@/components/common/kakao-map/custom-map-maker';
@@ -11,6 +15,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
 import BasicCarousel from '@/components/carousel/basic-carousel';
+import { HiringDataResponse } from '@/types/hiring/hiring';
 
 const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
   useKakaoLoader();
@@ -25,6 +30,11 @@ const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
       page,
       pageSize: 12,
     });
+
+  const { mutate: toggleBookmark, status: toggleBookmarkStatus } =
+    useToggleBookmark();
+  const hiringIds = hiringData?.data.map((x: HiringDataResponse) => x.id) || [];
+  const { data: bookmarkedStatus } = useCheckIsBookmarked(hiringIds);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -117,60 +127,93 @@ const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
       <p className="mt-14 mb-4 text-xl font-bold">채용중인 포지션</p>
 
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {hiringDataByUserId.data.map((x) => (
-          <Link key={x.id} href={`/hiring/${x.id}`} passHref>
-            <div className="h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
-              <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
-                <Image
-                  src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
-                  alt={`image ${x.id}`}
-                  style={{ objectFit: 'cover' }}
-                  className="rounded"
-                  fill
-                  priority
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                  quality={75}
-                />
-              </div>
+        {hiringDataByUserId.data.map((x) => {
+          const isBookmarked = bookmarkedStatus?.[x.id];
 
-              <div className="w-full flex flex-col gap-0">
-                <p className="text-base font-bold break-keep line-clamp-2">
-                  {x.title}
-                </p>
-
-                <div className="flex items-center gap-1 mt-2">
-                  <div className="relative w-5 h-5">
-                    <Image
-                      src={
-                        hiringData.data[0].enterprise_profile?.logo[0]
-                          ? hiringData.data[0].enterprise_profile?.logo[0]
-                          : '/svg/logo.svg'
-                      }
-                      alt={`image ${x.id}`}
-                      className="rounded"
-                      style={{ objectFit: 'contain' }}
-                      fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                      quality={75}
-                    />
-                  </div>
-
-                  <p className="text-sm break-words line-clamp-1 flex-1">
-                    {hiringData.data[0].enterprise_profile?.name}
-                  </p>
+          return (
+            <Link key={x.id} href={`/hiring/${x.id}`} passHref>
+              <div className="relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
+                <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
+                  <Image
+                    src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
+                    alt={`image ${x.id}`}
+                    style={{ objectFit: 'cover' }}
+                    className="rounded"
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                    quality={75}
+                  />
                 </div>
 
-                <p className="text-xs text-gray-500 mt-2">{x.short_address}</p>
-                <p className="text-xs text-gray-500">
-                  경력 {formatPeriod(x.period)}
-                </p>
+                <div
+                  className={`absolute top-2 right-2 w-8 h-8 bg-[#4c71c0] rounded-full ${
+                    toggleBookmarkStatus === 'pending'
+                      ? 'cursor-not-allowed'
+                      : ''
+                  }`}
+                  onClick={(e) => {
+                    if (toggleBookmarkStatus === 'pending') return;
+                    e.preventDefault();
+                    toggleBookmark(x.id);
+                  }}
+                >
+                  <Image
+                    src={
+                      isBookmarked ? '/svg/bookmarked.svg' : '/svg/bookmark.svg'
+                    }
+                    alt="bookmark"
+                    className="p-2"
+                    style={{ objectFit: 'contain' }}
+                    fill
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                    quality={75}
+                  />
+                </div>
+
+                <div className="w-full flex flex-col gap-0">
+                  <p className="text-base font-bold break-keep line-clamp-2">
+                    {x.title}
+                  </p>
+
+                  <div className="flex items-center gap-1 mt-2">
+                    <div className="relative w-5 h-5">
+                      <Image
+                        src={
+                          hiringData.data[0].enterprise_profile?.logo[0]
+                            ? hiringData.data[0].enterprise_profile?.logo[0]
+                            : '/svg/logo.svg'
+                        }
+                        alt={`image ${x.id}`}
+                        className="rounded"
+                        style={{ objectFit: 'contain' }}
+                        fill
+                        priority
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                        quality={75}
+                      />
+                    </div>
+
+                    <p className="text-sm break-words line-clamp-1 flex-1">
+                      {hiringData.data[0].enterprise_profile?.name}
+                    </p>
+                  </div>
+
+                  <p className="text-xs text-gray-500 mt-2">
+                    {x.short_address}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    경력 {formatPeriod(x.period)}
+                  </p>
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          );
+        })}
       </div>
 
       {(hiringDataByUserId?.count ?? 0) > 12 && (
@@ -208,14 +251,13 @@ const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
 
       <div className="mt-16 border border-gray-300 rounded">
         <Map
-          className="rounded-t"
+          className="rounded-t z-0 h-[250px] sm:h-[450px]"
           center={{
             lat: 33.450701,
             lng: 126.570667,
           }}
           style={{
             width: '100%',
-            height: '450px',
           }}
           level={4}
         >

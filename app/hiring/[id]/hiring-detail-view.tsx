@@ -1,7 +1,11 @@
 'use client';
 
 import BasicCarousel from '@/components/carousel/basic-carousel';
-import { useGetHiring } from '@/actions/hiring';
+import {
+  useCheckIsBookmarked,
+  useGetHiring,
+  useToggleBookmark,
+} from '@/actions/hiring';
 import Image from 'next/image';
 import { Map } from 'react-kakao-maps-sdk';
 import useKakaoLoader from '@/hooks/use-kakao-loader';
@@ -12,6 +16,7 @@ import ResumeSelectModal from '@/components/my-page/resume/resume-select-modal';
 import { useState } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { formatPeriod } from '@/functions/formatPeriod';
+import { HiringDataResponse } from '@/types/hiring/hiring';
 
 const HiringDetailView = ({
   hiringId,
@@ -28,6 +33,10 @@ const HiringDetailView = ({
     id: hiringId,
   });
   const { data: resumeData } = useGetResume();
+  const { mutate: toggleBookmark, status: toggleBookmarkStatus } =
+    useToggleBookmark();
+  const hiringIds = hiringData?.data.map((x: HiringDataResponse) => x.id) || [];
+  const { data: bookmarkedStatus } = useCheckIsBookmarked(hiringIds);
 
   const handleNavigate = () => {
     if (!hiringData || hiringData.data.length === 0) return;
@@ -59,7 +68,7 @@ const HiringDetailView = ({
       )}
 
       <div className="flex flex-col gap-3 sm:flex-row justify-between">
-        <div className="flex flex-col gap-1 items-start sm:items-center sm:flex-row mt-10">
+        <div className="flex flex-col gap-1 items-start sm:items-center md:flex-row mt-10">
           <div
             className="flex gap-2 items-center cursor-pointer"
             onClick={handleNavigate}
@@ -97,7 +106,36 @@ const HiringDetailView = ({
           </div>
         </div>
 
-        <div className="flex items-end">
+        <div className="flex gap-2 items-end">
+          <div
+            className={`relative w-10 h-10 bg-[#4c71c0] rounded-full ${
+              toggleBookmarkStatus === 'pending'
+                ? 'cursor-not-allowed'
+                : 'cursor-pointer'
+            }`}
+            onClick={(e) => {
+              if (toggleBookmarkStatus === 'pending') return;
+              e.preventDefault();
+              toggleBookmark(hiringId);
+            }}
+          >
+            <Image
+              src={
+                bookmarkedStatus?.[hiringId]
+                  ? '/svg/bookmarked.svg'
+                  : '/svg/bookmark.svg'
+              }
+              alt="bookmark"
+              className="p-2"
+              style={{ objectFit: 'contain' }}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+              quality={75}
+            />
+          </div>
+
           <ResumeSelectModal
             hiringData={hiringData.data}
             resumeData={resumeData}
@@ -146,14 +184,13 @@ const HiringDetailView = ({
 
       <div className="mt-10 border border-gray-300 rounded">
         <Map
-          className="rounded-t z-0"
+          className="rounded-t z-0 h-[250px] sm:h-[450px]"
           center={{
             lat: 33.450701,
             lng: 126.570667,
           }}
           style={{
             width: '100%',
-            height: '450px',
           }}
           level={4}
         >

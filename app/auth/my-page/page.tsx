@@ -10,6 +10,7 @@ import HiringPosts from '@/components/my-page/hiring/hiring-posts';
 import ResumeSubmitted from '@/components/my-page/resume/resume-submitted';
 import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { useSessionStorage } from 'usehooks-ts';
+import BookmarksHiring from '@/components/my-page/bookmarks-hiring';
 
 const MyPage = () => {
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
@@ -91,7 +92,17 @@ const MyPage = () => {
             className={getClassName('submitted')}
             value="submitted"
           >
-            내가 지원한 채용공고
+            지원한 채용공고
+          </Tabs.Trigger>
+
+          <Tabs.Trigger
+            ref={(el) => {
+              tabRefs.current['bookmarks-hiring'] = el;
+            }}
+            className={getClassName('bookmarks-hiring')}
+            value="bookmarks-hiring"
+          >
+            북마크한 채용공고
           </Tabs.Trigger>
 
           {enterpriseProfileData && enterpriseProfileData.length > 0 && (
@@ -102,7 +113,7 @@ const MyPage = () => {
               className={getClassName('employment')}
               value="employment"
             >
-              내가 등록한 채용공고
+              등록한 채용공고
             </Tabs.Trigger>
           )}
         </Tabs.List>
@@ -124,6 +135,10 @@ const MyPage = () => {
 
           <Tabs.Content value="submitted">
             <ResumeSubmitted />
+          </Tabs.Content>
+
+          <Tabs.Content value="bookmarks-hiring">
+            <BookmarksHiring />
           </Tabs.Content>
 
           {enterpriseProfileData && enterpriseProfileData.length > 0 && (

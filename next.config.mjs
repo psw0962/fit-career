@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  poweredByHeader: false,
+  compress: true,
   images: {
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'http',
@@ -39,7 +42,6 @@ const nextConfig = {
         pathname: '/thumb/**',
       },
     ],
-    disableStaticImages: false,
   },
 };
 

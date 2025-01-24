@@ -23,7 +23,7 @@ const GlobalSpinner: React.FC<DotSpinnerProps> = ({
 
   return (
     <div
-      className="absolute inset-0 flex items-center justify-center z-50"
+      className="absolute inset-0 flex items-center justify-center z-50 bg-white/80 backdrop-blur-sm"
       onClick={(e) => e.preventDefault()}
       onTouchStart={(e) => e.preventDefault()}
       style={{ cursor: 'not-allowed' }}

@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
+import { useCheckIsBookmarked, useToggleBookmark } from '@/actions/hiring';
 
 const HiringFilter: React.FC<HiringFilterProps> = ({
   regionFilter,
@@ -31,6 +32,10 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
       periodRange: periodValueFilter as [number, number],
     },
   });
+  const { mutate: toggleBookmark, status: toggleBookmarkStatus } =
+    useToggleBookmark();
+  const hiringIds = hiringData?.data.map((x: HiringDataResponse) => x.id) || [];
+  const { data: bookmarkedStatus } = useCheckIsBookmarked(hiringIds);
 
   const totalPages = Math.ceil((hiringData?.count || 0) / itemsPerPage);
   const pageGroupSize = 12;
@@ -62,9 +67,20 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {hiringData !== undefined &&
           hiringData.data.map((x: HiringDataResponse) => {
+            const isBookmarked = bookmarkedStatus?.[x.id];
+
             return (
-              <Link key={x.id} href={`/hiring/${x.id}`} passHref>
-                <div className="h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
+              <Link
+                key={x.id}
+                href={`/hiring/${x.id}`}
+                passHref
+                onClick={(e) => {
+                  if (toggleBookmarkStatus === 'pending') {
+                    e.preventDefault();
+                  }
+                }}
+              >
+                <div className="relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
                   <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
                     <Image
                       src={
@@ -73,6 +89,35 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
                       alt={`image ${x.id}`}
                       style={{ objectFit: 'cover' }}
                       className="rounded"
+                      fill
+                      priority
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                      quality={75}
+                    />
+                  </div>
+
+                  <div
+                    className={`absolute top-2 right-2 w-8 h-8 bg-[#4c71c0] rounded-full ${
+                      toggleBookmarkStatus === 'pending'
+                        ? 'cursor-not-allowed'
+                        : ''
+                    }`}
+                    onClick={(e) => {
+                      if (toggleBookmarkStatus === 'pending') return;
+                      e.preventDefault();
+                      toggleBookmark(x.id);
+                    }}
+                  >
+                    <Image
+                      src={
+                        isBookmarked
+                          ? '/svg/bookmarked.svg'
+                          : '/svg/bookmark.svg'
+                      }
+                      alt="bookmark"
+                      className="p-2"
+                      style={{ objectFit: 'contain' }}
                       fill
                       priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

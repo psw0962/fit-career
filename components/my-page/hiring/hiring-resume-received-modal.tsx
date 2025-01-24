@@ -135,19 +135,20 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
                           </button>
                         )}
                       </td>
+
                       <td className="p-3 text-center">
                         {resume.is_fitcareer_resume
-                          ? resume.name
+                          ? resume.name || '미작성'
                           : '파일로 제출됨'}
                       </td>
                       <td className="p-3 text-center">
                         {resume.is_fitcareer_resume
-                          ? resume.phone
+                          ? resume.phone || '미작성'
                           : '파일로 제출됨'}
                       </td>
                       <td className="p-3 text-center">
                         {resume.is_fitcareer_resume
-                          ? resume.email
+                          ? resume.email || '미작성'
                           : '파일로 제출됨'}
                       </td>
                       <td className="p-3 text-center">{resume.submitted_at}</td>
