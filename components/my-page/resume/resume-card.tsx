@@ -15,12 +15,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { useRouter } from 'next/navigation';
+import GlobalSpinner from '@/components/common/global-spinner';
 
 const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { mutate: deleteResume } = useDeleteResume();
+
+  const handleEdit = async () => {
+    setIsLoading(true);
+    router.push(`/auth/my-page/resume-edit/${data.id}`);
+  };
 
   const handleDelete = () => {
     if (data.id) {
@@ -112,13 +122,27 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
               <ResumeExport data={data} isPreview={true} />
               <ResumeExport data={data} isExport={true} />
 
-              <Link
-                href={`/auth/my-page/resume-edit/${data.id}`}
-                className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
+              <button
+                onClick={handleEdit}
+                disabled={isLoading}
+                className="w-full flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
               >
-                <p className="text-sm">수정하기</p>
-                <Image src="/svg/edit.svg" alt="edit" width={15} height={15} />
-              </Link>
+                {isLoading ? (
+                  <div className="fixed inset-0 flex items-center justify-center">
+                    <GlobalSpinner />
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-sm">수정하기</p>
+                    <Image
+                      src="/svg/edit.svg"
+                      alt="edit"
+                      width={15}
+                      height={15}
+                    />
+                  </>
+                )}
+              </button>
 
               <div
                 className="flex items-center justify-center gap-2 py-2 cursor-pointer"

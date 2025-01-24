@@ -466,6 +466,18 @@ const deleteAllUserData = async (): Promise<void> => {
     throw new Error(userError.message);
   }
 
+  const bookmarkTables = ['bookmarks_hiring', 'bookmarks_resume'];
+  for (const table of bookmarkTables) {
+    const { error: bookmarkError } = await supabase
+      .from(table)
+      .delete()
+      .eq('user_id', user?.id);
+
+    if (bookmarkError) {
+      console.error(`${table} 북마크 삭제 중 에러 발생:`, bookmarkError);
+    }
+  }
+
   const tableConfig = {
     hiring: { columns: ['images'], bucket: 'hiring', paths: ['hiring'] },
     resume: {

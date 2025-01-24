@@ -422,6 +422,15 @@ const deleteHiring = async (hiringId: string) => {
     throw new Error(hiringError.message);
   }
 
+  const { error: bookmarkDeleteError } = await supabase
+    .from('bookmarks_hiring')
+    .delete()
+    .eq('hiring_id', hiringId);
+
+  if (bookmarkDeleteError) {
+    console.error(`Failed to delete bookmarks: ${bookmarkDeleteError.message}`);
+  }
+
   const { error: deleteError } = await supabase
     .from('hiring')
     .delete()
@@ -634,7 +643,7 @@ const toggleBookmark = async (hiringId: string): Promise<void> => {
 export const useToggleBookmark = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
-
+  const router = useRouter();
   return useMutation<void, Error, string, BookmarkContext>({
     mutationFn: toggleBookmark,
     onMutate: async (hiringId) => {
@@ -669,8 +678,26 @@ export const useToggleBookmark = () => {
       await queryClient.invalidateQueries({
         queryKey: ['bookmarksHiring', hiringId],
       });
+
+      await queryClient.invalidateQueries({
+        queryKey: ['bookmarksHiring'],
+        refetchType: 'active',
+        exact: false,
+      });
     },
     onError: (error, hiringId, context) => {
+      if (error.message === 'Auth session missing!') {
+        router.push('/auth');
+
+        toast({
+          title: '로그인이 필요한 서비스입니다.',
+          description: '로그인 후 다시 시도해주세요.',
+          variant: 'warning',
+        });
+
+        return;
+      }
+
       if (context?.previousBookmark !== undefined) {
         queryClient.setQueryData(
           ['bookmarksHiring', hiringId],
@@ -724,5 +751,131 @@ export const useCheckIsBookmarked = (hiringIds: string[]) => {
     queryKey: ['bookmarksHiring', ...hiringIds],
     queryFn: () => checkIsBookmarked(hiringIds),
     throwOnError: true,
+  });
+};
+
+// =========================================
+// ============== get bookmarked hirings by user id
+// =========================================
+const getBookmarkedHiringsByUserId = async (
+  page: number = 0,
+  pageSize: number = 12
+): Promise<{ data: HiringDataResponse[]; count: number }> => {
+  const supabase = createBrowserSupabaseClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) throw new Error('User not found');
+
+  const { data: bookmarkData, error: bookmarkError } = await supabase
+    .from('bookmarks_hiring')
+    .select('hiring_id')
+    .eq('user_id', user.id);
+
+  if (bookmarkError) throw new Error(bookmarkError.message);
+
+  const hiringIds = bookmarkData.map(
+    (item: { hiring_id: string }) => item.hiring_id
+  );
+
+  if (hiringIds.length === 0) {
+    return { data: [], count: 0 };
+  }
+
+  const from = page * pageSize;
+  const to = from + pageSize - 1;
+
+  const [{ data, error }, { count, error: countError }] = await Promise.all([
+    supabase
+      .from('hiring')
+      .select(
+        `
+        *,
+        enterprise_profile:enterprise_profile!user_id(*)
+      `
+      )
+      .in('id', hiringIds)
+      .order('created_at', { ascending: false })
+      .range(from, to),
+
+    supabase
+      .from('hiring')
+      .select('*', { count: 'exact', head: true })
+      .in('id', hiringIds),
+  ]);
+
+  if (error || countError) {
+    throw new Error(error?.message || countError?.message);
+  }
+
+  return {
+    data: data as HiringDataResponse[],
+    count: count || 0,
+  };
+};
+
+export const useGetBookmarkedHiringsByUserId = (
+  page: number = 0,
+  pageSize: number = 12,
+  options?: UseQueryOptions<
+    { data: HiringDataResponse[]; count: number },
+    Error
+  >
+) => {
+  return useQuery<{ data: HiringDataResponse[]; count: number }, Error>({
+    queryKey: ['bookmarkedHiringsByUserId', page, pageSize],
+    queryFn: () => getBookmarkedHiringsByUserId(page, pageSize),
+    ...options,
+  });
+};
+
+// =========================================
+// ============== delete bookmark
+// =========================================
+const deleteBookmark = async (hiringId: string): Promise<void> => {
+  const supabase = createBrowserSupabaseClient();
+  const {
+    data: { user },
+    error: userError,
+  } = await supabase.auth.getUser();
+
+  if (userError || !user) throw new Error('User not found');
+
+  const { error: deleteError } = await supabase
+    .from('bookmarks_hiring')
+    .delete()
+    .eq('user_id', user.id)
+    .eq('hiring_id', hiringId);
+
+  if (deleteError) throw new Error(deleteError.message);
+};
+
+export const useDeleteBookmark = () => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation<void, Error, string>({
+    mutationFn: deleteBookmark,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['bookmarkedHiringsByUserId'],
+        refetchType: 'active',
+        exact: false,
+      });
+      toast({
+        title: '북마크가 삭제되었습니다.',
+        variant: 'default',
+      });
+    },
+    onError: (error: Error) => {
+      console.error('북마크 삭제 중 에러 발생:', error);
+      toast({
+        title: '북마크 삭제에 실패했습니다.',
+        description: '네트워크 에러, 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
+    },
   });
 };

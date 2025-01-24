@@ -251,14 +251,13 @@ const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
 
       <div className="mt-16 border border-gray-300 rounded">
         <Map
-          className="rounded-t"
+          className="rounded-t z-0 h-[250px] sm:h-[450px]"
           center={{
             lat: 33.450701,
             lng: 126.570667,
           }}
           style={{
             width: '100%',
-            height: '450px',
           }}
           level={4}
         >

@@ -25,8 +25,12 @@ import {
 } from '@/components/ui/dialog';
 import { useSessionStorage } from 'usehooks-ts';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
+import { useRouter } from 'next/navigation';
 
 const HiringPosts = () => {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   const [deleteHiringId, setDeleteHiringId] = useState<string | null>(null);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [page, setPage] = useSessionStorage('hiring-posts-current-page', 0);
@@ -44,6 +48,11 @@ const HiringPosts = () => {
   const { mutate: updateHiringVisibility } = useUpdateHiringVisibility();
   const { mutate: deleteHiring, status: deleteHiringStatus } =
     useDeleteHiring();
+
+  const handleEdit = async () => {
+    setIsLoading(true);
+    router.push(`/hiring/write`);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -295,12 +304,17 @@ const HiringPosts = () => {
             내가 등록한 채용공고가 없어요.
           </p>
 
-          <Link
-            href="/hiring/write"
-            className="w-fit h-fit bg-[#4C71C0] rounded px-6 py-3 text-sm text-white cursor-pointer"
-          >
-            <span>채용공고 등록하기</span>
-          </Link>
+          {isLoading ? (
+            <GlobalSpinner />
+          ) : (
+            <button
+              className="w-fit h-fit bg-[#4C71C0] rounded px-6 py-3 text-sm text-white cursor-pointer"
+              onClick={handleEdit}
+              disabled={isLoading}
+            >
+              <span>채용공고 등록하기</span>
+            </button>
+          )}
         </div>
       )}
     </div>
