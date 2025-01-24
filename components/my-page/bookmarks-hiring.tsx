@@ -13,7 +13,6 @@ import {
   flexRender,
 } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
-import Spinner from '@/components/common/spinner';
 import { useRouter } from 'next/navigation';
 import {
   Dialog,
@@ -25,6 +24,7 @@ import {
 } from '@/components/ui/dialog';
 import { useSessionStorage } from 'usehooks-ts';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
+import GlobalSpinner from '../common/global-spinner';
 
 export default function BookmarksHiring() {
   const columns: ColumnDef<HiringDataResponse>[] = [
@@ -50,7 +50,9 @@ export default function BookmarksHiring() {
             >
               <DialogContent
                 className="w-[90vw] max-w-[500px] min-w-[300px]"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 <DialogHeader>
                   <DialogTitle>북마크 삭제</DialogTitle>
@@ -61,14 +63,14 @@ export default function BookmarksHiring() {
                 <DialogFooter>
                   <div className="flex gap-2 justify-center mt-4 sm:mt-0">
                     <button
-                      className="border rounded px-4 py-2"
+                      className="text-sm border rounded px-4 py-2"
                       onClick={() => setOpenDeleteDialog(null)}
                     >
                       취소
                     </button>
 
                     <button
-                      className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2"
+                      className="bg-[#4C71C0] text-[#fff] text-sm rounded px-4 py-2"
                       onClick={() => {
                         deleteBookmark(row.original.id);
                         setOpenDeleteDialog(null);
@@ -255,7 +257,7 @@ export default function BookmarksHiring() {
         )}
       </div>
 
-      {hiringDataIsLoading && <Spinner />}
+      {hiringDataIsLoading && <GlobalSpinner />}
 
       {hiringData?.data.length === 0 && (
         <div className="flex items-center justify-center h-48">

@@ -18,7 +18,7 @@ const NavAuth = ({
   return (
     <div className={`${isMobile ? 'flex md:hidden' : 'hidden md:flex'} gap-4`}>
       {isLoading ? (
-        <Spinner />
+        <Spinner width="16px" height="16px" />
       ) : userData !== undefined && userData ? (
         <div className="flex gap-3 items-center">
           <Link href="/auth/my-page" passHref>
