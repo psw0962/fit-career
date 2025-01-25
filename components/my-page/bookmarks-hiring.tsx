@@ -177,7 +177,11 @@ export default function BookmarksHiring() {
                 <tr
                   key={row.id}
                   className="hover:bg-gray-50 transition-colors cursor-pointer"
-                  onClick={() => router.push(`/hiring/${row.original.id}`)}
+                  onClick={() => {
+                    if (!openDeleteDialog) {
+                      router.push(`/hiring/${row.original.id}`);
+                    }
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => {
                     return (
