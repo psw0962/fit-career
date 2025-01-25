@@ -1,8 +1,15 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import Spinner from '@/components/common/spinner';
+import { useRouter } from 'next/navigation';
+import { useDeleteResumeFromHiring } from '@/actions/resume';
+import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 import { useGetUserData } from '@/actions/auth';
 import { useGetHiringByUserSubmission } from '@/actions/hiring';
 import { HiringDataResponse } from '@/types/hiring/hiring';
+import { useSessionStorage } from 'usehooks-ts';
+import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import {
   useReactTable,
   getCoreRowModel,
@@ -10,11 +17,6 @@ import {
   ColumnDef,
   flexRender,
 } from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
-import Spinner from '@/components/common/spinner';
-import { useRouter } from 'next/navigation';
-import { useDeleteResumeFromHiring } from '@/actions/resume';
-import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 import {
   Dialog,
   DialogContent,
@@ -23,8 +25,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useSessionStorage } from 'usehooks-ts';
-import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 
 const ResumeSubmitted = () => {
   const columns: ColumnDef<HiringDataResponse>[] = [
@@ -46,27 +46,34 @@ const ResumeSubmitted = () => {
 
             <Dialog
               open={openDeleteDialog === row.original.id}
-              onOpenChange={() => setOpenDeleteDialog(null)}
+              onOpenChange={(open) => {
+                setOpenDeleteDialog(open ? row.original.id : null);
+              }}
             >
               <DialogContent
                 className="w-[90vw] max-w-[500px] min-w-[300px]"
-                onClick={(e) => e.stopPropagation()}
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
               >
                 <DialogHeader>
                   <DialogTitle>지원 취소</DialogTitle>
+
                   <DialogDescription>
                     지원을 취소하시겠습니까?
                   </DialogDescription>
                 </DialogHeader>
+
                 <DialogFooter>
                   <div className="flex gap-2 justify-center mt-4 sm:mt-0">
                     <button
                       className="border rounded px-4 py-2 text-sm"
-                      onClick={() => setOpenDeleteDialog(null)}
+                      onClick={() => {
+                        setOpenDeleteDialog(null);
+                      }}
                     >
                       취소
                     </button>
-
                     <button
                       className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm"
                       onClick={() => {
@@ -215,7 +222,11 @@ const ResumeSubmitted = () => {
                 <tr
                   key={row.id}
                   className="hover:bg-gray-50 transition-colors cursor-pointer"
-                  onClick={() => router.push(`/hiring/${row.original.id}`)}
+                  onClick={() => {
+                    if (!openDeleteDialog) {
+                      router.push(`/hiring/${row.original.id}`);
+                    }
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => {
                     return (
