@@ -83,26 +83,14 @@ const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
     });
   };
 
-  // const convertImageToBase64 = async (url: string) => {
-  //   const response = await fetch(url);
-  //   const blob = await response.blob();
-  //   return new Promise<string>((resolve, reject) => {
-  //     const reader = new FileReader();
-  //     reader.onloadend = () => resolve(reader.result as string);
-  //     reader.onerror = reject;
-  //     reader.readAsDataURL(blob);
-  //   });
-  // };
-
   const convertImageToBase64 = async (url: string) => {
     try {
       const response = await fetch(url);
       const blob = await response.blob();
 
-      // 이미지 크기 제한 추가 (예: 1MB)
-      if (blob.size > 1024 * 1024) {
-        throw new Error('Image size too large');
-      }
+      // if (blob.size > 1024 * 1024) {
+      //   throw new Error('Image size too large');
+      // }
 
       return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();

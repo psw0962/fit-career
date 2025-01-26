@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import { ResumeDataResponse } from '@/types/resume/resume';
-import React, { useState } from 'react';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
+import { PDFDownloadLink, PDFViewer, pdf } from '@react-pdf/renderer';
 import {
   Dialog,
   DialogContent,
@@ -22,6 +22,19 @@ const ResumeExport = ({
   isPreview?: boolean;
 }) => {
   const [showPreview, setShowPreview] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  const handlePreviewInMobile = async () => {
+    const blob = await pdf(<ResumeDocument data={data} />).toBlob();
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  };
+
+  useEffect(() => {
+    const userAgent =
+      typeof window !== 'undefined' ? window.navigator.userAgent : '';
+    setIsMobile(/Mobi|Android/i.test(userAgent));
+  }, []);
 
   return (
     <>
@@ -32,7 +45,6 @@ const ResumeExport = ({
         >
           <div className="flex items-center justify-center gap-2 py-2 border-b">
             <p className="text-sm">다운로드</p>
-
             <div className="relative w-[15px] h-[15px]">
               <Image src="/svg/download.svg" alt="download" fill />
             </div>
@@ -44,13 +56,19 @@ const ResumeExport = ({
         <>
           <div
             className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
-            onClick={() => setShowPreview(true)}
+            onClick={() => {
+              if (isMobile) {
+                handlePreviewInMobile();
+              } else {
+                setShowPreview(true);
+              }
+            }}
           >
             <p className="text-sm">미리보기</p>
             <Image src="/svg/view.svg" alt="view" width={15} height={15} />
           </div>
 
-          {showPreview && (
+          {!isMobile && showPreview && (
             <Dialog
               open={showPreview}
               onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}

@@ -9,12 +9,13 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useState } from 'react';
-import { PDFViewer } from '@react-pdf/renderer';
+import { useEffect, useState } from 'react';
+import { pdf, PDFViewer } from '@react-pdf/renderer';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
 import { useToast } from '@/hooks/use-toast';
 
 const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
+  const [isMobile, setIsMobile] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [selectedResume, setSelectedResume] = useState<ResumeReceived | null>(
@@ -22,6 +23,18 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
   );
 
   const { toast } = useToast();
+
+  const handlePreviewInMobile = async (resume: ResumeReceived) => {
+    const blob = await pdf(<ResumeDocument data={resume} />).toBlob();
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+  };
+
+  useEffect(() => {
+    const userAgent =
+      typeof window !== 'undefined' ? window.navigator.userAgent : '';
+    setIsMobile(/Mobi|Android/i.test(userAgent));
+  }, []);
 
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
@@ -87,8 +100,12 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
                           <button
                             className="text-sm text-blue-500"
                             onClick={() => {
-                              setSelectedResume(resume);
-                              setShowPreview(true);
+                              if (isMobile) {
+                                handlePreviewInMobile(resume);
+                              } else {
+                                setSelectedResume(resume);
+                                setShowPreview(true);
+                              }
                             }}
                           >
                             이력서 보기
