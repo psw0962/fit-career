@@ -502,7 +502,7 @@ const patchHiring = async (data: HiringData) => {
 
   if (hiringDataError) throw new Error(hiringDataError.message);
 
-  // Delete removed images from storage
+  // 스토리지 이미지 삭제
   const existingImages = hiringData?.images || [];
   const newFileImages = data.images.filter(
     (img): img is File => img instanceof File
@@ -518,7 +518,7 @@ const patchHiring = async (data: HiringData) => {
     }
   }
 
-  // Upload new images
+  // 새로운 이미지 업로드
   for (const image of newFileImages) {
     const { data: uploadData, error } = await supabase.storage
       .from('hiring')
