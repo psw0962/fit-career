@@ -9,7 +9,6 @@ import {
 } from '@react-pdf/renderer';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import parse from 'html-react-parser';
-import { DOMNode } from 'html-react-parser';
 import * as React from 'react';
 
 Font.register({
@@ -57,31 +56,41 @@ const pdfStyles = StyleSheet.create({
 });
 
 const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
-  const renderHtmlToPdf = (html: string) => {
+  function renderHtmlToPdf(html: string | null) {
+    if (!html) return <Text style={pdfStyles.text}>소개 내용이 없습니다.</Text>;
+
     return parse(html, {
-      transform: (
-        reactNode: React.ReactNode,
-        domNode: DOMNode,
-        index: number
-      ) => {
-        if (domNode.type === 'tag' && domNode.name === 'p') {
-          return (
-            <Text key={`p-${index}`} style={pdfStyles.text}>
-              {reactNode}
-            </Text>
-          );
+      replace: (domNode) => {
+        if (!domNode || domNode.type !== 'tag') return null;
+
+        if (domNode.name === 'div') {
+          return domNode.children?.map((child, index) => {
+            if (child.type === 'tag') {
+              return (
+                <React.Fragment key={index}>
+                  {renderHtmlToPdf(child.toString())}
+                </React.Fragment>
+              );
+            }
+            return null;
+          });
         }
-        if (domNode.type === 'tag' && domNode.name === 'strong') {
-          return (
-            <Text key={`strong-${index}`} style={{ ...pdfStyles.text }}>
-              {reactNode}
-            </Text>
-          );
+
+        if (domNode.name === 'p') {
+          const textContent = domNode.children
+            ?.map((child) => (child.type === 'text' ? child.data : ''))
+            .join(' ')
+            .trim();
+
+          return textContent ? (
+            <Text style={pdfStyles.text}>{textContent}</Text>
+          ) : null;
         }
+
         return null;
       },
     });
-  };
+  }
 
   const convertImageToBase64 = async (url: string) => {
     try {
@@ -136,6 +145,7 @@ const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
 
         <View style={pdfStyles.section}>
           <Text style={pdfStyles.subTitleText}>간단 소개</Text>
+
           {renderHtmlToPdf(data.introduction)}
         </View>
 
@@ -143,18 +153,22 @@ const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
           <Text style={pdfStyles.subTitleText}>학력</Text>
 
           {data.education.map((edu, index) => (
-            <Text key={`edu-${index}`} style={pdfStyles.text}>
-              {edu.schoolName} - {edu.majorAndDegree} ({edu.startDate} -{' '}
-              {edu.endDate}
-              {edu.isCurrentlyEnrolled === 'enrolled'
-                ? ' / 현재 재학중'
-                : edu.isCurrentlyEnrolled === 'graduated'
-                  ? ' / 졸업'
-                  : edu.isCurrentlyEnrolled === 'etc'
-                    ? ' / 그 외(졸업예정, 휴학, 자퇴 등)'
-                    : ''}
-              )
-            </Text>
+            <React.Fragment key={`edu-${index}`}>
+              <Text style={pdfStyles.text}>
+                {edu.schoolName} - {edu.majorAndDegree} ({edu.startDate} -{' '}
+                {edu.endDate}
+                {edu.isCurrentlyEnrolled === 'enrolled'
+                  ? ' / 현재 재학중'
+                  : edu.isCurrentlyEnrolled === 'graduated'
+                    ? ' / 졸업'
+                    : edu.isCurrentlyEnrolled === 'etc'
+                      ? ' / 그 외(졸업예정, 휴학, 자퇴 등)'
+                      : ''}
+                )
+              </Text>
+
+              <View style={pdfStyles.divier} />
+            </React.Fragment>
           ))}
         </View>
 
