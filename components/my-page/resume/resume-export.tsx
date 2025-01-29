@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
-import { PDFDownloadLink, PDFViewer, pdf } from '@react-pdf/renderer';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
+import ResumePreview from '@/components/my-page/resume/resume-preview';
 import {
   Dialog,
   DialogContent,
@@ -24,16 +25,10 @@ const ResumeExport = ({
   const [showPreview, setShowPreview] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
-  const handlePreviewInMobile = async () => {
-    const blob = await pdf(<ResumeDocument data={data} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  };
-
   useEffect(() => {
     const userAgent =
       typeof window !== 'undefined' ? window.navigator.userAgent : '';
-    setIsMobile(/Mobi|Android/i.test(userAgent));
+    setIsMobile(/Mobi/i.test(userAgent));
   }, []);
 
   return (
@@ -57,11 +52,7 @@ const ResumeExport = ({
           <div
             className="flex items-center justify-center gap-2 border-b py-2 cursor-pointer"
             onClick={() => {
-              if (isMobile) {
-                handlePreviewInMobile();
-              } else {
-                setShowPreview(true);
-              }
+              setShowPreview(true);
             }}
           >
             <p className="text-sm">미리보기</p>
@@ -73,7 +64,7 @@ const ResumeExport = ({
               open={showPreview}
               onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}
             >
-              <DialogContent className="w-[90vw] min-w-[300px] h-[80vh]">
+              <DialogContent className="w-[60vw] min-w-[300px] h-full">
                 <DialogHeader>
                   <DialogTitle></DialogTitle>
                   <DialogDescription></DialogDescription>
@@ -83,6 +74,26 @@ const ResumeExport = ({
                   <PDFViewer width="100%" height="100%">
                     <ResumeDocument data={data} />
                   </PDFViewer>
+                </div>
+
+                <DialogFooter></DialogFooter>
+              </DialogContent>
+            </Dialog>
+          )}
+
+          {isMobile && showPreview && (
+            <Dialog
+              open={showPreview}
+              onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}
+            >
+              <DialogContent className="w-[90vw] min-w-[300px] h-[80vh]">
+                <DialogHeader>
+                  <DialogTitle></DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
+
+                <div className="mt-5 w-full h-full">
+                  <ResumePreview data={data} />
                 </div>
 
                 <DialogFooter></DialogFooter>

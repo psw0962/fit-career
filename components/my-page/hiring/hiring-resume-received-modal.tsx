@@ -1,6 +1,12 @@
 'use client';
 
+import React from 'react';
 import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
+import { useEffect, useState } from 'react';
+import { PDFViewer } from '@react-pdf/renderer';
+import ResumeDocument from '@/components/my-page/resume/resume-document';
+import { useToast } from '@/hooks/use-toast';
+import ResumePreview from '@/components/my-page/resume/resume-preview';
 import {
   Dialog,
   DialogContent,
@@ -9,10 +15,6 @@ import {
   DialogDescription,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { useEffect, useState } from 'react';
-import { pdf, PDFViewer } from '@react-pdf/renderer';
-import ResumeDocument from '@/components/my-page/resume/resume-document';
-import { useToast } from '@/hooks/use-toast';
 
 const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -24,16 +26,10 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
 
   const { toast } = useToast();
 
-  const handlePreviewInMobile = async (resume: ResumeReceived) => {
-    const blob = await pdf(<ResumeDocument data={resume} />).toBlob();
-    const url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  };
-
   useEffect(() => {
     const userAgent =
       typeof window !== 'undefined' ? window.navigator.userAgent : '';
-    setIsMobile(/Mobi|Android/i.test(userAgent));
+    setIsMobile(/Mobi/i.test(userAgent));
   }, []);
 
   return (
@@ -100,12 +96,8 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
                           <button
                             className="text-sm text-blue-500"
                             onClick={() => {
-                              if (isMobile) {
-                                handlePreviewInMobile(resume);
-                              } else {
-                                setSelectedResume(resume);
-                                setShowPreview(true);
-                              }
+                              setSelectedResume(resume);
+                              setShowPreview(true);
                             }}
                           >
                             이력서 보기
@@ -183,7 +175,7 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
           )}
         </div>
 
-        {showPreview && selectedResume && (
+        {!isMobile && showPreview && selectedResume && (
           <div className="fixed inset-0 bg-black bg-opacity-50 z-[50] flex items-center justify-center">
             <div
               className={`relative w-full max-w-[900px] min-w-[300px] p-12 bg-white ${
@@ -193,6 +185,26 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
               <PDFViewer width="100%" height="100%">
                 <ResumeDocument data={selectedResume} />
               </PDFViewer>
+
+              <button
+                onClick={() => {
+                  setShowPreview(false);
+                  setSelectedResume(null);
+                }}
+                className="absolute top-4 right-4 text-[#000]"
+              >
+                닫기
+              </button>
+            </div>
+          </div>
+        )}
+
+        {isMobile && showPreview && selectedResume && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 z-[50] flex items-center justify-center">
+            <div
+              className={`relative w-full max-w-[900px] min-w-[300px] h-full p-5 bg-white overflow-y-scroll`}
+            >
+              <ResumePreview data={selectedResume} />
 
               <button
                 onClick={() => {
