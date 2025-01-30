@@ -84,6 +84,39 @@ const RootLayout = ({
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
           />
+
+          <script
+            async
+            src="https://www.googletagmanager.com/gtag/js?id=G-NT2EDNBP8N"
+          />
+
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-NT2EDNBP8N');
+              `,
+            }}
+          />
+
+          <script
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2830847395912425"
+            crossOrigin="anonymous"
+          />
+
+          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-2830847395912425"
+            data-ad-slot="6867921013"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
         </head>
 
         <body
