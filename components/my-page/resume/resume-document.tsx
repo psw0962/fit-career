@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Page,
   Text,
@@ -92,18 +94,64 @@ const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
     });
   }
 
+  const compressImage = async (base64String: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = base64String;
+
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          reject(new Error('Failed to get canvas context'));
+          return;
+        }
+
+        const MAX_WIDTH = 800;
+        const MAX_HEIGHT = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.7));
+      };
+
+      img.onerror = () => reject(new Error('Failed to load image'));
+    });
+  };
+
   const convertImageToBase64 = async (url: string) => {
     try {
       const response = await fetch(url);
       const blob = await response.blob();
 
-      // if (blob.size > 1024 * 1024) {
-      //   throw new Error('Image size too large');
-      // }
-
       return new Promise<string>((resolve, reject) => {
         const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
+        reader.onloadend = async () => {
+          const base64String = reader.result as string;
+          try {
+            const compressedImage = await compressImage(base64String);
+            resolve(compressedImage);
+          } catch (error) {
+            console.error('Image compression error:', error);
+            resolve(base64String);
+          }
+        };
         reader.onerror = (error) => {
           console.error('Image conversion error:', error);
           reject(error);
