@@ -8,6 +8,9 @@ import { Analytics } from '@vercel/analytics/react';
 import { pretendard } from './fonts';
 import { Suspense } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
+import Script from 'next/script';
+import AdsenseAd from '@/components/common/adsense-ad';
+import AdsenseInit from '@/components/common/adsense-init';
 
 export const viewport = {
   width: 'device-width',
@@ -80,42 +83,36 @@ const RootLayout = ({
     <ReactQueryClientProvider>
       <html lang="ko" className={pretendard.variable}>
         <head>
-          <script
+          <Script
+            id="json-ld"
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            strategy="afterInteractive"
           />
 
-          <script
+          <Script
+            id="gtm"
             async
             src="https://www.googletagmanager.com/gtag/js?id=G-NT2EDNBP8N"
+            strategy="afterInteractive"
           />
 
-          <script
+          <Script
+            id="google-analytics"
+            strategy="afterInteractive"
             dangerouslySetInnerHTML={{
               __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-NT2EDNBP8N');
-              `,
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        'ad_storage': 'denied',
+        'analytics_storage': 'denied',
+        'wait_for_update': 500
+      });
+      gtag('js', new Date());
+      gtag('config', 'G-NT2EDNBP8N');
+    `,
             }}
-          />
-
-          <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2830847395912425"
-            crossOrigin="anonymous"
-          />
-
-          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-
-          <ins
-            className="adsbygoogle"
-            style={{ display: 'block' }}
-            data-ad-client="ca-pub-2830847395912425"
-            data-ad-slot="6867921013"
-            data-ad-format="auto"
-            data-full-width-responsive="true"
           />
         </head>
 
@@ -138,11 +135,12 @@ const RootLayout = ({
               </main>
             </Suspense>
 
-            <Toaster />
-
             <Footer />
           </div>
 
+          <AdsenseInit />
+          <AdsenseAd />
+          <Toaster />
           <Analytics />
         </body>
       </html>

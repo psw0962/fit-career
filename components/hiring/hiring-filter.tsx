@@ -98,7 +98,7 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
                   </div>
 
                   <div
-                    className={`absolute top-2 right-2 w-8 h-8 bg-[#4c71c0] rounded-full ${
+                    className={`absolute top-1 right-1 sm:top-2 sm:right-2 w-8 h-8 bg-[#4c71c0] rounded-full ${
                       toggleBookmarkStatus === 'pending'
                         ? 'cursor-not-allowed'
                         : ''

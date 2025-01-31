@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ResumeDataResponse } from '@/types/resume/resume';
+import Image from 'next/image';
 
 export default function ResumePreview({ data }: { data: ResumeDataResponse }) {
   const profileImageUrl = data.resume_image?.[0];
@@ -23,11 +24,18 @@ export default function ResumePreview({ data }: { data: ResumeDataResponse }) {
       {/* 프로필 이미지 */}
       {profileImageUrl && (
         <div className="mb-4">
-          <img
-            src={profileImageUrl}
-            alt="resume_image"
-            className="w-24 h-24 object-cover rounded-md"
-          />
+          <div className="relative w-24 h-24">
+            <Image
+              src={profileImageUrl}
+              alt="resume_image"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              fill
+              className="rounded"
+              style={{ objectFit: 'cover' }}
+              priority
+              quality={75}
+            />
+          </div>
         </div>
       )}
 
