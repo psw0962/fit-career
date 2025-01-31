@@ -41,7 +41,6 @@ FIT-career는 피트니스 전용 채용 플랫폼입니다. 기존에 피트니
 ### Deploy
 
 - Vercel
-- Supabase
 
 ## 📱 주요 화면
 
@@ -55,11 +54,19 @@ FIT-career는 피트니스 전용 채용 플랫폼입니다. 기존에 피트니
 
 #### 채용공고 관리
 
-![Profile](public/images/hirings.png) ![Profile](public/images/submitted-resume-1.png) ![Profile](public/images/submitted-resume-2.png)
+![Profile](public/images/hirings.png) ![Profile](public/images/submitted-resume-1.png) ![Profile](public/images/submitted-resume-2.png) ![Profile](public/images/hiring-registration1.png) ![Profile](public/images/hiring-registration2.png)
 
 #### 이력서 관리
 
 ![Profile](public/images/resume.png) ![Profile](public/images/submitted.png) ![Profile](public/images/resume-select.png)
+
+#### 프로필 관리
+
+![Profile](public/images/profile.png) ![Profile](public/images/profile-edit.png)
+
+#### 북마크 관리
+
+![Profile](public/images/bookmark.png) ![Profile](public/images/bookmark-management.png)
 
 ## ✉️ 문의
 
