@@ -1,9 +1,10 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
 import { useEffect, useState } from 'react';
-import { PDFViewer } from '@react-pdf/renderer';
+import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
 import { useToast } from '@/hooks/use-toast';
 import ResumePreview from '@/components/my-page/resume/resume-preview';
@@ -205,6 +206,19 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
               className={`relative w-full max-w-[900px] min-w-[300px] h-full p-5 bg-white overflow-y-scroll`}
             >
               <ResumePreview data={selectedResume} />
+
+              <PDFDownloadLink
+                className="absolute top-4 right-14"
+                document={<ResumeDocument data={selectedResume} />}
+                fileName={selectedResume.name}
+              >
+                <div className="flex items-center">
+                  <p className="">다운로드</p>
+                  <div className="relative w-[15px] h-[15px]">
+                    <Image src="/svg/download.svg" alt="download" fill />
+                  </div>
+                </div>
+              </PDFDownloadLink>
 
               <button
                 onClick={() => {
