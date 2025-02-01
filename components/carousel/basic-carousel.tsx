@@ -39,9 +39,18 @@ const BasicCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
               slides.map((imageUrl, index) => (
                 <div key={index} className="flex-shrink-0 w-full">
                   <div className="relative w-full h-[400px] overflow-hidden border rounded">
+                    <div
+                      className="absolute inset-0 rounded"
+                      style={{
+                        backgroundImage: `url(${slides.length !== 0 ? imageUrl : '/svg/logo.svg'})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                      }}
+                    />
+                    <div className="absolute inset-0 bg-black/70" />
                     <Image
                       src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
-                      className="rounded"
+                      className="rounded py-6 px-6"
                       alt={`image ${index}`}
                       fill
                       priority
