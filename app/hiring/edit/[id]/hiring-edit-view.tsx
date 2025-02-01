@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -21,6 +21,7 @@ import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
 import withAuth from '@/hoc/withAuth';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import imageCompression from 'browser-image-compression';
 import {
   DndContext,
   DragEndEvent,
@@ -34,6 +35,11 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
+
+interface UploadedImage {
+  id: string;
+  file: File | string;
+}
 
 const HiringEditView = ({ hiringId }: { hiringId: string }) => {
   const router = useRouter();
@@ -64,7 +70,7 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
   const [deadLine, setDeadLine] = useState<string>(
     format(new Date(), 'yyyy-MM-dd')
   );
-  const [images, setImages] = useState<(File | string)[]>([]);
+  const [images, setImages] = useState<UploadedImage[]>([]);
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -102,20 +108,6 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
   const sensors = useSensors(mouseSensor, touchSensor);
 
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over) return;
-
-    if (active.id !== over.id) {
-      setImages((items) => {
-        const oldIndex = Number(active.id);
-        const newIndex = Number(over.id);
-        return arrayMove(items, oldIndex, newIndex);
-      });
-    }
-  };
-
   const daumPostCodeHandler = (data: Address) => {
     setAddress({
       ...address,
@@ -128,41 +120,66 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
     setPeriodValue(value);
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const files = event.target.files;
-
     if (files) {
-      // 파일 이름 중복 방지
-      const uniqueFiles = Array.from(files).map((file) => {
-        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-        const uniqueName = `${uniqueSuffix}-${file.name}`;
-        return new File([file], uniqueName, { type: file.type });
-      });
+      const fileArray = Array.from(files);
+      const compressedImages: UploadedImage[] = [];
 
-      // 상태 업데이트
+      for (const file of fileArray) {
+        try {
+          const options = {
+            maxSizeMB: 0.8,
+            maxWidthOrHeight: 1024,
+            useWebWorker: true,
+          };
+
+          const compressedBlob = await imageCompression(file, options);
+          const uniqueSuffix = `${Date.now()}-${Math.round(
+            Math.random() * 1e9
+          )}`;
+          const uniqueId = `${uniqueSuffix}-${file.name}`;
+          const compressedFile = new File([compressedBlob], file.name, {
+            type: file.type,
+          });
+          compressedImages.push({ id: uniqueId, file: compressedFile });
+        } catch (error) {
+          console.error('Image compression error:', error);
+        }
+      }
+
       setImages((prev) => {
-        const totalImages = prev.length + uniqueFiles.length;
+        const totalImages = prev.length + compressedImages.length;
         if (totalImages > 5) {
+          toast({
+            title: '회사 이미지는 최대 5개까지 업로드할 수 있습니다.',
+            variant: 'warning',
+          });
           return prev;
         }
-        return [...prev, ...uniqueFiles];
+        return [...prev, ...compressedImages];
       });
-
-      // 이미지 최대 5개 제한
-      if (uniqueFiles.length + images.length > 5) {
-        toast({
-          title: '회사 이미지는 최대 5개까지 업로드할 수 있습니다.',
-          variant: 'warning',
-        });
-      }
     }
 
     event.target.value = '';
   };
 
-  const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+  const removeImage = (id: string) => {
+    setImages((prev) => prev.filter((img) => img.id !== id));
   };
+
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    setImages((prevImages) => {
+      const oldIndex = prevImages.findIndex((img) => img.id === active.id);
+      const newIndex = prevImages.findIndex((img) => img.id === over.id);
+      return arrayMove(prevImages, oldIndex, newIndex);
+    });
+  }, []);
 
   const stripHtml = (html: string) => {
     const tmp = document.createElement('div');
@@ -263,7 +280,7 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
       title,
       content,
       deadLine,
-      images: images as File[],
+      images: images.map((img) => img.file),
     });
   };
 
@@ -321,7 +338,12 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
       setTitle(hiringData.title);
       setContent(hiringData.content);
       setDeadLine(hiringData.dead_line);
-      setImages(hiringData.images);
+      setImages(
+        hiringData.images.map((img: string) => ({
+          id: img,
+          file: img,
+        }))
+      );
     }
   }, [hiringData]);
 
@@ -647,20 +669,18 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <SortableContext
-          items={images.map((_, index) => index)}
+          items={images.map((img) => img.id)}
           strategy={horizontalListSortingStrategy}
         >
           <div className="flex flex-wrap gap-3">
-            {images.map((image, index) => (
-              <div key={index} className="flex flex-col items-center gap-2">
+            {images.map((img, index) => (
+              <div key={img.id} className="flex flex-col items-center gap-2">
                 <SortableImageDnd
-                  id={index}
+                  id={img.id}
                   index={index}
-                  image={image as File}
-                  onRemove={removeImage}
-                  isUrl={typeof image === 'string'}
+                  image={img.file}
+                  onRemove={() => removeImage(img.id)}
                 />
-
                 {index === 0 && (
                   <p className="text-xs sm:text-sm font-bold">대표 이미지</p>
                 )}

@@ -20,16 +20,20 @@ const postHiring = async (data: HiringData) => {
   const imageUrls: string[] = [];
 
   for (const image of data.images) {
-    const { data: uploadData, error } = await supabase.storage
-      .from('hiring')
-      .upload(`hiring/${Date.now()}-${image.name}`, image);
+    if (typeof image !== 'string') {
+      const { data: uploadData, error } = await supabase.storage
+        .from('hiring')
+        .upload(`hiring/${Date.now()}-${image.name}`, image);
 
-    if (error) {
-      throw new Error(`${error.message}`);
+      if (error) {
+        throw new Error(`${error.message}`);
+      }
+
+      const url = supabase.storage.from('hiring').getPublicUrl(uploadData.path);
+      imageUrls.push(url.data.publicUrl);
+    } else {
+      imageUrls.push(image);
     }
-
-    const url = supabase.storage.from('hiring').getPublicUrl(uploadData.path);
-    imageUrls.push(url.data.publicUrl);
   }
 
   const makeShortAddress = data.address.zoneAddress.split(' ');
@@ -85,7 +89,6 @@ export const usePostHiring = (
     onError: (error: Error) => {
       console.error('채용 공고 등록 중 에러 발생:', error);
 
-      // Supabase 에러 메시지 확인
       if (error.message.includes('You can only post once every 24 hour.')) {
         const minutes = error.message.match(/(\d+)\s*minutes/)?.[1] ?? '';
         toast({
@@ -492,8 +495,6 @@ export const useDeleteHiring = (
 const patchHiring = async (data: HiringData) => {
   const supabase = createBrowserSupabaseClient();
 
-  const imageUrls: string[] = [];
-
   const { data: hiringData, error: hiringDataError } = await supabase
     .from('hiring')
     .select('images')
@@ -502,32 +503,30 @@ const patchHiring = async (data: HiringData) => {
 
   if (hiringDataError) throw new Error(hiringDataError.message);
 
-  // 스토리지 이미지 삭제
-  const existingImages = hiringData?.images || [];
-  const newFileImages = data.images.filter(
-    (img): img is File => img instanceof File
-  );
-  const keptImageUrls = data.images.filter(
-    (img: string | File): img is string => typeof img === 'string'
+  const existingImages: string[] = hiringData?.images || [];
+
+  const finalImageUrls: string[] = await Promise.all(
+    data.images.map(async (img: File | string) => {
+      if (typeof img === 'string') {
+        return img;
+      } else {
+        const { data: uploadData, error } = await supabase.storage
+          .from('hiring')
+          .upload(`hiring/${Date.now()}-${img.name}`, img);
+        if (error) throw new Error(error.message);
+        const url = supabase.storage
+          .from('hiring')
+          .getPublicUrl(uploadData.path);
+        return url.data.publicUrl;
+      }
+    })
   );
 
   for (const imageUrl of existingImages) {
-    if (!keptImageUrls.includes(imageUrl)) {
+    if (!finalImageUrls.includes(imageUrl)) {
       const path = imageUrl.split('/').slice(-1)[0];
       await supabase.storage.from('hiring').remove([`hiring/${path}`]);
     }
-  }
-
-  // 새로운 이미지 업로드
-  for (const image of newFileImages) {
-    const { data: uploadData, error } = await supabase.storage
-      .from('hiring')
-      .upload(`hiring/${Date.now()}-${image.name}`, image);
-
-    if (error) throw new Error(error.message);
-
-    const url = supabase.storage.from('hiring').getPublicUrl(uploadData.path);
-    imageUrls.push(url.data.publicUrl);
   }
 
   const makeShortAddress = data.address.zoneAddress.split(' ');
@@ -547,7 +546,7 @@ const patchHiring = async (data: HiringData) => {
       title: data.title,
       content: data.content,
       dead_line: data.deadLine,
-      images: [...keptImageUrls, ...imageUrls],
+      images: finalImageUrls,
       short_address: shortAddress,
       address_search_key: data.address.zoneAddress,
       updated_at: formatKRTime(),
