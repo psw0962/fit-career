@@ -13,7 +13,7 @@ export type HiringData = {
   title: string;
   content: string;
   deadLine: string;
-  images: File[];
+  images: (File | string)[];
 };
 
 export type HiringDataResponse = {

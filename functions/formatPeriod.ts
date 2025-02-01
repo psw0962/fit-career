@@ -7,7 +7,7 @@ export const formatPeriod = (value: number[]) => {
     }
 
     if (start === 0 && end === 10) {
-      return '전체';
+      return '전체/무관';
     }
 
     if (start === end) {

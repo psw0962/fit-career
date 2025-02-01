@@ -38,26 +38,18 @@ const BasicCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
             {slides &&
               slides.map((imageUrl, index) => (
                 <div key={index} className="flex-shrink-0 w-full">
-                  <div className="relative w-full h-[400px] overflow-hidden border rounded">
-                    <div
-                      className="absolute inset-0 rounded"
-                      style={{
-                        backgroundImage: `url(${slides.length !== 0 ? imageUrl : '/svg/logo.svg'})`,
-                        backgroundSize: 'cover',
-                        backgroundPosition: 'center',
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-black/70" />
+                  <div className="relative w-full aspect-[16/9] overflow-hidden border rounded">
                     <Image
                       src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
-                      className="rounded py-6 px-6"
                       alt={`image ${index}`}
+                      className="rounded"
                       fill
                       priority
-                      style={{ objectFit: 'contain' }}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                       quality={75}
+                      style={{ objectFit: 'cover' }}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      placeholder="blur"
+                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                     />
                   </div>
                 </div>
@@ -65,7 +57,7 @@ const BasicCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
           </div>
         </div>
 
-        <div className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-full text-sm font-medium">
+        <div className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-full text-sm">
           {selectedIndex + 1} / {slides?.length}
         </div>
       </div>

@@ -29,6 +29,7 @@
     "@tiptap/starter-kit": "^2.11.2",
     "@vercel/analytics": "^1.4.1",
     "animate.css": "^4.1.1",
+    "browser-image-compression": "^2.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",

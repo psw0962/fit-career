@@ -160,8 +160,7 @@ const HiringDetailView = ({
             - 근무장소 : {hiringData.data[0].address}
           </p>
           <p className="break-keep">
-            - 필요 경력 : {hiringData.data[0].period[0]}년 ~{' '}
-            {hiringData.data[0].period[1]}년
+            - 필요 경력 : {formatPeriod(hiringData.data[0].period)}
           </p>
           <p className="break-keep">
             - 채용 포지션 : {hiringData.data[0].position}

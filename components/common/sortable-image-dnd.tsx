@@ -4,11 +4,10 @@ import Image from 'next/image';
 import { useEffect, useMemo } from 'react';
 
 interface SortableImageDndProps {
-  id: number;
+  id: number | string;
   index: number;
   image: File | string;
   onRemove: (index: number) => void;
-  isUrl?: boolean;
 }
 
 export const SortableImageDnd = ({
@@ -16,7 +15,6 @@ export const SortableImageDnd = ({
   index,
   image,
   onRemove,
-  isUrl,
 }: SortableImageDndProps) => {
   const {
     attributes,
@@ -41,16 +39,23 @@ export const SortableImageDnd = ({
     [transform, transition, isDragging]
   );
 
-  const imageUrl = useMemo(
-    () => (isUrl ? (image as string) : URL.createObjectURL(image as File)),
-    [image, isUrl]
-  );
+  const imageUrl = useMemo(() => {
+    if (typeof image === 'string') {
+      return image;
+    } else if (image instanceof File) {
+      return URL.createObjectURL(image);
+    }
+    return '';
+  }, [image]);
 
   useEffect(() => {
-    if (!isUrl) {
-      return () => URL.revokeObjectURL(imageUrl);
+    if (!(typeof image === 'string') && image instanceof File) {
+      const url = URL.createObjectURL(image);
+      return () => {
+        URL.revokeObjectURL(url);
+      };
     }
-  }, [imageUrl, isUrl]);
+  }, [image]);
 
   return (
     <div
@@ -70,7 +75,7 @@ export const SortableImageDnd = ({
         className="w-full h-full rounded cursor-grab select-none"
         draggable={false}
         style={{
-          objectFit: 'contain',
+          objectFit: 'cover',
           WebkitTouchCallout: 'none',
         }}
         fill
