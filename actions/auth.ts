@@ -9,8 +9,6 @@ import { AuthResponse, User } from '@supabase/supabase-js';
 import { EnterpriseProfile, SignInResponse } from '@/types/auth/auth';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
-import { createServerSupabaseClient } from '@/utils/supabase/server';
-import { NextApiRequest, NextApiResponse } from 'next';
 
 // =========================================
 // ============== post email sign in
@@ -85,18 +83,24 @@ export const useSignInWithEmail = (
 // =========================================
 // ============== post kakao sign in
 // =========================================
-const signInWithKakao = async (): Promise<SignInResponse> => {
+const signInWithKakao = async (
+  redirectOverride?: string
+): Promise<SignInResponse> => {
   const supabase = createBrowserSupabaseClient();
 
-  const redirectUrl =
+  const baseCallbackUrl =
     process.env.NODE_ENV === 'production'
       ? 'https://www.fitcareer.co.kr/auth/callback'
       : 'http://localhost:3000/auth/callback';
 
+  const callbackUrl = redirectOverride
+    ? `${baseCallbackUrl}?returnTo=${encodeURIComponent(redirectOverride)}`
+    : baseCallbackUrl;
+
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'kakao',
     options: {
-      redirectTo: redirectUrl,
+      redirectTo: callbackUrl,
     },
   });
 
@@ -108,10 +112,10 @@ const signInWithKakao = async (): Promise<SignInResponse> => {
 };
 
 export const useSignInWithKakao = (
-  options?: UseMutationOptions<SignInResponse, Error, void, void>
+  options?: UseMutationOptions<SignInResponse, Error, string, void>
 ) => {
-  return useMutation<SignInResponse, Error, void, void>({
-    mutationFn: signInWithKakao,
+  return useMutation<SignInResponse, Error, string, void>({
+    mutationFn: (redirectOverride: string) => signInWithKakao(redirectOverride),
     onSuccess: (data) => {},
     onError: (error: Error) => {
       console.error('로그인 중 에러 발생:', error.message);

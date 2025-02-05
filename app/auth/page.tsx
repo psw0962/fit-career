@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 const Auth = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect') || '/';
 
   const { toast } = useToast();
   const { mutate, isPending } = useSignInWithKakao();
@@ -18,9 +19,15 @@ const Auth = () => {
 
   useEffect(() => {
     if (data) {
-      router.push('/');
+      router.push(redirectTo);
     }
-  }, [data]);
+  }, [data, redirectTo, router]);
+
+  useEffect(() => {
+    if (data) {
+      router.replace(redirectTo);
+    }
+  }, [data, redirectTo, router]);
 
   useEffect(() => {
     const message = searchParams.get('message');
@@ -67,7 +74,7 @@ const Auth = () => {
         <div
           className="w-[250px] flex items-center justify-center bg-[#FEE500] text-black font-bold py-2 px-4 mt-5 rounded cursor-pointer"
           onClick={() => {
-            mutate();
+            mutate(redirectTo);
           }}
         >
           <div className="relative w-8 h-8 mr-1">

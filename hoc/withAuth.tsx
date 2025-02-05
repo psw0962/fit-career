@@ -1,15 +1,22 @@
-import { useRouter } from 'next/navigation';
-import { useGetUserData } from '@/actions/auth';
-import { useEffect } from 'react';
+'use client';
 
-const withAuth = (WrappedComponent: any) => {
-  return (props: any) => {
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import type { ComponentType, FC } from 'react';
+import { useGetUserData } from '@/actions/auth';
+
+export function withAuth<P extends {}>(
+  WrappedComponent: ComponentType<P>
+): FC<P> {
+  const AuthenticatedComponent: FC<P> = (props) => {
     const router = useRouter();
+
     const { data, isLoading } = useGetUserData();
 
     useEffect(() => {
       if (!isLoading && !data) {
         router.push('/auth?message=login_required');
+        return;
       }
     }, [data, isLoading, router]);
 
@@ -17,6 +24,6 @@ const withAuth = (WrappedComponent: any) => {
 
     return <WrappedComponent {...props} />;
   };
-};
 
-export default withAuth;
+  return AuthenticatedComponent;
+}

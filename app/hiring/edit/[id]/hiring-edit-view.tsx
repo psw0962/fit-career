@@ -5,7 +5,7 @@ import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
 import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
@@ -18,7 +18,7 @@ import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useSessionStorage } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
 import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
-import withAuth from '@/hoc/withAuth';
+import { withAuth } from '@/hoc/withAuth';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import imageCompression from 'browser-image-compression';
@@ -43,6 +43,7 @@ interface UploadedImage {
 
 const HiringEditView = ({ hiringId }: { hiringId: string }) => {
   const router = useRouter();
+  const pathname = usePathname();
   const open = useDaumPostcodePopup();
   const { toast } = useToast();
 
@@ -292,7 +293,11 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
 
   useEffect(() => {
     if (!userDataLoading && !userData) {
-      router.replace('/auth?message=login_required');
+      router.push(
+        `/auth?message=login_required&redirect=${encodeURIComponent(
+          pathname || '/'
+        )}`
+      );
       return;
     }
 
