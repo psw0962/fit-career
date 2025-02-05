@@ -2,7 +2,7 @@
 
 import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useRef } from 'react';
-import withAuth from '@/hoc/withAuth';
+import { withAuth } from '@/hoc/withAuth';
 import Profile from '@/components/my-page/profile';
 import EnterpriseProfile from '@/components/my-page/enterprise-profile';
 import ResumeList from '@/components/my-page/resume/resume-list';

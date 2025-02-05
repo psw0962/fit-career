@@ -12,7 +12,7 @@ import {
 import Image from 'next/image';
 import { usePostResumeToHiring } from '@/actions/resume';
 import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 import { useSessionStorage } from 'usehooks-ts';
 import { useGetUserData } from '@/actions/auth';
@@ -34,6 +34,7 @@ const ResumeSelectIdModal = ({
   setSelectedResumeId: (id: string) => void;
 }) => {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [activeTab, setActiveTab] = useSessionStorage('activeTab', '');
 
@@ -97,7 +98,11 @@ const ResumeSelectIdModal = ({
             if (isDeadlinePassed()) return;
 
             if (!userData) {
-              router.push('/auth?message=login_required');
+              router.push(
+                `/auth?message=login_required&redirect=${encodeURIComponent(
+                  pathname || '/'
+                )}`
+              );
               return;
             }
 

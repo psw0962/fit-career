@@ -3,7 +3,7 @@
 import { usePostHiring } from '@/actions/hiring';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
@@ -42,6 +42,7 @@ interface UploadedImage {
 
 const HiringWrite = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const open = useDaumPostcodePopup();
   const { toast } = useToast();
 
@@ -289,7 +290,11 @@ const HiringWrite = () => {
 
   useEffect(() => {
     if (!userDataLoading && !userData) {
-      router.replace('/auth?message=login_required');
+      router.push(
+        `/auth?message=login_required&redirect=${encodeURIComponent(
+          pathname || '/'
+        )}`
+      );
       return;
     }
 

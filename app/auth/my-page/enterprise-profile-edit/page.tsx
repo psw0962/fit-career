@@ -9,7 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
 import { format, parse } from 'date-fns';
 import { POSITIONS } from '@/constant/position';
-import withAuth from '@/hoc/withAuth';
+import { withAuth } from '@/hoc/withAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';

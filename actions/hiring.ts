@@ -686,7 +686,8 @@ export const useToggleBookmark = () => {
     },
     onError: (error, hiringId, context) => {
       if (error.message === 'Auth session missing!') {
-        router.push('/auth');
+        const currentPath = window.location.pathname + window.location.search;
+        router.push(`/auth?redirect=${encodeURIComponent(currentPath)}`);
 
         toast({
           title: '로그인이 필요한 서비스입니다.',

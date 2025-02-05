@@ -7,7 +7,7 @@ import { validateInput } from '@/functions/validateInput';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useGetResume, usePatchResume } from '@/actions/resume';
 import { v4 as uuidv4 } from 'uuid';
-import withAuth from '@/hoc/withAuth';
+import { withAuth } from '@/hoc/withAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
