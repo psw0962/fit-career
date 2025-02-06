@@ -17,7 +17,7 @@ import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useSessionStorage } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
-import { SortableImageDnd } from '@/components/common/sortable-image-dnd';
+import SortableImageDnd from '@/components/common/sortable-image-dnd';
 import { withAuth } from '@/hoc/withAuth';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -41,7 +41,7 @@ interface UploadedImage {
   file: File | string;
 }
 
-const HiringEditView = ({ hiringId }: { hiringId: string }) => {
+function HiringEditView({ hiringId }: { hiringId: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const open = useDaumPostcodePopup();
@@ -703,6 +703,6 @@ const HiringEditView = ({ hiringId }: { hiringId: string }) => {
       </button>
     </div>
   );
-};
+}
 
 export default withAuth(HiringEditView);

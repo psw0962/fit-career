@@ -12,7 +12,7 @@ import {
   type CarouselApi,
 } from '@/components/ui/carousel';
 
-const ArrowCarousel = () => {
+export default function ArrowCarousel() {
   const [api, setApi] = React.useState<CarouselApi>();
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
@@ -54,6 +54,4 @@ const ArrowCarousel = () => {
       </div>
     </div>
   );
-};
-
-export default ArrowCarousel;
+}

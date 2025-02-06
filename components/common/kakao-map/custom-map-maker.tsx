@@ -4,11 +4,11 @@ import { useEffect, useState } from 'react';
 import { MapMarker } from 'react-kakao-maps-sdk';
 import ReSetttingMapBounds from './re-setting-map-bounds';
 
-const CustomMapMaker = ({
+export default function CustomMapMaker({
   address,
 }: {
   address: string;
-}): React.ReactElement => {
+}): React.ReactElement {
   const [coordinates, setCoordinates] = useState({
     lat: 37.5665,
     lng: 126.978,
@@ -37,6 +37,4 @@ const CustomMapMaker = ({
       <ReSetttingMapBounds points={[coordinates]} />
     </div>
   );
-};
-
-export default CustomMapMaker;
+}

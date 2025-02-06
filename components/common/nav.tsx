@@ -12,7 +12,7 @@ const MENU_LIST = [
   // { id: 3, name: '대회정보', title: '핏커리어 대회정보', path: '/competition' },
 ];
 
-const Nav = (): React.ReactElement => {
+export default function Nav() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -147,6 +147,4 @@ const Nav = (): React.ReactElement => {
       </div>
     </nav>
   );
-};
-
-export default Nav;
+}

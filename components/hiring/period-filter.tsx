@@ -15,10 +15,10 @@ import {
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/common/spinner';
 
-const PeriodFilter: React.FC<PeriodFilterProps> = ({
+export default function PeriodFilter({
   periodValueFilter,
   setPeriodValueFilter,
-}) => {
+}: PeriodFilterProps) {
   const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempFilter, setTempFilter] = useState([0, 10]);
@@ -126,6 +126,4 @@ const PeriodFilter: React.FC<PeriodFilterProps> = ({
       </DialogContent>
     </Dialog>
   );
-};
-
-export default PeriodFilter;
+}

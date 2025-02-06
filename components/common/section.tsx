@@ -3,7 +3,7 @@
 import type { WheelEvent as ReactWheelEvent } from 'react';
 import { useEffect, useState } from 'react';
 
-const SectionComp: React.FC = () => {
+export default function SectionComp(): React.ReactElement {
   const [currentSection, setCurrentSection] = useState(0);
   const [isThrottled, setIsThrottled] = useState(false);
   const sections = ['Section 1', 'Section 2', 'Section 3', 'Section 4'];
@@ -59,6 +59,4 @@ const SectionComp: React.FC = () => {
       </div>
     </div>
   );
-};
-
-export default SectionComp;
+}

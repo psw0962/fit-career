@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-const Footer = (): React.ReactElement => {
+export default function Footer(): React.ReactElement {
   const router = useRouter();
 
   return (
@@ -47,6 +47,4 @@ const Footer = (): React.ReactElement => {
       </div>
     </div>
   );
-};
-
-export default Footer;
+}

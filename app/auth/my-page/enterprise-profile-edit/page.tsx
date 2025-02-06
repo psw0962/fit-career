@@ -20,7 +20,7 @@ import {
   usePostEnterpriseProfile,
 } from '@/actions/auth';
 
-const EnterpriseProfileEdit = (): React.ReactElement => {
+function EnterpriseProfileEdit(): React.ReactElement {
   const open = useDaumPostcodePopup();
   const { toast } = useToast();
 
@@ -484,6 +484,6 @@ const EnterpriseProfileEdit = (): React.ReactElement => {
       </div>
     </div>
   );
-};
+}
 
 export default withAuth(EnterpriseProfileEdit);

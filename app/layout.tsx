@@ -74,11 +74,11 @@ const jsonLd = {
     '핏커리어(FIT Career)에서 피트니스 취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보를 확인하세요.',
 };
 
-const RootLayout = ({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) => {
+}>) {
   return (
     <ReactQueryClientProvider>
       <html lang="ko" className={pretendard.variable}>
@@ -146,6 +146,4 @@ const RootLayout = ({
       </html>
     </ReactQueryClientProvider>
   );
-};
-
-export default RootLayout;
+}

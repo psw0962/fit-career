@@ -1,7 +1,7 @@
 'use client';
 import { useEffect } from 'react';
 
-const AdsenseInit = () => {
+export default function AdsenseInit() {
   useEffect(() => {
     document.cookie = 'cookieConsent=true; SameSite=None; Secure';
 
@@ -34,6 +34,4 @@ const AdsenseInit = () => {
   }, []);
 
   return null;
-};
-
-export default AdsenseInit;
+}

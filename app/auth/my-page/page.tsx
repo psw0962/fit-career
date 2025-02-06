@@ -12,7 +12,7 @@ import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { useSessionStorage } from 'usehooks-ts';
 import BookmarksHiring from '@/components/my-page/bookmarks-hiring';
 
-const MyPage = () => {
+function MyPage() {
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   const [activeTab, setActiveTab] = useSessionStorage('activeTab', 'profile');
@@ -150,6 +150,6 @@ const MyPage = () => {
       </Tabs.Root>
     </div>
   );
-};
+}
 
 export default withAuth(MyPage);

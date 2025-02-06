@@ -8,11 +8,11 @@ type DotSpinnerProps = {
   dotColor?: string;
 };
 
-const GlobalSpinner: React.FC<DotSpinnerProps> = ({
+export default function GlobalSpinner({
   width = '1.5rem',
   height = '1.5rem',
   dotColor = '#114784',
-}) => {
+}: DotSpinnerProps) {
   React.useEffect(() => {
     document.body.style.overflow = 'hidden';
 
@@ -58,6 +58,4 @@ const GlobalSpinner: React.FC<DotSpinnerProps> = ({
       </div>
     </div>
   );
-};
-
-export default GlobalSpinner;
+}

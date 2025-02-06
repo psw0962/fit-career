@@ -10,7 +10,7 @@ import Image from 'next/image';
 import useDebounce from '@/hooks/use-debounce';
 import { useSessionStorage } from 'usehooks-ts';
 
-const HiringMain = () => {
+export default function HiringMain() {
   const [regionFilter, setRegionFilter] = useSessionStorage<RegionFilter>(
     'regionFilter',
     {
@@ -126,6 +126,4 @@ const HiringMain = () => {
       />
     </div>
   );
-};
-
-export default HiringMain;
+}

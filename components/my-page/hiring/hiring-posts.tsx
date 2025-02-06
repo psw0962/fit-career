@@ -27,7 +27,7 @@ import { useSessionStorage } from 'usehooks-ts';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import { useRouter } from 'next/navigation';
 
-const HiringPosts = () => {
+export default function HiringPosts() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -319,6 +319,4 @@ const HiringPosts = () => {
       )}
     </div>
   );
-};
-
-export default HiringPosts;
+}

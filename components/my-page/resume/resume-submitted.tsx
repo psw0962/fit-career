@@ -26,7 +26,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 
-const ResumeSubmitted = () => {
+export default function ResumeSubmitted() {
   const columns: ColumnDef<HiringDataResponse>[] = [
     {
       accessorKey: 'cancel',
@@ -315,6 +315,4 @@ const ResumeSubmitted = () => {
       )}
     </div>
   );
-};
-
-export default ResumeSubmitted;
+}

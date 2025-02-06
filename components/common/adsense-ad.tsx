@@ -8,7 +8,7 @@ declare global {
   }
 }
 
-const AdsenseAd = () => {
+export default function AdsenseAd() {
   const adLoaded = useRef(false);
 
   useEffect(() => {
@@ -35,6 +35,4 @@ const AdsenseAd = () => {
       data-privacy-sandbox="true"
     />
   );
-};
-
-export default AdsenseAd;
+}

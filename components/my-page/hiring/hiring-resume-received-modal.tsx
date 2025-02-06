@@ -17,7 +17,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
+export default function HiringResumeReceivedModal({
+  data,
+}: {
+  data: HiringDataResponse;
+}) {
   const [isMobile, setIsMobile] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
@@ -235,6 +239,4 @@ const HiringResumeReceivedModal = ({ data }: { data: HiringDataResponse }) => {
       </DialogContent>
     </Dialog>
   );
-};
-
-export default HiringResumeReceivedModal;
+}

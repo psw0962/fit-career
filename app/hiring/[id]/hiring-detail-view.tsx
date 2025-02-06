@@ -18,11 +18,11 @@ import GlobalSpinner from '@/components/common/global-spinner';
 import { formatPeriod } from '@/functions/formatPeriod';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 
-const HiringDetailView = ({
+export default function HiringDetailView({
   hiringId,
 }: {
   hiringId: string;
-}): React.ReactElement => {
+}): React.ReactElement {
   useKakaoLoader();
   const router = useRouter();
 
@@ -217,6 +217,4 @@ const HiringDetailView = ({
       </div>
     </div>
   );
-};
-
-export default HiringDetailView;
+}

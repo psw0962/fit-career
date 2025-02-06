@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 
-const Profile = (): React.ReactElement => {
+export default function Profile() {
   const { toast } = useToast();
 
   const [isDeleting, setIsDeleting] = useState(false);
@@ -148,6 +148,4 @@ const Profile = (): React.ReactElement => {
       </Dialog>
     </div>
   );
-};
-
-export default Profile;
+}

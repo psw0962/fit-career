@@ -10,12 +10,12 @@ interface SortableImageDndProps {
   onRemove: (index: number) => void;
 }
 
-export const SortableImageDnd = ({
+export default function SortableImageDnd({
   id,
   index,
   image,
   onRemove,
-}: SortableImageDndProps) => {
+}: SortableImageDndProps) {
   const {
     attributes,
     listeners,
@@ -103,4 +103,4 @@ export const SortableImageDnd = ({
       </button>
     </div>
   );
-};
+}

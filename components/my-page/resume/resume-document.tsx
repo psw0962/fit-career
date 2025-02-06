@@ -57,7 +57,7 @@ const pdfStyles = StyleSheet.create({
   },
 });
 
-const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
+export default function ResumeDocument({ data }: { data: ResumeDataResponse }) {
   function renderHtmlToPdf(html: string | null) {
     if (!html) return <Text style={pdfStyles.text}>소개 내용이 없습니다.</Text>;
 
@@ -270,6 +270,4 @@ const ResumeDocument = ({ data }: { data: ResumeDataResponse }) => {
       </Page>
     </Document>
   );
-};
-
-export default ResumeDocument;
+}
