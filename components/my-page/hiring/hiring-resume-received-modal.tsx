@@ -8,7 +8,7 @@ import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
 import { useToast } from '@/hooks/use-toast';
 import ResumePreview from '@/components/my-page/resume/resume-preview';
-import { useMarkResumeAsRead } from '@/actions/resume';
+import { useMarkResumeAsRead, useUpdateResumeStatus } from '@/actions/resume';
 import {
   Dialog,
   DialogContent,
@@ -23,16 +23,46 @@ export default function HiringResumeReceivedModal({
 }: {
   data: HiringDataResponse;
 }) {
+  const statusOptions = [
+    '서류접수',
+    '서류합격',
+    '면접합격',
+    '최종합격',
+    '불합격',
+  ];
+
   const [isMobile, setIsMobile] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [selectedResume, setSelectedResume] = useState<ResumeReceived | null>(
     null
   );
+  const [localResumes, setLocalResumes] = useState<ResumeReceived[]>(
+    data.resume_received
+  );
 
   const { toast } = useToast();
-
   const { mutate: markResumeAsRead } = useMarkResumeAsRead();
+  const { mutate: updateResumeStatus } = useUpdateResumeStatus();
+
+  function handleStatusChange(
+    e: React.ChangeEvent<HTMLSelectElement>,
+    resumeId: string
+  ) {
+    const newStatus = e.target.value;
+    setLocalResumes((prevResumes) =>
+      prevResumes.map((resume) =>
+        resume.id === resumeId
+          ? { ...resume, status: newStatus as ResumeReceived['status'] }
+          : resume
+      )
+    );
+    updateResumeStatus({ hiringId: data.id, resumeId, status: newStatus });
+  }
+
+  useEffect(() => {
+    setLocalResumes(data.resume_received);
+  }, [data.resume_received]);
 
   useEffect(() => {
     const userAgent =
@@ -93,6 +123,7 @@ export default function HiringResumeReceivedModal({
                   <th className="p-3 text-center">이메일</th>
                   <th className="p-3 text-center">제출일</th>
                   <th className="p-3 text-center">읽음/안읽음</th>
+                  <th className="p-3 text-center">진행 상태</th>
                 </tr>
               </thead>
 
@@ -176,6 +207,19 @@ export default function HiringResumeReceivedModal({
                       <td className="p-3 text-center">{resume.submitted_at}</td>
                       <td className="p-3 text-center">
                         {resume.is_read ? '읽음' : '안읽음'}
+                      </td>
+                      <td className="p-3 text-center">
+                        <select
+                          value={resume.status}
+                          onChange={(e) => handleStatusChange(e, resume.id)}
+                          className="border rounded p-1"
+                        >
+                          {statusOptions.map((status) => (
+                            <option key={status} value={status}>
+                              {status}
+                            </option>
+                          ))}
+                        </select>
                       </td>
                     </tr>
                   ))

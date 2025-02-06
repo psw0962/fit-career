@@ -552,7 +552,7 @@ const postResumeToHiring = async (data: {
 
   const newResumeEntry = {
     ...resumeData,
-    status: 'pending',
+    status: '서류접수',
     submitted_at: formatKRTime(),
     is_read: false,
   };
@@ -785,4 +785,89 @@ export const useMarkResumeAsRead = (
       ...options,
     }
   );
+};
+
+// =========================================
+// ============== update resume status
+// =========================================
+const updateResumeStatus = async (data: {
+  hiringId: string;
+  resumeId: string;
+  status: string;
+}) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const { data: hiringData, error: hiringError } = await supabase
+    .from('hiring')
+    .select('resume_received')
+    .eq('id', data.hiringId)
+    .single();
+
+  if (hiringError) {
+    throw new Error(hiringError.message);
+  }
+
+  const resumeReceived = hiringData?.resume_received || [];
+  let resumeFound = false;
+
+  const updatedResumes = resumeReceived.map((resume: any) => {
+    if (resume.id === data.resumeId) {
+      resumeFound = true;
+      return { ...resume, status: data.status };
+    }
+    return resume;
+  });
+
+  if (!resumeFound) {
+    throw new Error('해당 이력서를 찾을 수 없습니다.');
+  }
+
+  const { error: updateError } = await supabase
+    .from('hiring')
+    .update({ resume_received: updatedResumes })
+    .eq('id', data.hiringId);
+
+  if (updateError) {
+    throw new Error(updateError.message);
+  }
+};
+
+export const useUpdateResumeStatus = (
+  options?: UseMutationOptions<
+    void,
+    Error,
+    { hiringId: string; resumeId: string; status: string },
+    void
+  >
+) => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation<
+    void,
+    Error,
+    { hiringId: string; resumeId: string; status: string },
+    void
+  >({
+    mutationFn: updateResumeStatus,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['hiringListByUserSubmission'],
+      });
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
+      toast({
+        title: '이력서 상태 업데이트에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
+    },
+    ...options,
+  });
 };

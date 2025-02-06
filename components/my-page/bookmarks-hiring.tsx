@@ -159,7 +159,7 @@ export default function BookmarksHiring() {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b"
+                    className="px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b whitespace-nowrap"
                   >
                     {flexRender(
                       header.column.columnDef.header,

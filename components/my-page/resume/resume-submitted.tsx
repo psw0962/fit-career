@@ -111,34 +111,51 @@ export default function ResumeSubmitted() {
       },
     },
     {
-      accessorKey: 'resume_received[0].submitted_at',
+      accessorKey: 'submitted_at',
       header: '지원일',
       cell: ({ row }) => {
-        const submittedAt = (
-          row.original.resume_received as {
-            submitted_at: string;
-            title: string;
-            is_fitcareer_resume: boolean;
-          }[]
-        )[0];
+        const submissions = row.original.filtered_resume_received || [];
+        const submission = Array.isArray(submissions) ? submissions[0] : null;
 
         return (
           <div className="flex flex-col gap-1">
             <span className="text-gray-500 text-xs">
-              {submittedAt?.submitted_at || '-'}
+              {submission?.submitted_at || '-'}
             </span>
 
             <span className="mx-auto text-gray-500 text-[12px] max-w-[200px] break-words line-clamp-1">
-              {submittedAt.is_fitcareer_resume
-                ? submittedAt.title.length > 15
-                  ? `${submittedAt.title.slice(0, 15)}...`
-                  : submittedAt.title
-                : submittedAt.title.length > 15
-                  ? `${convertBase64Unicode(submittedAt.title, 'decode').split('.')[0].slice(0, 15)}...${convertBase64Unicode(submittedAt.title, 'decode').split('.')[1]}`
-                  : `${convertBase64Unicode(submittedAt.title, 'decode').split('.')[0]}.${convertBase64Unicode(submittedAt.title, 'decode').split('.')[1]}`}
+              {submission
+                ? submission.is_fitcareer_resume
+                  ? submission.title.length > 15
+                    ? `${submission.title.slice(0, 15)}...`
+                    : submission.title
+                  : submission.title.length > 15
+                    ? `${convertBase64Unicode(submission.title, 'decode').split('.')[0].slice(0, 15)}...${convertBase64Unicode(submission.title, 'decode').split('.')[1]}`
+                    : `${convertBase64Unicode(submission.title, 'decode').split('.')[0]}.${convertBase64Unicode(submission.title, 'decode').split('.')[1]}`
+                : '-'}
             </span>
           </div>
         );
+      },
+    },
+    {
+      accessorKey: 'is_read',
+      header: '기업 열람',
+      cell: ({ row }) => {
+        const submissions = row.original.filtered_resume_received || [];
+        const submission = Array.isArray(submissions) ? submissions[0] : null;
+        const isRead = submission?.is_read;
+        return isRead ? '열람' : '미열람';
+      },
+    },
+    {
+      accessorKey: 'status',
+      header: '진행 상태',
+      cell: ({ row }) => {
+        const submissions = row.original.filtered_resume_received || [];
+        const submission = Array.isArray(submissions) ? submissions[0] : null;
+        const status = submission?.status;
+        return status;
       },
     },
   ];
@@ -204,7 +221,7 @@ export default function ResumeSubmitted() {
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b"
+                    className="px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b whitespace-nowrap"
                   >
                     {flexRender(
                       header.column.columnDef.header,

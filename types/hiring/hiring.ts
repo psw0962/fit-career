@@ -32,7 +32,8 @@ export type HiringDataResponse = {
   period: number[];
   position_etc: boolean;
   is_visible: boolean;
-  resume_received: {}[];
+  resume_received: ResumeReceived[];
+  filtered_resume_received?: ResumeReceived[];
   enterprise_profile?: {
     id: string;
     user_id: string;
