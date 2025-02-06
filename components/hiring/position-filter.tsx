@@ -14,10 +14,10 @@ import {
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/common/spinner';
 
-const PositionFilter: React.FC<PositionFilterProps> = ({
+export default function PositionFilter({
   positionFilter,
   setPositionFilter,
-}) => {
+}: PositionFilterProps) {
   const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempFilter, setTempFilter] = useState<string[]>([]);
@@ -121,6 +121,4 @@ const PositionFilter: React.FC<PositionFilterProps> = ({
       </DialogContent>
     </Dialog>
   );
-};
-
-export default PositionFilter;
+}

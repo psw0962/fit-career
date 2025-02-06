@@ -7,7 +7,7 @@ import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
-const EnterpriseProfile = () => {
+export default function EnterpriseProfile() {
   const router = useRouter();
   const { data: userData } = useGetUserData();
   const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
@@ -97,6 +97,4 @@ const EnterpriseProfile = () => {
       )}
     </div>
   );
-};
-
-export default EnterpriseProfile;
+}

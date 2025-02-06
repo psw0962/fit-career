@@ -6,11 +6,11 @@ type DotSpinnerProps = {
   dotColor?: string;
 };
 
-const Spinner: React.FC<DotSpinnerProps> = ({
+export default function Spinner({
   width = '1.5rem',
   height = '1.5rem',
   dotColor = '#114784',
-}) => {
+}: DotSpinnerProps) {
   return (
     <div className="flex items-center justify-center z-50">
       <div className="flex space-x-2">
@@ -43,6 +43,4 @@ const Spinner: React.FC<DotSpinnerProps> = ({
       </div>
     </div>
   );
-};
-
-export default Spinner;
+}

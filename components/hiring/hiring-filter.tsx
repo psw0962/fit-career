@@ -11,13 +11,13 @@ import GlobalSpinner from '@/components/common/global-spinner';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import { useCheckIsBookmarked, useToggleBookmark } from '@/actions/hiring';
 
-const HiringFilter: React.FC<HiringFilterProps> = ({
+export default function HiringFilter({
   regionFilter,
   positionFilter,
   periodValueFilter,
   currentPage,
   setCurrentPage,
-}) => {
+}: HiringFilterProps) {
   const itemsPerPage = 12;
 
   useScrollRestoration('hiring-list');
@@ -209,6 +209,4 @@ const HiringFilter: React.FC<HiringFilterProps> = ({
       )}
     </>
   );
-};
-
-export default HiringFilter;
+}

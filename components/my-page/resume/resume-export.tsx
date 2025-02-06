@@ -13,7 +13,7 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 
-const ResumeExport = ({
+export default function ResumeExport({
   data,
   isExport,
   isPreview,
@@ -21,7 +21,7 @@ const ResumeExport = ({
   data: ResumeDataResponse;
   isExport?: boolean;
   isPreview?: boolean;
-}) => {
+}) {
   const [showPreview, setShowPreview] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -104,6 +104,4 @@ const ResumeExport = ({
       )}
     </>
   );
-};
-
-export default ResumeExport;
+}

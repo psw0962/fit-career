@@ -8,7 +8,7 @@ type ThumbnailCarouselProps = {
   options?: EmblaOptionsType;
 };
 
-const BasicCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
+export default function BasicCarousel(props: ThumbnailCarouselProps) {
   const { slides, options } = props;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [emblaMainRef, emblaMainApi] = useEmblaCarousel(options);
@@ -63,6 +63,4 @@ const BasicCarousel: React.FC<ThumbnailCarouselProps> = (props) => {
       </div>
     </div>
   );
-};
-
-export default BasicCarousel;
+}

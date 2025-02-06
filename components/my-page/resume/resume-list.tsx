@@ -11,7 +11,7 @@ import {
 } from '@/actions/resume';
 import ResumeCard from '@/components/my-page/resume/resume-card';
 
-const Resume = (): React.ReactElement => {
+export default function Resume() {
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
   const { data: resumeListData } = useGetResume();
   const { mutate: postNewResumeMutate, status: postNewResumeStatus } =
@@ -123,6 +123,4 @@ const Resume = (): React.ReactElement => {
       )}
     </div>
   );
-};
-
-export default Resume;
+}

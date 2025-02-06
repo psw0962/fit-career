@@ -18,7 +18,7 @@ import {
 import { useRouter } from 'next/navigation';
 import GlobalSpinner from '@/components/common/global-spinner';
 
-const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
+export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -272,6 +272,4 @@ const ResumeCard = ({ data }: { data: ResumeDataResponse }) => {
       </Dialog>
     </>
   );
-};
-
-export default ResumeCard;
+}

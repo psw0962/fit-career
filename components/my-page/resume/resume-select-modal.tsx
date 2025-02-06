@@ -18,7 +18,7 @@ import { useSessionStorage } from 'usehooks-ts';
 import { useGetUserData } from '@/actions/auth';
 import { useToast } from '@/hooks/use-toast';
 
-const ResumeSelectIdModal = ({
+export default function ResumeSelectIdModal({
   hiringData,
   resumeData,
   resumeUserIdModalIsOpen,
@@ -32,7 +32,7 @@ const ResumeSelectIdModal = ({
   setResumeUserIdModalIsOpen: (isOpen: boolean) => void;
   selectedResumeId: string;
   setSelectedResumeId: (id: string) => void;
-}) => {
+}) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -245,6 +245,4 @@ const ResumeSelectIdModal = ({
       )}
     </Dialog>
   );
-};
-
-export default ResumeSelectIdModal;
+}

@@ -1,4 +1,4 @@
-export const validateInput = (value: string, type: string): boolean => {
+export function validateInput(value: string, type: string): boolean {
   switch (type) {
     case 'phonePart':
       return /^\d{0,4}$/.test(value); // 0~4자리 숫자만 허용
@@ -8,4 +8,4 @@ export const validateInput = (value: string, type: string): boolean => {
     default:
       return false;
   }
-};
+}

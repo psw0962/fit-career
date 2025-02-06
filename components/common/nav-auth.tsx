@@ -5,13 +5,13 @@ import Spinner from './spinner';
 import Image from 'next/image';
 import Link from 'next/link';
 
-const NavAuth = ({
+export default function NavAuth({
   isMobile,
   setIsMobileMenuOpen = () => {},
 }: {
   isMobile: boolean;
   setIsMobileMenuOpen: (isMobileMenuOpen: boolean) => void;
-}): React.ReactElement => {
+}): React.ReactElement {
   const { data: userData, isLoading } = useGetUserData();
   const { mutate: logout } = useSignOut();
 
@@ -66,6 +66,4 @@ const NavAuth = ({
       )}
     </div>
   );
-};
-
-export default NavAuth;
+}

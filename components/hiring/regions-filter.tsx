@@ -18,10 +18,10 @@ import {
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/common/spinner';
 
-const RegionsFilter: React.FC<RegionsFilterProps> = ({
+export default function RegionsFilter({
   regionFilter,
   setRegionFilter,
-}) => {
+}: RegionsFilterProps) {
   const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempFilter, setTempFilter] = useState<RegionFilter>({
@@ -276,6 +276,4 @@ const RegionsFilter: React.FC<RegionsFilterProps> = ({
       </DialogContent>
     </Dialog>
   );
-};
-
-export default RegionsFilter;
+}

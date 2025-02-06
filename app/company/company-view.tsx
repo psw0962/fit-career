@@ -17,7 +17,7 @@ import GlobalSpinner from '@/components/common/global-spinner';
 import BasicCarousel from '@/components/carousel/basic-carousel';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 
-const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
+export default function CompanyView({ hiringId }: { hiringId: string }) {
   useKakaoLoader();
 
   const [page, setPage] = useState(0);
@@ -277,6 +277,4 @@ const Company = ({ hiringId }: { hiringId: string }): React.ReactElement => {
       </div>
     </div>
   );
-};
-
-export default Company;
+}

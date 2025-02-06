@@ -8,7 +8,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useToast } from '@/hooks/use-toast';
 
-const Auth = () => {
+export default function Auth() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect') || '/';
@@ -94,6 +94,4 @@ const Auth = () => {
       </div>
     </div>
   );
-};
-
-export default Auth;
+}

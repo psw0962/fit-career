@@ -19,7 +19,7 @@ import {
   LinkData,
 } from '@/types/resume/resume';
 
-const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
+function ResumeEditView({ resumeId }: { resumeId: string }) {
   const titleRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -1187,6 +1187,6 @@ const ResumeEditView = ({ resumeId }: { resumeId: string }) => {
       </button>
     </div>
   );
-};
+}
 
 export default withAuth(ResumeEditView);

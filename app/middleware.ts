@@ -1,7 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { type NextRequest, NextResponse } from 'next/server';
 
-export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
+export async function applyMiddlewareSupabaseClient(request: NextRequest) {
   // Create an unmodified response
   let response = NextResponse.next({
     request: {
@@ -61,7 +61,7 @@ export const applyMiddlewareSupabaseClient = async (request: NextRequest) => {
   await supabase.auth.getUser();
 
   return response;
-};
+}
 
 export async function middleware(request) {
   return await applyMiddlewareSupabaseClient(request);

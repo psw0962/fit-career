@@ -1,4 +1,4 @@
-export const formatPeriod = (value: number[]) => {
+export function formatPeriod(value: number[]) {
   if (value.length === 2) {
     const [start, end] = value;
 
@@ -17,4 +17,4 @@ export const formatPeriod = (value: number[]) => {
   } else {
     return `${value[0]}년 이상`;
   }
-};
+}
