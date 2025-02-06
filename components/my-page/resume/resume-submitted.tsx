@@ -141,6 +141,14 @@ export default function ResumeSubmitted() {
         );
       },
     },
+    {
+      accessorKey: 'resume_received[0].is_read',
+      header: '기업 열람',
+      cell: ({ row }) => {
+        const isRead = row.original.resume_received[0].is_read;
+        return isRead ? '열람' : '미열람';
+      },
+    },
   ];
 
   const router = useRouter();

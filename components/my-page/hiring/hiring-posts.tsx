@@ -7,7 +7,7 @@ import {
 } from '@/actions/hiring';
 import GlobalSpinner from '@/components/common/global-spinner';
 import Image from 'next/image';
-import { HiringDataResponse } from '@/types/hiring/hiring';
+import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
 import Link from 'next/link';
 import { formatPeriod } from '@/functions/formatPeriod';
 import { useGetUserData } from '@/actions/auth';
@@ -68,7 +68,7 @@ export default function HiringPosts() {
         {hiringData !== undefined &&
           hiringData.data.map((x: HiringDataResponse) => {
             const unreadCount = x.resume_received.filter(
-              (resume: any) => !resume.is_read
+              (resume: ResumeReceived) => !resume.is_read
             ).length;
 
             return (
