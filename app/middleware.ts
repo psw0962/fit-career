@@ -9,6 +9,18 @@ export async function applyMiddlewareSupabaseClient(request: NextRequest) {
     },
   });
 
+  response.headers.set(
+    'Content-Security-Policy',
+    [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://*.google.com",
+      "frame-src 'self' https://accounts.google.com https://*.google.com",
+      "frame-ancestors 'self' https://*.google.com",
+      "connect-src 'self' https://*.google.com",
+      "img-src 'self' data: https://*.google.com",
+    ].join('; ')
+  );
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

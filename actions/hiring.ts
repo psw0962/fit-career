@@ -288,21 +288,15 @@ const getHiringByUserSubmission = async (
   const to = from + pageSize - 1;
 
   const [{ data, error }, { count, error: countError }] = await Promise.all([
-    supabase
-      .from('hiring')
-      .select(
-        `
-        *,
-        enterprise_profile:enterprise_profile!user_id(*)
-      `
-      )
-      .contains('resume_received', JSON.stringify([{ user_id: userId }]))
-      .range(from, to)
-      .order('resume_received->0->>submitted_at', { ascending: false }),
+    supabase.rpc('get_hiring_by_user_submission', {
+      p_candidate_id: userId,
+      p_from: from,
+      p_to: to,
+    }),
 
     supabase
       .from('hiring')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .contains('resume_received', JSON.stringify([{ user_id: userId }])),
   ]);
 
