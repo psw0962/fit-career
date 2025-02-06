@@ -67,6 +67,10 @@ export default function HiringPosts() {
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {hiringData !== undefined &&
           hiringData.data.map((x: HiringDataResponse) => {
+            const unreadCount = x.resume_received.filter(
+              (resume: any) => !resume.is_read
+            ).length;
+
             return (
               <div
                 key={x.id}
@@ -177,6 +181,19 @@ export default function HiringPosts() {
                   </div>
 
                   <HiringResumeReceivedModal data={x} />
+
+                  {unreadCount > 0 && (
+                    <div className="absolute bottom-14 animate-float">
+                      <div className="relative bg-red-50 px-3 py-1 rounded-full shadow-lg">
+                        <span className="text-xs font-semibold text-red-600">
+                          새롭게 접수된 이력서 {unreadCount} 건
+                        </span>
+                        <div className="absolute bottom-[-6px] left-1/2 transform -translate-x-1/2">
+                          <div className="w-0 h-0 border-t-[6px] border-t-red-50 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="absolute top-3 right-3 cursor-pointer">

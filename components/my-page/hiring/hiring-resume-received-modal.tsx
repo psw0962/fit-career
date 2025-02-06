@@ -8,6 +8,7 @@ import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
 import { useToast } from '@/hooks/use-toast';
 import ResumePreview from '@/components/my-page/resume/resume-preview';
+import { useMarkResumeAsRead } from '@/actions/resume';
 import {
   Dialog,
   DialogContent,
@@ -31,6 +32,8 @@ export default function HiringResumeReceivedModal({
 
   const { toast } = useToast();
 
+  const { mutate: markResumeAsRead } = useMarkResumeAsRead();
+
   useEffect(() => {
     const userAgent =
       typeof window !== 'undefined' ? window.navigator.userAgent : '';
@@ -41,7 +44,7 @@ export default function HiringResumeReceivedModal({
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogTrigger asChild>
         <button
-          className="w-full mt-[2px] text-sm bg-[#4C71C0] px-2 py-2 rounded text-white"
+          className="w-full text-sm bg-[#4C71C0] px-2 py-2 rounded text-white"
           onClick={() => setIsModalOpen(true)}
         >
           {`접수된 이력서 (${data.resume_received.length})`}
@@ -89,6 +92,7 @@ export default function HiringResumeReceivedModal({
                   <th className="p-3 text-center">전화번호</th>
                   <th className="p-3 text-center">이메일</th>
                   <th className="p-3 text-center">제출일</th>
+                  <th className="p-3 text-center">읽음/안읽음</th>
                 </tr>
               </thead>
 
@@ -101,6 +105,10 @@ export default function HiringResumeReceivedModal({
                           <button
                             className="text-sm text-blue-500"
                             onClick={() => {
+                              markResumeAsRead({
+                                hiringId: data.id,
+                                resumeId: resume.id,
+                              });
                               setSelectedResume(resume);
                               setShowPreview(true);
                             }}
@@ -166,6 +174,9 @@ export default function HiringResumeReceivedModal({
                           : '파일로 제출됨'}
                       </td>
                       <td className="p-3 text-center">{resume.submitted_at}</td>
+                      <td className="p-3 text-center">
+                        {resume.is_read ? '읽음' : '안읽음'}
+                      </td>
                     </tr>
                   ))
                 ) : (

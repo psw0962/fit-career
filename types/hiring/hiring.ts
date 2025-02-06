@@ -93,4 +93,5 @@ export type ResumeReceived = {
   submitted_at: string;
   upload_resume: string | 'NULL';
   is_fitcareer_resume: boolean;
+  is_read: boolean;
 };
