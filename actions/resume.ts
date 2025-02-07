@@ -871,3 +871,113 @@ export const useUpdateResumeStatus = (
     ...options,
   });
 };
+
+// =========================================
+// ============== clone resume
+// =========================================
+const cloneResume = async (resumeId: string) => {
+  const supabase = createBrowserSupabaseClient();
+
+  const { data: originalResume, error: fetchError } = await supabase
+    .from('resume')
+    .select('*')
+    .eq('id', resumeId)
+    .single();
+
+  if (fetchError) {
+    throw new Error(fetchError.message);
+  }
+
+  const { data: userData } = await supabase.auth.getUser();
+
+  if (!userData?.user?.id) {
+    throw new Error('User not found');
+  }
+
+  const { data: resumeCountData, error: countError } = await supabase
+    .from('resume')
+    .select('*', { count: 'exact' })
+    .eq('user_id', userData.user.id);
+
+  if (countError) {
+    throw new Error(countError.message);
+  }
+
+  if (resumeCountData.length >= 4) {
+    throw new Error('MAX_RESUME_COUNT');
+  }
+
+  const { error: insertError } = await supabase.from('resume').insert([
+    {
+      title: `${originalResume.title} (복사본)`,
+      resume_image: originalResume.resume_image || [],
+      name: originalResume.name || '',
+      email: originalResume.email || '',
+      phone: originalResume.phone || '',
+      introduction: originalResume.introduction || '',
+      education: originalResume.education || [],
+      experience: originalResume.experience || [],
+      certificates: originalResume.certificates || [],
+      awards: originalResume.awards || [],
+      links: originalResume.links || [],
+      is_fitcareer_resume: originalResume.is_fitcareer_resume,
+      updated_at: formatKRTime(),
+    },
+  ]);
+
+  if (insertError) {
+    throw new Error(insertError.message);
+  }
+};
+
+export const useCloneResume = (
+  options?: UseMutationOptions<void, Error, string, void>
+) => {
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+
+  return useMutation<void, Error, string, void>({
+    mutationFn: cloneResume,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['hiringListByUserSubmission'],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: ['resume'],
+        refetchType: 'all',
+        exact: false,
+      });
+
+      toast({
+        title: '이력서가 복제되었습니다.',
+        description: '복제된 이력서를 확인해보세요.',
+        variant: 'default',
+      });
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
+
+      if (error.message === 'MAX_RESUME_COUNT') {
+        toast({
+          title: '이력서는 최대 4개까지 등록할 수 있습니다.',
+          variant: 'warning',
+        });
+        return;
+      }
+
+      toast({
+        title: '이력서 복제에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
+    },
+    ...options,
+  });
+};
