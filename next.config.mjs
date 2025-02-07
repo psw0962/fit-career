@@ -1,47 +1,9 @@
-import bundleAnalyzer from '@next/bundle-analyzer';
-
-const withBundleAnalyzer = bundleAnalyzer({
-  enabled: process.env.ANALYZE === 'true',
-});
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        minSize: 20000,
-        maxSize: 70000,
-        cacheGroups: {
-          default: false,
-          vendors: false,
-          commons: {
-            name: 'commons',
-            chunks: 'all',
-            minChunks: 2,
-          },
-          ui: {
-            name: 'ui',
-            test: /[\\/]node_modules[\\/](@radix-ui|@shadcn)[\\/]/,
-            chunks: 'all',
-          },
-        },
-      };
-    }
-    return config;
-  },
   poweredByHeader: false,
   compress: true,
-  experimental: {
-    optimizePackageImports: [
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-select',
-      'date-fns',
-    ],
-  },
   images: {
     formats: ['image/webp'],
-    minimumCacheTTL: 60,
     remotePatterns: [
       {
         protocol: 'http',
@@ -83,4 +45,4 @@ const nextConfig = {
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+export default nextConfig;
