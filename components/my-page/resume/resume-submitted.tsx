@@ -7,9 +7,10 @@ import { useDeleteResumeFromHiring } from '@/actions/resume';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 import { useGetUserData } from '@/actions/auth';
 import { useGetHiringByUserSubmission } from '@/actions/hiring';
-import { HiringDataResponse } from '@/types/hiring/hiring';
+import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
 import { useSessionStorage } from 'usehooks-ts';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
+import ResumePreview from '@/components/my-page/resume/resume-preview';
 import {
   useReactTable,
   getCoreRowModel,
@@ -27,6 +28,9 @@ import {
 } from '@/components/ui/dialog';
 
 export default function ResumeSubmitted() {
+  const [openResumeDialog, setOpenResumeDialog] =
+    useState<ResumeReceived | null>(null);
+
   const columns: ColumnDef<HiringDataResponse>[] = [
     {
       accessorKey: 'cancel',
@@ -111,34 +115,6 @@ export default function ResumeSubmitted() {
       },
     },
     {
-      accessorKey: 'submitted_at',
-      header: '지원일',
-      cell: ({ row }) => {
-        const submissions = row.original.filtered_resume_received || [];
-        const submission = Array.isArray(submissions) ? submissions[0] : null;
-
-        return (
-          <div className="flex flex-col gap-1">
-            <span className="text-gray-500 text-xs">
-              {submission?.submitted_at || '-'}
-            </span>
-
-            <span className="mx-auto text-gray-500 text-[12px] max-w-[200px] break-words line-clamp-1">
-              {submission
-                ? submission.is_fitcareer_resume
-                  ? submission.title.length > 15
-                    ? `${submission.title.slice(0, 15)}...`
-                    : submission.title
-                  : submission.title.length > 15
-                    ? `${convertBase64Unicode(submission.title, 'decode').split('.')[0].slice(0, 15)}...${convertBase64Unicode(submission.title, 'decode').split('.')[1]}`
-                    : `${convertBase64Unicode(submission.title, 'decode').split('.')[0]}.${convertBase64Unicode(submission.title, 'decode').split('.')[1]}`
-                : '-'}
-            </span>
-          </div>
-        );
-      },
-    },
-    {
       accessorKey: 'is_read',
       header: '기업 열람',
       cell: ({ row }) => {
@@ -156,6 +132,85 @@ export default function ResumeSubmitted() {
         const submission = Array.isArray(submissions) ? submissions[0] : null;
         const status = submission?.status;
         return status;
+      },
+    },
+    {
+      accessorKey: 'submitted_resume',
+      header: '제출한 이력서',
+      cell: ({ row }) => {
+        const submissions = row.original.filtered_resume_received || [];
+        const submission = Array.isArray(submissions) ? submissions[0] : null;
+
+        return (
+          <>
+            <span
+              className="mx-auto text-gray-500 text-[12px] max-w-[200px] break-words line-clamp-1 underline"
+              onClick={(e) => {
+                e.stopPropagation();
+
+                if (submission?.is_fitcareer_resume) {
+                  setOpenResumeDialog(submission);
+                } else if (submission && !submission?.is_fitcareer_resume) {
+                  window.open(submission.upload_resume, '_blank');
+                }
+              }}
+            >
+              {submission
+                ? submission.is_fitcareer_resume
+                  ? submission.title.length > 17
+                    ? `${submission.title.slice(0, 17)}...`
+                    : submission.title
+                  : submission.title.length > 17
+                    ? `${convertBase64Unicode(submission.title, 'decode').split('.')[0].slice(0, 17)}...${convertBase64Unicode(submission.title, 'decode').split('.')[1]}`
+                    : `${convertBase64Unicode(submission.title, 'decode').split('.')[0]}.${convertBase64Unicode(submission.title, 'decode').split('.')[1]}`
+                : '-'}
+            </span>
+
+            <Dialog
+              open={openResumeDialog === submission}
+              onOpenChange={(open) => {
+                setOpenResumeDialog(open ? submission : null);
+              }}
+            >
+              <DialogContent
+                className="w-[90vw] max-w-[500px] min-w-[300px]"
+                onClick={(e) => {
+                  e.stopPropagation();
+                }}
+              >
+                <DialogHeader>
+                  <DialogTitle>제출한 이력서 정보</DialogTitle>
+                  <DialogDescription></DialogDescription>
+                </DialogHeader>
+
+                {submission && <ResumePreview data={submission} />}
+
+                <DialogFooter>
+                  <button
+                    className="bg-[#4C71C0] text-white rounded px-4 py-2 text-sm"
+                    onClick={() => setOpenResumeDialog(null)}
+                  >
+                    확인
+                  </button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </>
+        );
+      },
+    },
+    {
+      accessorKey: 'submitted_at',
+      header: '지원일',
+      cell: ({ row }) => {
+        const submissions = row.original.filtered_resume_received || [];
+        const submission = Array.isArray(submissions) ? submissions[0] : null;
+
+        return (
+          <span className="text-gray-500 text-xs">
+            {submission?.submitted_at || '-'}
+          </span>
+        );
       },
     },
   ];
