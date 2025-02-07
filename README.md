@@ -54,11 +54,11 @@ FIT-career는 피트니스 전용 채용 플랫폼을 기반으로 피트니스 
 
 #### 채용공고 관리
 
-![Profile](public/images/hirings.png) ![Profile](public/images/submitted-resume-1.png) ![Profile](public/images/submitted-resume-2.png) ![Profile](public/images/hiring-registration1.png) ![Profile](public/images/hiring-registration2.png)
+![Profile](public/images/hirings.png) ![Profile](public/images/submitted-resume1.png) ![Profile](public/images/submitted-resume2.png) ![Profile](public/images/hiring-registration1.png) ![Profile](public/images/hiring-registration2.png)
 
 #### 이력서 관리
 
-![Profile](public/images/resume.png) ![Profile](public/images/submitted.png) ![Profile](public/images/resume-select.png)
+![Profile](public/images/resume.png) ![Profile](public/images/submitted-resume3.png) ![Profile](public/images/submitted-resume4.png) ![Profile](public/images/resume-select.png)
 
 #### 프로필 관리
 
