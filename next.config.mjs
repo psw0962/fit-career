@@ -33,7 +33,6 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: [
       '@radix-ui/react-dialog',
       '@radix-ui/react-select',
