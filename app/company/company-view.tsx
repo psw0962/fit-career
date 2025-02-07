@@ -78,7 +78,7 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
               fill
               priority
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+              blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
               quality={75}
             />
           </div>
@@ -136,14 +136,14 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
                 <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
                   <Image
                     src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
-                    alt={`image ${x.id}`}
+                    alt={`${x.title} 이미지`}
                     style={{ objectFit: 'cover' }}
                     className="rounded"
                     fill
                     priority
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                    quality={75}
+                    sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                    blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
+                    quality={60}
                   />
                 </div>
 
@@ -169,8 +169,8 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
                     fill
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                    quality={75}
+                    blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
+                    quality={60}
                   />
                 </div>
 
@@ -187,14 +187,13 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
                             ? hiringData.data[0].enterprise_profile?.logo[0]
                             : '/svg/logo.svg'
                         }
-                        alt={`image ${x.id}`}
+                        alt={`${x.enterprise_profile?.name} 로고`}
                         className="rounded"
-                        style={{ objectFit: 'contain' }}
                         fill
-                        priority
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                        quality={75}
+                        loading="lazy"
+                        sizes="20px"
+                        style={{ objectFit: 'contain' }}
+                        quality={60}
                       />
                     </div>
 

@@ -41,15 +41,15 @@ export default function BasicCarousel(props: ThumbnailCarouselProps) {
                   <div className="relative w-full aspect-[16/9] overflow-hidden border rounded">
                     <Image
                       src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
-                      alt={`image ${index}`}
+                      alt={`${index}번째 이미지`}
                       className="rounded"
                       fill
                       priority
-                      quality={75}
+                      quality={60}
                       style={{ objectFit: 'cover' }}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                       placeholder="blur"
-                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                      blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
                     />
                   </div>
                 </div>

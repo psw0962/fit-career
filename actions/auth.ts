@@ -176,7 +176,6 @@ export const getUserData = async (): Promise<User | null> => {
     const { data, error } = await supabase.auth.getUser();
 
     if (error) {
-      console.error('Error fetching user:', error.message);
       return null;
     }
 

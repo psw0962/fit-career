@@ -15,8 +15,7 @@ import AdsenseInit from '@/components/common/adsense-init';
 export const viewport = {
   width: 'device-width',
   initialScale: 1.0,
-  maximumScale: 1.0,
-  userScalable: false,
+  maximumScale: 5.0,
 };
 
 export const metadata: Metadata = {
