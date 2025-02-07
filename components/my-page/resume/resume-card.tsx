@@ -1,9 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
-import { useDeleteResume } from '@/actions/resume';
+import { useCloneResume, useDeleteResume } from '@/actions/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import ResumeExport from '@/components/my-page/resume/resume-export';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
@@ -26,6 +25,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const { mutate: deleteResume } = useDeleteResume();
+  const { mutate: cloneResume } = useCloneResume();
 
   const handleEdit = async () => {
     setIsLoading(true);
@@ -121,6 +121,19 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
             >
               <ResumeExport data={data} isPreview={true} />
               <ResumeExport data={data} isExport={true} />
+
+              <div
+                className="flex items-center justify-center gap-2 py-2 border-b cursor-pointer"
+                onClick={() => cloneResume(data.id)}
+              >
+                <p className="text-sm">복제하기</p>
+                <Image
+                  src="/svg/duplicate.svg"
+                  alt="duplicate"
+                  width={15}
+                  height={15}
+                />
+              </div>
 
               <div
                 className="flex items-center justify-center gap-2 py-2 border-b cursor-pointer"
