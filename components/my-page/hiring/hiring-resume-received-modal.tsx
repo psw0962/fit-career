@@ -166,6 +166,7 @@ export default function HiringResumeReceivedModal({
                                   resume.upload_resume,
                                   { method: 'HEAD' }
                                 );
+
                                 if (!response.ok) {
                                   toast({
                                     title:
@@ -174,6 +175,12 @@ export default function HiringResumeReceivedModal({
                                   });
                                   return;
                                 }
+
+                                markResumeAsRead({
+                                  hiringId: data.id,
+                                  resumeId: resume.id,
+                                });
+
                                 window.open(resume.upload_resume, '_blank');
                               } catch (error) {
                                 toast({
