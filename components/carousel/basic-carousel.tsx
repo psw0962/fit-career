@@ -49,7 +49,7 @@ export default function BasicCarousel(props: ThumbnailCarouselProps) {
                       style={{ objectFit: 'cover' }}
                       sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                       placeholder="blur"
-                      blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
+                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                     />
                   </div>
                 </div>
