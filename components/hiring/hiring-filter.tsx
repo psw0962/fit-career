@@ -86,35 +86,18 @@ export default function HiringFilter({
                       src={
                         x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
                       }
-                      alt={`image ${x.id}`}
+                      alt={`${x.title} 이미지`}
                       style={{ objectFit: 'cover' }}
                       className="rounded"
                       fill
-                      priority
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      priority={currentPage === 1}
+                      loading={currentPage === 1 ? 'eager' : 'lazy'}
+                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                       placeholder="blur"
-                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                      quality={75}
+                      blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
+                      quality={60}
                     />
                   </div>
-
-                  {/* <div className="absolute top-4 left-4 flex items-center gap-1 bg-black/60 px-1.5 py-0.5 rounded-full">
-                    <div className="relative w-4 h-4">
-                      <Image
-                        src="/svg/view.svg"
-                        alt="view"
-                        fill
-                        priority
-                        style={{ objectFit: 'contain' }}
-                        className="filter brightness-0 invert"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                        quality={75}
-                      />
-                    </div>
-
-                    <p className="text-xs text-white font-bold">200</p>
-                  </div> */}
 
                   <div
                     className={`absolute top-1 right-1 sm:top-2 sm:right-2 w-8 h-8 bg-[#4c71c0] rounded-full ${
@@ -140,8 +123,8 @@ export default function HiringFilter({
                       fill
                       priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                      quality={75}
+                      blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
+                      quality={60}
                     />
                   </div>
 
@@ -154,14 +137,13 @@ export default function HiringFilter({
                       <div className="relative w-5 h-5 flex-shrink-0">
                         <Image
                           src={x.enterprise_profile?.logo[0] ?? '/svg/logo.svg'}
-                          alt={`image ${x.id}`}
+                          alt={`${x.enterprise_profile?.name} 로고`}
                           className="rounded"
                           fill
+                          loading="lazy"
+                          sizes="20px"
                           style={{ objectFit: 'contain' }}
-                          priority
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          blurDataURL="data:image/gif;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                          quality={75}
+                          quality={60}
                         />
                       </div>
 
