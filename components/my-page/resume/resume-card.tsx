@@ -84,7 +84,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
               fill
               style={{ objectFit: 'contain' }}
               priority
-              blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
               quality={75}
             />
           </div>
@@ -173,7 +173,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
               fill
               style={{ objectFit: 'contain' }}
               priority
-              blurDataURL="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 3'%3E%3C/svg%3E"
+              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
               quality={75}
             />
           </div>
