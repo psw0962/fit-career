@@ -124,7 +124,7 @@ export default function RootLayout({
 
             <Suspense fallback={<GlobalSpinner />}>
               <main
-                className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16"
+                className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16 min-h-[calc(100vh-4rem)]"
                 style={{
                   containIntrinsicSize: '0 500px',
                   contentVisibility: 'auto',
@@ -137,10 +137,12 @@ export default function RootLayout({
             <Footer />
           </div>
 
-          <AdsenseInit />
-          <AdsenseAd />
-          <Toaster />
-          <Analytics />
+          <Suspense>
+            <AdsenseInit />
+            <AdsenseAd />
+            <Analytics />
+            <Toaster />
+          </Suspense>
         </body>
       </html>
     </ReactQueryClientProvider>
