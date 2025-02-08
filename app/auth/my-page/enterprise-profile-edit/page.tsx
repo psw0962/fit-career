@@ -316,7 +316,8 @@ function EnterpriseProfileEdit(): React.ReactElement {
                   className="rounded-full"
                   style={{ objectFit: 'cover' }}
                   fill
-                  priority
+                  priority={false}
+                  loading="lazy"
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                   quality={75}
