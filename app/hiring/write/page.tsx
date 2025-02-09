@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { usePostHiring } from '@/actions/hiring';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
@@ -14,7 +15,6 @@ import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useSessionStorage } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
-import SortableImageDnd from '@/components/common/sortable-image-dnd';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import { format, parse } from 'date-fns';
@@ -34,6 +34,11 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
+
+const SortableImageDnd = dynamic(
+  () => import('@/components/common/sortable-image-dnd'),
+  { ssr: false }
+);
 
 interface UploadedImage {
   id: string;

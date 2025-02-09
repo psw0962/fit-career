@@ -8,8 +8,6 @@ import Link from 'next/link';
 const MENU_LIST = [
   { id: 1, name: '채용정보', title: '핏커리어 채용정보', path: '/' },
   { id: 2, name: '공지사항', title: '핏커리어 공지사항', path: '/notice' },
-  // { id: 2, name: '커뮤니티', title: '핏커리어 커뮤니티', path: '/community' },
-  // { id: 3, name: '대회정보', title: '핏커리어 대회정보', path: '/competition' },
 ];
 
 export default function Nav() {

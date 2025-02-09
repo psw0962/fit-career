@@ -1,16 +1,35 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useRef } from 'react';
-import { withAuth } from '@/hoc/withAuth';
-import Profile from '@/components/my-page/profile';
-import EnterpriseProfile from '@/components/my-page/enterprise-profile';
-import ResumeList from '@/components/my-page/resume/resume-list';
-import HiringPosts from '@/components/my-page/hiring/hiring-posts';
-import ResumeSubmitted from '@/components/my-page/resume/resume-submitted';
-import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import { useSessionStorage } from 'usehooks-ts';
-import BookmarksHiring from '@/components/my-page/bookmarks-hiring';
+import { withAuth } from '@/hoc/withAuth';
+import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
+
+const Profile = dynamic(() => import('@/components/my-page/profile'), {
+  ssr: false,
+});
+const EnterpriseProfile = dynamic(
+  () => import('@/components/my-page/enterprise-profile'),
+  { ssr: false }
+);
+const ResumeList = dynamic(
+  () => import('@/components/my-page/resume/resume-list'),
+  { ssr: false }
+);
+const ResumeSubmitted = dynamic(
+  () => import('@/components/my-page/resume/resume-submitted'),
+  { ssr: false }
+);
+const HiringPosts = dynamic(
+  () => import('@/components/my-page/hiring/hiring-posts'),
+  { ssr: false }
+);
+const BookmarksHiring = dynamic(
+  () => import('@/components/my-page/bookmarks-hiring'),
+  { ssr: false }
+);
 
 function MyPage() {
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
