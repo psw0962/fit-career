@@ -45,58 +45,60 @@ export default function RegionsFilter({
   };
 
   const toggleCounty = (county: string) => {
-    if (!tempFilter.selectedCity) return;
+    setTempFilter((prev) => {
+      if (!prev.selectedCity) return prev;
 
-    const cityName = tempFilter.selectedCity.city;
-    const countyLabel = `${cityName} ${county}`;
-    const isCountySelected = tempFilter.selectedCounties.includes(countyLabel);
+      const cityName = prev.selectedCity.city;
+      const countyLabel = `${cityName} ${county}`;
 
-    let updatedCounties;
-
-    if (county === `${cityName} 전체`) {
-      if (tempFilter.allSelectedCities.includes(cityName)) {
-        updatedCounties = tempFilter.selectedCounties.filter(
-          (item) => !item.startsWith(`${cityName}`)
-        );
-        setTempFilter((prev) => ({
-          ...prev,
-          selectedCounties: updatedCounties,
-          allSelectedCities: prev.allSelectedCities.filter(
-            (city) => city !== cityName
-          ),
-        }));
+      if (county === `${cityName} 전체`) {
+        if (prev.allSelectedCities.includes(cityName)) {
+          // 전체 해제: 해당 도시의 모든 county 제거
+          return {
+            ...prev,
+            selectedCounties: prev.selectedCounties.filter(
+              (item) => !item.startsWith(`${cityName}`)
+            ),
+            allSelectedCities: prev.allSelectedCities.filter(
+              (city) => city !== cityName
+            ),
+          };
+        } else {
+          // 전체 선택: 해당 도시의 모든 county 추가
+          const newCounties = [
+            ...prev.selectedCounties.filter(
+              (item) => !item.startsWith(`${cityName}`)
+            ),
+            ...prev.selectedCity.county
+              .filter((c) => c !== `${cityName} 전체`)
+              .map((c) => `${cityName} ${c}`),
+          ];
+          return {
+            ...prev,
+            selectedCounties: newCounties,
+            allSelectedCities: [...prev.allSelectedCities, cityName],
+          };
+        }
       } else {
-        updatedCounties = [
-          ...tempFilter.selectedCounties.filter(
-            (item) => !item.startsWith(`${cityName}`)
-          ),
-          ...tempFilter.selectedCity.county
-            .filter((c) => c !== `${cityName} 전체`)
-            .map((c) => `${cityName} ${c}`),
-        ];
-        setTempFilter((prev) => ({
+        // 개별 county 토글
+        const isCountySelected = prev.selectedCounties.includes(countyLabel);
+        const updatedCounties = isCountySelected
+          ? prev.selectedCounties.filter((item) => item !== countyLabel)
+          : [...prev.selectedCounties, countyLabel];
+
+        const allCountiesSelected = prev.selectedCity.county
+          .filter((c) => c !== `${cityName} 전체`)
+          .every((c) => updatedCounties.includes(`${cityName} ${c}`));
+
+        return {
           ...prev,
           selectedCounties: updatedCounties,
-          allSelectedCities: [...prev.allSelectedCities, cityName],
-        }));
+          allSelectedCities: allCountiesSelected
+            ? [...prev.allSelectedCities, cityName]
+            : prev.allSelectedCities.filter((city) => city !== cityName),
+        };
       }
-    } else {
-      updatedCounties = isCountySelected
-        ? tempFilter.selectedCounties.filter((item) => item !== countyLabel)
-        : [...tempFilter.selectedCounties, countyLabel];
-
-      const allCountiesSelected = tempFilter.selectedCity.county
-        .filter((c) => c !== `${cityName} 전체`)
-        .every((c) => updatedCounties.includes(`${cityName} ${c}`));
-
-      setTempFilter((prev) => ({
-        ...prev,
-        selectedCounties: updatedCounties,
-        allSelectedCities: allCountiesSelected
-          ? [...prev.allSelectedCities, cityName]
-          : prev.allSelectedCities.filter((city) => city !== cityName),
-      }));
-    }
+    });
   };
 
   useEffect(() => {
@@ -160,7 +162,7 @@ export default function RegionsFilter({
 
           {/* City selection */}
           <div className="flex gap-1">
-            <div className="border p-4 w-full max-h-72 overflow-auto rounded">
+            <div className="border p-4 w-full max-h-72 overflow-y-auto rounded">
               <ul>
                 {REGIONS.map((region) => (
                   <li key={region.id} className="flex items-center">
@@ -181,9 +183,11 @@ export default function RegionsFilter({
 
             {/* County selection */}
             {tempFilter.selectedCity ? (
-              <div className="border p-4 w-full max-h-72 overflow-auto rounded">
+              <div className="border p-4 w-full max-h-72 overflow-y-auto rounded">
                 <ul>
                   {tempFilter.selectedCity.county.map((county) => {
+                    const uniqueId = `${tempFilter.selectedCity!.id}-${county.replace(/\s/g, '-')}`;
+
                     const countyLabel =
                       county ===
                       `${tempFilter.selectedCity && tempFilter.selectedCity.city} 전체`
@@ -209,8 +213,8 @@ export default function RegionsFilter({
                     return (
                       <li key={county} className="flex items-center">
                         <input
-                          id={`county ${countyLabel}`}
-                          name={`county ${countyLabel}`}
+                          id={uniqueId}
+                          name={uniqueId}
                           type="checkbox"
                           checked={
                             county === `${tempFilter.selectedCity?.city} 전체`
@@ -219,14 +223,11 @@ export default function RegionsFilter({
                                   countyLabel
                                 )
                           }
-                          onChange={() =>
-                            tempFilter.selectedCity && toggleCounty(county)
-                          }
+                          onChange={() => {
+                            tempFilter && toggleCounty(county);
+                          }}
                         />
-                        <label
-                          htmlFor={`county ${countyLabel}`}
-                          className="ml-2"
-                        >
+                        <label htmlFor={uniqueId} className="ml-2">
                           {county}
                         </label>
                       </li>
@@ -241,11 +242,11 @@ export default function RegionsFilter({
             )}
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
             {tempFilter.allSelectedCities.map((city) => (
               <div
                 key={`${city} 전체`}
-                className="w-fit px-2 py-2 bg-[#4C71C0] rounded text-white"
+                className="flex items-center w-fit px-2 py-1 bg-[#4C71C0] rounded text-white text-sm font-bold"
               >
                 {`${city} 전체`}
               </div>
@@ -257,7 +258,10 @@ export default function RegionsFilter({
                 return !tempFilter.allSelectedCities.includes(cityName);
               })
               .map((county) => (
-                <div key={county} className="w-fit px-2 py-2 border rounded">
+                <div
+                  key={county}
+                  className="flex items-center w-fit px-2 py-1 border rounded text-sm"
+                >
                   {county}
                 </div>
               ))}
