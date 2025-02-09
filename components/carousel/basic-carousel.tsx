@@ -45,7 +45,7 @@ export default function BasicCarousel(props: ThumbnailCarouselProps) {
                       className="rounded"
                       fill
                       priority
-                      quality={60}
+                      quality={75}
                       style={{ objectFit: 'cover' }}
                       sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                       placeholder="blur"

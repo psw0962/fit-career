@@ -6,8 +6,8 @@ const nextConfig = {
   compress: true,
   images: {
     formats: ['image/webp'],
-    deviceSizes: [128, 160, 256],
-    imageSizes: [64, 96],
+    deviceSizes: [128, 160, 256, 384, 512, 640, 768, 1024, 1200, 1920],
+    imageSizes: [64, 96, 128, 160, 256, 384, 512, 640, 768, 1024, 1200, 1920],
     remotePatterns: [
       {
         protocol: 'http',
