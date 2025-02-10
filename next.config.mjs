@@ -5,7 +5,7 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   images: {
-    formats: ['image/webp'],
+    formats: ['image/avif', 'image/webp'],
     deviceSizes: [128, 160, 256, 384, 512, 640, 768, 1024, 1200, 1920],
     imageSizes: [64, 96, 128, 160, 256, 384, 512, 640, 768, 1024, 1200, 1920],
     remotePatterns: [

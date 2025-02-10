@@ -1,39 +1,39 @@
 // regions
-export type City = {
+export interface City {
   id: number;
   city: string;
   county: string[];
-};
+}
 
-export type RegionFilter = {
+export interface RegionFilter {
   selectedCity: City | null;
   selectedCounties: string[];
   allSelectedCities: string[];
-};
+}
 
-export type RegionsFilterProps = {
+export interface RegionsFilterProps {
   regionFilter: RegionFilter;
   setRegionFilter: (
     value: RegionFilter | ((prev: RegionFilter) => RegionFilter)
   ) => void;
-};
+}
 
-export type PositionFilterProps = {
+export interface PositionFilterProps {
   positionFilter: string[];
   setPositionFilter: (value: string[] | ((prev: string[]) => string[])) => void;
-};
+}
 
-export type PeriodFilterProps = {
+export interface PeriodFilterProps {
   periodValueFilter: number[];
   setPeriodValueFilter: (
     value: number[] | ((prev: number[]) => number[])
   ) => void;
-};
+}
 
-export type HiringFilterProps = {
+export interface HiringFilterProps {
   regionFilter: RegionFilter;
   positionFilter: string[];
   periodValueFilter: number[];
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-};
+}

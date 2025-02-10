@@ -190,7 +190,7 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
                         alt={`${x.enterprise_profile?.name} 로고`}
                         className="rounded"
                         fill
-                        loading="lazy"
+                        priority={true}
                         sizes="20px"
                         style={{ objectFit: 'contain' }}
                         quality={75}

@@ -3,10 +3,10 @@ import { EmblaOptionsType } from 'embla-carousel';
 import useEmblaCarousel from 'embla-carousel-react';
 import Image from 'next/image';
 
-type ThumbnailCarouselProps = {
+interface ThumbnailCarouselProps {
   slides: string[] | undefined;
   options?: EmblaOptionsType;
-};
+}
 
 export default function ThumbnailCarousel(props: ThumbnailCarouselProps) {
   const { slides, options } = props;

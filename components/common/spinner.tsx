@@ -1,10 +1,10 @@
 import React from 'react';
 
-type DotSpinnerProps = {
+interface DotSpinnerProps {
   width?: string;
   height?: string;
   dotColor?: string;
-};
+}
 
 export default function Spinner({
   width = '1.5rem',

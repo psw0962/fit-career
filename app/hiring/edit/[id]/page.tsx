@@ -1,9 +1,9 @@
 import { createServerSupabaseClient } from '@/utils/supabase/server';
 import { notFound } from 'next/navigation';
 import NoAuthority from '@/components/common/no-authority';
-import HiringEditView from './hiring-edit-view';
+import HiringEditDynamicImport from './hiring-edit-view-dynamic-import';
 
-export default async function HiringDetailPage({
+export default async function HiringEditPage({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -26,12 +26,11 @@ export default async function HiringDetailPage({
       notFound();
     }
 
-    // 필요한 경우 권한 체크 추가
     if (!user || hiring.user_id !== user.id) {
       return <NoAuthority />;
     }
 
-    return <HiringEditView hiringId={id} />;
+    return <HiringEditDynamicImport hiringId={id} />;
   } catch (error) {
     notFound();
   }
