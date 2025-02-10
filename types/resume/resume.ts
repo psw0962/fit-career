@@ -1,4 +1,4 @@
-export type ResumeData = {
+export interface ResumeData {
   id?: string;
   title: string;
   resumeImage: File[];
@@ -42,9 +42,9 @@ export type ResumeData = {
   upload_resume?: string;
   is_fitcareer_resume?: boolean;
   updated_at?: string;
-};
+}
 
-export type ResumeDataResponse = {
+export interface ResumeDataResponse {
   id: string;
   user_id: string;
   title: string;
@@ -62,24 +62,24 @@ export type ResumeDataResponse = {
   upload_resume?: string | null;
   is_fitcareer_resume?: boolean;
   updated_at: string;
-};
+}
 
-export type LinkData = {
+export interface LinkData {
   id: string;
   title: string;
   url: string;
-};
+}
 
-export type Education = {
+export interface Education {
   id: string;
   startDate: string;
   endDate: string;
   isCurrentlyEnrolled: string;
   schoolName: string;
   majorAndDegree: string;
-};
+}
 
-export type Experience = {
+export interface Experience {
   id: string;
   startDate: string;
   endDate: string;
@@ -87,16 +87,16 @@ export type Experience = {
   companyName: string;
   jobTitle: string;
   description: string;
-};
+}
 
-export type Certificate = {
+export interface Certificate {
   id: string;
   date: string;
   certificateName: string;
-};
+}
 
-export type Award = {
+export interface Award {
   id: string;
   date: string;
   awardName: string;
-};
+}

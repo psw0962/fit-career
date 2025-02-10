@@ -1,8 +1,11 @@
 import { Provider } from '@supabase/supabase-js';
 
-export type SignInResponse = { provider: Provider; url: string };
+export interface SignInResponse {
+  provider: Provider;
+  url: string;
+}
 
-export type EnterpriseProfile = {
+export interface EnterpriseProfile {
   name: string;
   industry: {
     job: string;
@@ -18,4 +21,4 @@ export type EnterpriseProfile = {
   description: string;
   settingLogo?: File[];
   currentLogo?: string;
-};
+}

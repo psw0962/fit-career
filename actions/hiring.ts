@@ -112,7 +112,7 @@ ${minutes}분 후에 다시 시도해 주세요.`,
 // =========================================
 // ============== get hiring
 // =========================================
-type FilterParams = {
+interface FilterParams {
   id?: string;
   user_id?: string;
   page?: number;
@@ -124,7 +124,7 @@ type FilterParams = {
     positions?: string[];
     periodRange?: [number, number];
   };
-};
+}
 
 const getHiring = async (params: FilterParams) => {
   const supabase = createBrowserSupabaseClient();
@@ -588,10 +588,6 @@ export const usePatchHiring = (
 // =========================================
 // ============== toggle bookmark
 // =========================================
-type BookmarkContext = {
-  previousBookmark: unknown;
-};
-
 const toggleBookmark = async (hiringId: string): Promise<void> => {
   const supabase = createBrowserSupabaseClient();
 
@@ -637,7 +633,7 @@ export const useToggleBookmark = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const router = useRouter();
-  return useMutation<void, Error, string, BookmarkContext>({
+  return useMutation<void, Error, string, { previousBookmark: unknown }>({
     mutationFn: toggleBookmark,
     onMutate: async (hiringId) => {
       await queryClient.cancelQueries({

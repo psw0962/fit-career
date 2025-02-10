@@ -1,4 +1,4 @@
-export type HiringData = {
+export interface HiringData {
   id?: string;
   address: {
     zoneCode: string;
@@ -14,41 +14,9 @@ export type HiringData = {
   content: string;
   deadLine: string;
   images: (File | string)[];
-};
+}
 
-export type HiringDataResponse = {
-  id: string;
-  updated_at: string;
-  created_at: string;
-  address: string;
-  address_search_key: string;
-  position: string;
-  title: string;
-  content: string;
-  dead_line: string;
-  images: string[];
-  user_id: string;
-  short_address: string;
-  period: number[];
-  position_etc: boolean;
-  is_visible: boolean;
-  resume_received: ResumeReceived[];
-  filtered_resume_received?: ResumeReceived[];
-  enterprise_profile?: {
-    id: string;
-    user_id: string;
-    name: string;
-    address: string;
-    address_search_key: string;
-    description: string;
-    logo: string[];
-    establishment: string;
-    industry: string;
-    industry_etc: boolean;
-  };
-};
-
-export type ResumeReceived = {
+export interface ResumeReceived {
   id: string;
   name: string;
   email: string;
@@ -95,4 +63,36 @@ export type ResumeReceived = {
   upload_resume: string | 'NULL';
   is_fitcareer_resume: boolean;
   is_read: boolean;
-};
+}
+
+export interface HiringDataResponse {
+  id: string;
+  updated_at: string;
+  created_at: string;
+  address: string;
+  address_search_key: string;
+  position: string;
+  title: string;
+  content: string;
+  dead_line: string;
+  images: string[];
+  user_id: string;
+  short_address: string;
+  period: number[];
+  position_etc: boolean;
+  is_visible: boolean;
+  resume_received: ResumeReceived[];
+  filtered_resume_received?: ResumeReceived[];
+  enterprise_profile?: {
+    id: string;
+    user_id: string;
+    name: string;
+    address: string;
+    address_search_key: string;
+    description: string;
+    logo: string[];
+    establishment: string;
+    industry: string;
+    industry_etc: boolean;
+  };
+}
