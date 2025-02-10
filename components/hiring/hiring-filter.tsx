@@ -91,7 +91,6 @@ export default function HiringFilter({
                       className="rounded"
                       fill
                       priority={currentPage === 1}
-                      loading={currentPage === 1 ? 'eager' : 'lazy'}
                       sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
                       placeholder="blur"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
@@ -140,7 +139,7 @@ export default function HiringFilter({
                           alt={`${x.enterprise_profile?.name} 로고`}
                           className="rounded"
                           fill
-                          loading="lazy"
+                          priority={true}
                           sizes="20px"
                           style={{ objectFit: 'contain' }}
                           quality={75}

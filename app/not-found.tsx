@@ -14,11 +14,10 @@ export default function NotFound() {
           alt="enterprise logo"
           fill
           style={{ objectFit: 'contain' }}
-          priority={false}
+          priority={true}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
           quality={75}
-          loading="lazy"
         />
       </div>
 
