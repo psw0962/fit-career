@@ -87,10 +87,9 @@ export default function HiringPosts() {
                         style={{ objectFit: 'cover' }}
                         className="rounded"
                         fill
-                        priority
+                        priority={true}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                        quality={75}
                       />
                     </div>
 
@@ -109,10 +108,8 @@ export default function HiringPosts() {
                             className="rounded"
                             style={{ objectFit: 'contain' }}
                             fill
-                            priority
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                            quality={75}
                           />
                         </div>
 

@@ -94,8 +94,6 @@ export default function HiringMain() {
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               fill
               style={{ objectFit: 'cover' }}
-              priority
-              quality={75}
             />
           </div>
           <p className="text-sm">전체 초기화</p>

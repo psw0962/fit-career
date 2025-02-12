@@ -1,5 +1,3 @@
-'use client';
-
 export default function Terms() {
   return (
     <div className="flex flex-col gap-4">

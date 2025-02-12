@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import '../public/styles/global.css';
 import Nav from '@/components/common/nav';
 import Footer from '@/components/common/footer';
-import ReactQueryClientProvider from '@/config/ReactQueryClientProvider';
+import ReactQueryClientProvider from '@/config/react-query-client-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Analytics } from '@vercel/analytics/react';
 import { pretendard } from './fonts';
@@ -124,7 +124,7 @@ export default function RootLayout({
 
             <Suspense fallback={<GlobalSpinner />}>
               <main
-                className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16 min-h-[calc(100vh-4rem)]"
+                className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16 min-h-[calc(100vh-10rem)]"
                 style={{
                   containIntrinsicSize: '0 500px',
                   contentVisibility: 'auto',

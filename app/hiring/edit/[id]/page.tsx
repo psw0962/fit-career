@@ -16,15 +16,11 @@ export default async function HiringEditPage({
       data: { user },
     } = await supabase.auth.getUser();
 
-    const { data: hiring, error } = await supabase
+    const { data: hiring } = await supabase
       .from('hiring')
       .select('*')
       .eq('id', id)
       .single();
-
-    if (error || !hiring) {
-      notFound();
-    }
 
     if (!user || hiring.user_id !== user.id) {
       return <NoAuthority />;

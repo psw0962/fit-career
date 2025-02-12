@@ -5,9 +5,10 @@ const nextConfig = {
   poweredByHeader: false,
   compress: true,
   images: {
+    minimumCacheTTL: 60,
     formats: ['image/avif', 'image/webp'],
-    deviceSizes: [128, 160, 256, 384, 512, 640, 768, 1024, 1200, 1920],
-    imageSizes: [64, 96, 128, 160, 256, 384, 512, 640, 768, 1024, 1200, 1920],
+    deviceSizes: [640, 768, 1024, 1280, 1536, 1920, 2048],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
     remotePatterns: [
       {
         protocol: 'http',

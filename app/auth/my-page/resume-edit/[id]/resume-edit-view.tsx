@@ -7,7 +7,6 @@ import { validateInput } from '@/functions/validateInput';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useGetResume, usePatchResume } from '@/actions/resume';
 import { v4 as uuidv4 } from 'uuid';
-import { withAuth } from '@/hoc/withAuth';
 import { useToast } from '@/hooks/use-toast';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
@@ -19,7 +18,7 @@ import {
   LinkData,
 } from '@/types/resume/resume';
 
-function ResumeEditView({ resumeId }: { resumeId: string }) {
+export default function ResumeEditView({ resumeId }: { resumeId: string }) {
   const titleRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const phoneRef = useRef<HTMLInputElement>(null);
@@ -375,11 +374,9 @@ function ResumeEditView({ resumeId }: { resumeId: string }) {
                 alt="resume image"
                 fill
                 style={{ objectFit: 'cover' }}
-                priority
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                 className="rounded"
-                quality={75}
               />
 
               <button
@@ -408,11 +405,9 @@ function ResumeEditView({ resumeId }: { resumeId: string }) {
                   alt="resume image"
                   fill
                   style={{ objectFit: 'cover' }}
-                  priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                   className="rounded"
-                  quality={75}
                 />
 
                 <button
@@ -1188,5 +1183,3 @@ function ResumeEditView({ resumeId }: { resumeId: string }) {
     </div>
   );
 }
-
-export default withAuth(ResumeEditView);

@@ -1,10 +1,4 @@
-'use client';
-
-import dynamic from 'next/dynamic';
-
-const HiringForm = dynamic(() => import('@/app/hiring/write/hiring-form'), {
-  ssr: false,
-});
+import HiringForm from './hiring-form';
 
 export default function HiringWrite() {
   return <HiringForm />;

@@ -18,7 +18,6 @@ import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useSessionStorage } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
 import SortableImageDnd from '@/components/common/sortable-image-dnd';
-import { withAuth } from '@/hoc/withAuth';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import imageCompression from 'browser-image-compression';
@@ -41,7 +40,7 @@ interface UploadedImage {
   file: File | string;
 }
 
-function HiringEditView({ hiringId }: { hiringId: string }) {
+export default function HiringEditView({ hiringId }: { hiringId: string }) {
   const router = useRouter();
   const pathname = usePathname();
   const open = useDaumPostcodePopup();
@@ -415,10 +414,8 @@ function HiringEditView({ hiringId }: { hiringId: string }) {
                       style={{ objectFit: 'contain' }}
                       className="rounded"
                       fill
-                      priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                      quality={75}
                     />
                   </div>
 
@@ -654,7 +651,6 @@ function HiringEditView({ hiringId }: { hiringId: string }) {
               alt="upload"
               width={32}
               height={32}
-              priority
               className="invert brightness-0"
             />
             <p className="text-sm text-white">이미지 업로드</p>
@@ -704,5 +700,3 @@ function HiringEditView({ hiringId }: { hiringId: string }) {
     </div>
   );
 }
-
-export default withAuth(HiringEditView);
