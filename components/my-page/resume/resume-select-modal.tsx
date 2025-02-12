@@ -162,8 +162,6 @@ export default function ResumeSelectIdModal({
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             fill
                             style={{ objectFit: 'contain' }}
-                            priority={true}
-                            quality={75}
                           />
                         </div>
 
@@ -188,8 +186,6 @@ export default function ResumeSelectIdModal({
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             fill
                             style={{ objectFit: 'contain' }}
-                            priority={true}
-                            quality={75}
                           />
                         </div>
 

@@ -85,8 +85,6 @@ export default function PositionFilter({
                 alt="reset"
                 fill
                 style={{ objectFit: 'cover' }}
-                priority
-                quality={75}
               />
             </div>
             <p>초기화</p>

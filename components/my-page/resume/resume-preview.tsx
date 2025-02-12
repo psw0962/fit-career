@@ -32,8 +32,6 @@ export default function ResumePreview({ data }: { data: ResumeDataResponse }) {
               fill
               className="rounded"
               style={{ objectFit: 'cover' }}
-              priority
-              quality={75}
             />
           </div>
         </div>

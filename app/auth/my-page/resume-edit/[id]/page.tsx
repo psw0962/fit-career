@@ -1,12 +1,7 @@
-import dynamic from 'next/dynamic';
 import { notFound } from 'next/navigation';
 import { createServerSupabaseClient } from '@/utils/supabase/server';
 import NoAuthority from '@/components/common/no-authority';
-import GlobalSpinner from '@/components/common/global-spinner';
-
-const ResumeEditView = dynamic(() => import('./resume-edit-view'), {
-  loading: () => <GlobalSpinner />,
-});
+import ResumeEditView from './resume-edit-view';
 
 export default async function ResumeEditPage({
   params,

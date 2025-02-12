@@ -37,7 +37,10 @@ import {
 
 const SortableImageDnd = dynamic(
   () => import('@/components/common/sortable-image-dnd'),
-  { ssr: false }
+  {
+    loading: () => <GlobalSpinner />,
+    ssr: false,
+  }
 );
 
 interface UploadedImage {
@@ -383,10 +386,8 @@ export default function HiringForm() {
                       className="rounded"
                       style={{ objectFit: 'contain' }}
                       fill
-                      priority
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                      quality={75}
                     />
                   </div>
 
@@ -627,7 +628,6 @@ export default function HiringForm() {
               alt="upload"
               width={32}
               height={32}
-              priority
               className="invert brightness-0"
             />
             <p className="text-sm text-white">이미지 업로드</p>

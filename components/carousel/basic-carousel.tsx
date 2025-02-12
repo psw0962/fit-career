@@ -42,12 +42,12 @@ export default function BasicCarousel(props: ThumbnailCarouselProps) {
                     <Image
                       src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
                       alt={`${index}번째 이미지`}
+                      style={{ objectFit: 'cover' }}
                       className="rounded"
                       fill
-                      priority
-                      quality={75}
-                      style={{ objectFit: 'cover' }}
-                      sizes="(max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
+                      priority={selectedIndex === index}
+                      loading={selectedIndex === index ? 'eager' : 'lazy'}
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       placeholder="blur"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                     />
