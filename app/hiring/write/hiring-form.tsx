@@ -1,12 +1,12 @@
 'use client';
 
 import dynamic from 'next/dynamic';
+import type { ComponentType } from 'react';
 import { usePostHiring } from '@/actions/hiring';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import DatePicker from 'react-datepicker';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
@@ -21,6 +21,7 @@ import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import imageCompression from 'browser-image-compression';
 import 'react-datepicker/dist/react-datepicker.css';
+import type { DatePickerProps } from 'react-datepicker';
 import {
   DndContext,
   DragEndEvent,
@@ -34,6 +35,17 @@ import {
   arrayMove,
   horizontalListSortingStrategy,
 } from '@dnd-kit/sortable';
+
+const DatePicker = dynamic<DatePickerProps>(
+  () =>
+    import('react-datepicker').then((mod) => mod.default) as Promise<
+      ComponentType<DatePickerProps>
+    >,
+  {
+    loading: () => <GlobalSpinner />,
+    ssr: false,
+  }
+);
 
 const SortableImageDnd = dynamic(
   () => import('@/components/common/sortable-image-dnd'),

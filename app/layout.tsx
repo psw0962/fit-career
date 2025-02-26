@@ -6,8 +6,6 @@ import ReactQueryClientProvider from '@/config/react-query-client-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Analytics } from '@vercel/analytics/react';
 import { pretendard } from './fonts';
-import { Suspense } from 'react';
-import GlobalSpinner from '@/components/common/global-spinner';
 import Script from 'next/script';
 import AdsenseAd from '@/components/common/adsense-ad';
 import AdsenseInit from '@/components/common/adsense-init';
@@ -122,27 +120,23 @@ export default function RootLayout({
           <div className="flex flex-col min-w-[350px] min-h-screen">
             <Nav />
 
-            <Suspense fallback={<GlobalSpinner />}>
-              <main
-                className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16 min-h-[calc(100vh-10rem)]"
-                style={{
-                  containIntrinsicSize: '0 500px',
-                  contentVisibility: 'auto',
-                }}
-              >
-                {children}
-              </main>
-            </Suspense>
+            <main
+              className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16 min-h-[calc(100vh-10rem)]"
+              style={{
+                containIntrinsicSize: '0 500px',
+                contentVisibility: 'auto',
+              }}
+            >
+              {children}
+            </main>
 
             <Footer />
           </div>
 
-          <Suspense>
-            <AdsenseInit />
-            <AdsenseAd />
-            <Analytics />
-            <Toaster />
-          </Suspense>
+          <AdsenseInit />
+          <AdsenseAd />
+          <Analytics />
+          <Toaster />
         </body>
       </html>
     </ReactQueryClientProvider>
