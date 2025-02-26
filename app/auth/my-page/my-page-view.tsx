@@ -6,7 +6,6 @@ import { useEffect, useRef } from 'react';
 import { useSessionStorage } from 'usehooks-ts';
 import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
 import GlobalSpinner from '@/components/common/global-spinner';
-import { useRouter } from 'next/navigation';
 
 const Profile = dynamic(() => import('@/components/my-page/profile'), {
   loading: () => <GlobalSpinner />,
@@ -34,7 +33,6 @@ const BookmarksHiring = dynamic(
 );
 
 export default function MyPageView() {
-  const router = useRouter();
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   const [activeTab, setActiveTab] = useSessionStorage('activeTab', 'profile');
