@@ -2,14 +2,14 @@
 
 import dynamic from 'next/dynamic';
 import type { ComponentType } from 'react';
-import { usePostHiring } from '@/actions/hiring';
+import { usePostHiring } from '@/api/hiring';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import GlobalSpinner from '@/components/common/global-spinner';
-import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
+import { useGetEnterpriseProfile, useGetUserData } from '@/api/auth';
 import { POSITIONS } from '@/constant/position';
 import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
@@ -30,11 +30,7 @@ import {
   TouchSensor,
   MouseSensor,
 } from '@dnd-kit/core';
-import {
-  SortableContext,
-  arrayMove,
-  horizontalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 
 const DatePicker = dynamic<DatePickerProps>(
   () =>
@@ -44,16 +40,13 @@ const DatePicker = dynamic<DatePickerProps>(
   {
     loading: () => <GlobalSpinner />,
     ssr: false,
-  }
+  },
 );
 
-const SortableImageDnd = dynamic(
-  () => import('@/components/common/sortable-image-dnd'),
-  {
-    loading: () => <GlobalSpinner />,
-    ssr: false,
-  }
-);
+const SortableImageDnd = dynamic(() => import('@/components/common/sortable-image-dnd'), {
+  loading: () => <GlobalSpinner />,
+  ssr: false,
+});
 
 interface UploadedImage {
   id: string;
@@ -94,9 +87,7 @@ export default function HiringForm() {
     <p>혜택 및 복지 : 4대 보험, 하계 휴가, 교육 비용 지원 등</p>
     <p>채용 절차 : 서류 전형 &gt; 대면 면접 &gt; 처우 협의 &gt; 최종 합격</p>
   `);
-  const [deadLine, setDeadLine] = useState<string>(
-    format(new Date(), 'yyyy-MM-dd')
-  );
+  const [deadLine, setDeadLine] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const [images, setImages] = useState<UploadedImage[]>([]);
 
   const editor = useEditor({
@@ -115,8 +106,9 @@ export default function HiringForm() {
 
   const { mutate: postHring, status: postHringStatus } = usePostHiring();
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
-  const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
-    useGetEnterpriseProfile(userData?.id ?? '');
+  const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } = useGetEnterpriseProfile(
+    userData?.id ?? '',
+  );
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -145,9 +137,7 @@ export default function HiringForm() {
     setPeriodValue(value);
   };
 
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
       const fileArray = Array.from(files);
@@ -162,9 +152,7 @@ export default function HiringForm() {
           };
 
           const compressedBlob = await imageCompression(file, options);
-          const uniqueSuffix = `${Date.now()}-${Math.round(
-            Math.random() * 1e9
-          )}`;
+          const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
           const uniqueId = `${uniqueSuffix}-${file.name}`;
           const compressedFile = new File([compressedBlob], file.name, {
             type: file.type,
@@ -310,11 +298,7 @@ export default function HiringForm() {
 
   useEffect(() => {
     if (!userDataLoading && !userData) {
-      router.push(
-        `/auth?message=login_required&redirect=${encodeURIComponent(
-          pathname || '/'
-        )}`
-      );
+      router.push(`/auth?message=login_required&redirect=${encodeURIComponent(pathname || '/')}`);
       return;
     }
 
@@ -335,11 +319,7 @@ export default function HiringForm() {
     }
   }, [userData, enterpriseProfile, userDataLoading, enterpriseProfileLoading]);
 
-  if (
-    postHringStatus === 'pending' ||
-    enterpriseProfileLoading ||
-    userDataLoading
-  ) {
+  if (postHringStatus === 'pending' || enterpriseProfileLoading || userDataLoading) {
     return <GlobalSpinner />;
   }
 
@@ -351,24 +331,22 @@ export default function HiringForm() {
 
       <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
         <p className="font-bold text-sm">
-          • 무분별한 도배 게시글 방지를 위해 채용공고 등록은 24시간마다 한 번만
-          할 수 있어요.
+          • 무분별한 도배 게시글 방지를 위해 채용공고 등록은 24시간마다 한 번만 할 수 있어요.
         </p>
         <p className="text-sm">
-          • 지원자가 한눈에 직무와 관련된 정보를 파악할 수 있도록 명확하고
-          간결한 제목을 작성하면 좋아요.
+          • 지원자가 한눈에 직무와 관련된 정보를 파악할 수 있도록 명확하고 간결한 제목을 작성하면
+          좋아요.
         </p>
         <p className="text-sm">
-          • 회사의 비전, 미션, 문화 등을 간단히 소개하여 지원자가 회사에 대한
-          이해를 높일 수 있도록 하면 좋아요.
+          • 회사의 비전, 미션, 문화 등을 간단히 소개하여 지원자가 회사에 대한 이해를 높일 수 있도록
+          하면 좋아요.
         </p>
         <p className="text-sm">
-          • 필수 자격 요건과 우대 사항을 명확히 구분하여 작성하고, 근무 지역과
-          회사가 제공하는 혜택과 복지를 명시하여 지원률을 높일 수 있어요.
+          • 필수 자격 요건과 우대 사항을 명확히 구분하여 작성하고, 근무 지역과 회사가 제공하는
+          혜택과 복지를 명시하여 지원률을 높일 수 있어요.
         </p>
         <p className="text-sm">
-          • 지원 절차와 채용 프로세스를 명확히 안내하여 지원자가 쉽게 지원할 수
-          있도록 하면 좋아요.
+          • 지원 절차와 채용 프로세스를 명확히 안내하여 지원자가 쉽게 지원할 수 있도록 하면 좋아요.
         </p>
       </div>
 
@@ -410,12 +388,7 @@ export default function HiringForm() {
               <p className="mt-2 text-sm">
                 {enterpriseProfile[0]?.industry} /{' '}
                 {calculateYearsInBusiness(enterpriseProfile[0]?.establishment)}
-                년차 (
-                {parseInt(
-                  enterpriseProfile[0]?.establishment.split('-')[0],
-                  10
-                )}
-                )
+                년차 ({parseInt(enterpriseProfile[0]?.establishment.split('-')[0], 10)})
               </p>
 
               <div className="mt-2 text-[#707173] text-sm">
@@ -463,9 +436,7 @@ export default function HiringForm() {
             <input
               type="text"
               id="address"
-              onChange={(e) =>
-                setAddress({ ...address, detailAddress: e.target.value })
-              }
+              onChange={(e) => setAddress({ ...address, detailAddress: e.target.value })}
               value={address.detailAddress}
               placeholder="상세 주소 입력"
               className="border p-2"
@@ -615,22 +586,14 @@ export default function HiringForm() {
         <p className="text-2xl font-bold mb-2">회사 이미지</p>
 
         <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
-          <p className="font-bold text-sm">
-            • 이미지는 최대 5개까지 업로드 가능해요
-          </p>
+          <p className="font-bold text-sm">• 이미지는 최대 5개까지 업로드 가능해요</p>
           <p className="text-sm">
-            • <span className="font-bold">가로 방향</span>의 사진이 회사의
-            전체적인 모습을 더 잘 보여줄 수 있습니다.
+            • <span className="font-bold">가로 방향</span>의 사진이 회사의 전체적인 모습을 더 잘
+            보여줄 수 있습니다.
           </p>
-          <p className="text-sm">
-            • 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.
-          </p>
-          <p className="text-sm">
-            • 첫 번째 이미지가 채용공고 대표 이미지로 사용돼요.
-          </p>
-          <p className="text-sm">
-            • 이미지를 드래그하면 업로드될 이미지 순서를 변경할 수 있어요.
-          </p>
+          <p className="text-sm">• 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.</p>
+          <p className="text-sm">• 첫 번째 이미지가 채용공고 대표 이미지로 사용돼요.</p>
+          <p className="text-sm">• 이미지를 드래그하면 업로드될 이미지 순서를 변경할 수 있어요.</p>
         </div>
 
         <label className="relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
@@ -671,9 +634,7 @@ export default function HiringForm() {
                   image={img.file}
                   onRemove={() => removeImage(img.id)}
                 />
-                {index === 0 && (
-                  <p className="text-xs sm:text-sm font-bold">대표 이미지</p>
-                )}
+                {index === 0 && <p className="text-xs sm:text-sm font-bold">대표 이미지</p>}
               </div>
             ))}
           </div>

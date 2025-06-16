@@ -17,7 +17,7 @@ import {
   useGetUserData,
   usePatchEnterpriseProfile,
   usePostEnterpriseProfile,
-} from '@/actions/auth';
+} from '@/api/auth';
 
 export default function EnterpriseProfileEditForm(): React.ReactElement {
   const open = useDaumPostcodePopup();
@@ -68,12 +68,9 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
   };
 
   const { data: userData } = useGetUserData();
-  const { data: enterpriseProfile } = useGetEnterpriseProfile(
-    userData?.id ?? ''
-  );
+  const { data: enterpriseProfile } = useGetEnterpriseProfile(userData?.id ?? '');
   const { mutate: postMutate, status: postStatus } = usePostEnterpriseProfile();
-  const { mutate: patchMutate, status: patchStatus } =
-    usePatchEnterpriseProfile();
+  const { mutate: patchMutate, status: patchStatus } = usePatchEnterpriseProfile();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -208,18 +205,13 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
       enterpriseProfile !== undefined &&
       enterpriseProfile !== null
     ) {
-      const [zoneCode, ...zoneAddress] =
-        enterpriseProfile[0].address.split(' ');
+      const [zoneCode, ...zoneAddress] = enterpriseProfile[0].address.split(' ');
 
       setCurrentLogo(enterpriseProfile[0].logo[0]);
       setName(enterpriseProfile[0].name);
       setIndustry({
-        job: enterpriseProfile[0].industry_etc
-          ? '기타'
-          : enterpriseProfile[0].industry,
-        etc: enterpriseProfile[0].industry_etc
-          ? enterpriseProfile[0].industry
-          : '',
+        job: enterpriseProfile[0].industry_etc ? '기타' : enterpriseProfile[0].industry,
+        etc: enterpriseProfile[0].industry_etc ? enterpriseProfile[0].industry : '',
       });
       setAddress({
         ...address,
@@ -303,35 +295,33 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
           )}
 
           {/* 이미 업로드된 로고를 가져오는 경우 */}
-          {enterpriseProfile &&
-            enterpriseProfile[0]?.logo[0]?.length > 0 &&
-            currentLogo !== '' && (
-              <div className="relative w-20 h-20 border-gray-300">
-                <Image
-                  src={currentLogo}
-                  alt="enterprise logo"
-                  className="rounded-full"
-                  style={{ objectFit: 'cover' }}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                />
+          {enterpriseProfile && enterpriseProfile[0]?.logo[0]?.length > 0 && currentLogo !== '' && (
+            <div className="relative w-20 h-20 border-gray-300">
+              <Image
+                src={currentLogo}
+                alt="enterprise logo"
+                className="rounded-full"
+                style={{ objectFit: 'cover' }}
+                fill
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+              />
 
-                <button
-                  onClick={() => setCurrentLogo('')}
-                  className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
-                >
-                  <Image
-                    src="/svg/close.svg"
-                    alt="close"
-                    width={12}
-                    height={12}
-                    className="invert brightness-0"
-                    draggable={false}
-                  />
-                </button>
-              </div>
-            )}
+              <button
+                onClick={() => setCurrentLogo('')}
+                className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
+              >
+                <Image
+                  src="/svg/close.svg"
+                  alt="close"
+                  width={12}
+                  height={12}
+                  className="invert brightness-0"
+                  draggable={false}
+                />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -424,9 +414,7 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
 
             <input
               type="text"
-              onChange={(e) =>
-                setAddress({ ...address, detailAddress: e.target.value })
-              }
+              onChange={(e) => setAddress({ ...address, detailAddress: e.target.value })}
               value={address.detailAddress}
               placeholder="상세 주소 입력"
               className="border p-2 rounded"

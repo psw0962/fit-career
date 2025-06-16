@@ -1,9 +1,6 @@
 'use client';
 
-import {
-  useDeleteBookmark,
-  useGetBookmarkedHiringsByUserId,
-} from '@/actions/hiring';
+import { useDeleteBookmark, useGetBookmarkedHiringsByUserId } from '@/api/hiring';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 import {
   useReactTable,
@@ -56,9 +53,7 @@ export default function BookmarksHiring() {
               >
                 <DialogHeader>
                   <DialogTitle>북마크 삭제</DialogTitle>
-                  <DialogDescription>
-                    북마크를 삭제하시겠습니까?
-                  </DialogDescription>
+                  <DialogDescription>북마크를 삭제하시겠습니까?</DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
                   <div className="flex gap-2 justify-center mt-4 sm:mt-0">
@@ -146,9 +141,7 @@ export default function BookmarksHiring() {
   return (
     <div className="mt-5">
       <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
-        <p>
-          • 기업에서 채용공고를 삭제하면 내가 북마크한 채용공고도 함께 삭제돼요.
-        </p>
+        <p>• 기업에서 채용공고를 삭제하면 내가 북마크한 채용공고도 함께 삭제돼요.</p>
       </div>
 
       <div className="w-full overflow-x-auto">
@@ -161,10 +154,7 @@ export default function BookmarksHiring() {
                     key={header.id}
                     className="px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b whitespace-nowrap"
                   >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                    {flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 ))}
               </tr>
@@ -189,10 +179,7 @@ export default function BookmarksHiring() {
                         key={cell.id}
                         className="px-6 py-4 text-sm text-center text-gray-600 whitespace-nowrap"
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     );
                   })}
@@ -220,9 +207,7 @@ export default function BookmarksHiring() {
 
         {Array.from({ length: table.getPageCount() }, (_, index) => index)
           .filter((pageIndex) => {
-            const currentGroup = Math.floor(
-              table.getState().pagination.pageIndex / 12
-            );
+            const currentGroup = Math.floor(table.getState().pagination.pageIndex / 12);
             const pageGroup = Math.floor(pageIndex / 12);
             return currentGroup === pageGroup;
           })

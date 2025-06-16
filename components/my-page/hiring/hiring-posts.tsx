@@ -1,16 +1,12 @@
 'use client';
 
-import {
-  useDeleteHiring,
-  useGetHiring,
-  useUpdateHiringVisibility,
-} from '@/actions/hiring';
+import { useDeleteHiring, useGetHiring, useUpdateHiringVisibility } from '@/api/hiring';
 import GlobalSpinner from '@/components/common/global-spinner';
 import Image from 'next/image';
 import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
 import Link from 'next/link';
 import { formatPeriod } from '@/functions/formatPeriod';
-import { useGetUserData } from '@/actions/auth';
+import { useGetUserData } from '@/api/auth';
 import { useEffect, useRef, useState } from 'react';
 import * as Switch from '@radix-ui/react-switch';
 import Spinner from '@/components/common/spinner';
@@ -46,8 +42,7 @@ export default function HiringPosts() {
     pageSize: 12,
   });
   const { mutate: updateHiringVisibility } = useUpdateHiringVisibility();
-  const { mutate: deleteHiring, status: deleteHiringStatus } =
-    useDeleteHiring();
+  const { mutate: deleteHiring, status: deleteHiringStatus } = useDeleteHiring();
 
   const handleEdit = async () => {
     setIsLoading(true);
@@ -68,7 +63,7 @@ export default function HiringPosts() {
         {hiringData !== undefined &&
           hiringData.data.map((x: HiringDataResponse) => {
             const unreadCount = x.resume_received.filter(
-              (resume: ResumeReceived) => !resume.is_read
+              (resume: ResumeReceived) => !resume.is_read,
             ).length;
 
             return (
@@ -80,9 +75,7 @@ export default function HiringPosts() {
                   <div className="flex flex-col gap-0">
                     <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
                       <Image
-                        src={
-                          x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
-                        }
+                        src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
                         alt={`image ${x.id}`}
                         style={{ objectFit: 'cover' }}
                         className="rounded"
@@ -94,16 +87,12 @@ export default function HiringPosts() {
                     </div>
 
                     <div className="w-full flex flex-col gap-0">
-                      <p className="text-base font-bold break-keep line-clamp-2">
-                        {x.title}
-                      </p>
+                      <p className="text-base font-bold break-keep line-clamp-2">{x.title}</p>
 
                       <div className="flex items-center gap-1 mt-2">
                         <div className="relative w-5 h-5 flex-shrink-0">
                           <Image
-                            src={
-                              x.enterprise_profile?.logo[0] ?? '/svg/logo.svg'
-                            }
+                            src={x.enterprise_profile?.logo[0] ?? '/svg/logo.svg'}
                             alt={`image ${x.id}`}
                             className="rounded"
                             style={{ objectFit: 'contain' }}
@@ -118,24 +107,17 @@ export default function HiringPosts() {
                         </p>
                       </div>
 
-                      <p className="text-xs text-gray-500 mt-2">
-                        {x.short_address}
-                      </p>
+                      <p className="text-xs text-gray-500 mt-2">{x.short_address}</p>
 
-                      <p className="text-xs text-gray-500">
-                        경력 {formatPeriod(x.period)}
-                      </p>
+                      <p className="text-xs text-gray-500">경력 {formatPeriod(x.period)}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs text-gray-500">
-                      등록일 {x.created_at}
-                    </p>
+                    <p className="text-xs text-gray-500">등록일 {x.created_at}</p>
 
                     <p className="text-xs text-gray-500">
-                      최근 수정일{' '}
-                      {x.updated_at === 'NULL' ? x.created_at : x.updated_at}
+                      최근 수정일 {x.updated_at === 'NULL' ? x.created_at : x.updated_at}
                     </p>
                   </div>
                 </Link>
@@ -149,12 +131,7 @@ export default function HiringPosts() {
                         e.stopPropagation();
                       }}
                     >
-                      <Image
-                        src="/svg/edit.svg"
-                        alt="edit"
-                        width={15}
-                        height={15}
-                      />
+                      <Image src="/svg/edit.svg" alt="edit" width={15} height={15} />
 
                       <span className="text-sm">수정하기</span>
                     </Link>
@@ -166,12 +143,7 @@ export default function HiringPosts() {
                         setDeleteHiringId(x.id);
                       }}
                     >
-                      <Image
-                        src="/svg/delete.svg"
-                        alt="delete"
-                        width={15}
-                        height={15}
-                      />
+                      <Image src="/svg/delete.svg" alt="delete" width={15} height={15} />
 
                       <button className="text-sm">삭제하기</button>
                     </div>
@@ -196,19 +168,9 @@ export default function HiringPosts() {
                 <div className="absolute top-3 right-3 cursor-pointer">
                   <div className="flex items-center gap-1">
                     {x.is_visible ? (
-                      <Image
-                        src="/svg/view.svg"
-                        alt="view"
-                        width={20}
-                        height={20}
-                      />
+                      <Image src="/svg/view.svg" alt="view" width={20} height={20} />
                     ) : (
-                      <Image
-                        src="/svg/view-off.svg"
-                        alt="view-off"
-                        width={20}
-                        height={20}
-                      />
+                      <Image src="/svg/view-off.svg" alt="view-off" width={20} height={20} />
                     )}
 
                     <Switch.Root
@@ -301,9 +263,7 @@ export default function HiringPosts() {
           <button
             className="min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
             onClick={() =>
-              setPage(
-                Math.min(Math.ceil((hiringData?.count ?? 0) / 12) - 1, page + 1)
-              )
+              setPage(Math.min(Math.ceil((hiringData?.count ?? 0) / 12) - 1, page + 1))
             }
             disabled={page >= Math.ceil((hiringData?.count ?? 0) / 12) - 1}
           >
@@ -314,9 +274,7 @@ export default function HiringPosts() {
 
       {hiringData?.data.length === 0 && (
         <div className="flex flex-col gap-2 items-center justify-center h-48">
-          <p className="text-sm text-gray-500">
-            내가 등록한 채용공고가 없어요.
-          </p>
+          <p className="text-sm text-gray-500">내가 등록한 채용공고가 없어요.</p>
 
           {isLoading ? (
             <GlobalSpinner />

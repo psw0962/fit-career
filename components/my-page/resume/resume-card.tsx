@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useCloneResume, useDeleteResume } from '@/actions/resume';
+import { useCloneResume, useDeleteResume } from '@/api/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import ResumeExport from '@/components/my-page/resume/resume-export';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
@@ -95,9 +95,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
             서류 합격률 UP!
           </p>
 
-          <p className="mt-4 text-[10px] text-gray-500">
-            최근 수정일 {data.updated_at}
-          </p>
+          <p className="mt-4 text-[10px] text-gray-500">최근 수정일 {data.updated_at}</p>
 
           <div
             id={`more-button-${data.id}`}
@@ -125,12 +123,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
                 onClick={() => cloneResume(data.id)}
               >
                 <p className="text-sm">복제하기</p>
-                <Image
-                  src="/svg/duplicate.svg"
-                  alt="duplicate"
-                  width={15}
-                  height={15}
-                />
+                <Image src="/svg/duplicate.svg" alt="duplicate" width={15} height={15} />
               </div>
 
               <div
@@ -146,12 +139,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
                 onClick={() => setIsDeleteModalOpen(true)}
               >
                 <p className="text-sm">삭제하기</p>
-                <Image
-                  src="/svg/delete.svg"
-                  alt="delete"
-                  width={15}
-                  height={15}
-                />
+                <Image src="/svg/delete.svg" alt="delete" width={15} height={15} />
               </div>
             </div>
           )}
@@ -202,19 +190,11 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
                 onClick={() =>
                   data.upload_resume &&
                   convertBase64Unicode(data.title, 'decode') &&
-                  downloadFile(
-                    data.upload_resume,
-                    convertBase64Unicode(data.title, 'decode')
-                  )
+                  downloadFile(data.upload_resume, convertBase64Unicode(data.title, 'decode'))
                 }
               >
                 <p className="text-sm">다운로드</p>
-                <Image
-                  src="/svg/download.svg"
-                  alt="download"
-                  width={15}
-                  height={15}
-                />
+                <Image src="/svg/download.svg" alt="download" width={15} height={15} />
               </div>
 
               <div
@@ -222,12 +202,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
                 onClick={() => setIsDeleteModalOpen(true)}
               >
                 <p className="text-sm">삭제하기</p>
-                <Image
-                  src="/svg/delete.svg"
-                  alt="delete"
-                  width={15}
-                  height={15}
-                />
+                <Image src="/svg/delete.svg" alt="delete" width={15} height={15} />
               </div>
             </div>
           )}

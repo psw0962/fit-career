@@ -4,33 +4,33 @@ import dynamic from 'next/dynamic';
 import * as Tabs from '@radix-ui/react-tabs';
 import { useEffect, useRef } from 'react';
 import { useSessionStorage } from 'usehooks-ts';
-import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
+import { useGetEnterpriseProfile, useGetUserData } from '@/api/auth';
 import GlobalSpinner from '@/components/common/global-spinner';
 
 const Profile = dynamic(() => import('@/components/my-page/profile'), {
   loading: () => <GlobalSpinner />,
   ssr: false,
 });
-const EnterpriseProfile = dynamic(
-  () => import('@/components/my-page/enterprise-profile'),
-  { loading: () => <GlobalSpinner />, ssr: false }
-);
-const ResumeList = dynamic(
-  () => import('@/components/my-page/resume/resume-list'),
-  { loading: () => <GlobalSpinner />, ssr: false }
-);
-const ResumeSubmitted = dynamic(
-  () => import('@/components/my-page/resume/resume-submitted'),
-  { loading: () => <GlobalSpinner />, ssr: false }
-);
-const HiringPosts = dynamic(
-  () => import('@/components/my-page/hiring/hiring-posts'),
-  { loading: () => <GlobalSpinner />, ssr: false }
-);
-const BookmarksHiring = dynamic(
-  () => import('@/components/my-page/bookmarks-hiring'),
-  { loading: () => <GlobalSpinner />, ssr: false }
-);
+const EnterpriseProfile = dynamic(() => import('@/components/my-page/enterprise-profile'), {
+  loading: () => <GlobalSpinner />,
+  ssr: false,
+});
+const ResumeList = dynamic(() => import('@/components/my-page/resume/resume-list'), {
+  loading: () => <GlobalSpinner />,
+  ssr: false,
+});
+const ResumeSubmitted = dynamic(() => import('@/components/my-page/resume/resume-submitted'), {
+  loading: () => <GlobalSpinner />,
+  ssr: false,
+});
+const HiringPosts = dynamic(() => import('@/components/my-page/hiring/hiring-posts'), {
+  loading: () => <GlobalSpinner />,
+  ssr: false,
+});
+const BookmarksHiring = dynamic(() => import('@/components/my-page/bookmarks-hiring'), {
+  loading: () => <GlobalSpinner />,
+  ssr: false,
+});
 
 export default function MyPageView() {
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});

@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetHiring } from '@/actions/hiring';
+import { useGetHiring } from '@/api/hiring';
 import Image from 'next/image';
 import { HiringFilterProps } from '@/types/hiring/filter-type';
 import { useEffect } from 'react';
@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
-import { useCheckIsBookmarked, useToggleBookmark } from '@/actions/hiring';
+import { useCheckIsBookmarked, useToggleBookmark } from '@/api/hiring';
 
 export default function HiringFilter({
   regionFilter,
@@ -32,8 +32,7 @@ export default function HiringFilter({
       periodRange: periodValueFilter as [number, number],
     },
   });
-  const { mutate: toggleBookmark, status: toggleBookmarkStatus } =
-    useToggleBookmark();
+  const { mutate: toggleBookmark, status: toggleBookmarkStatus } = useToggleBookmark();
   const hiringIds = hiringData?.data.map((x: HiringDataResponse) => x.id) || [];
   const { data: bookmarkedStatus } = useCheckIsBookmarked(hiringIds);
 
@@ -83,9 +82,7 @@ export default function HiringFilter({
                 <div className="relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
                   <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
                     <Image
-                      src={
-                        x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'
-                      }
+                      src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
                       alt={`${x.title} 이미지`}
                       style={{ objectFit: 'cover' }}
                       className="rounded"
@@ -100,9 +97,7 @@ export default function HiringFilter({
 
                   <div
                     className={`absolute top-1 right-1 sm:top-2 sm:right-2 w-8 h-8 bg-[#4c71c0] rounded-full ${
-                      toggleBookmarkStatus === 'pending'
-                        ? 'cursor-not-allowed'
-                        : ''
+                      toggleBookmarkStatus === 'pending' ? 'cursor-not-allowed' : ''
                     }`}
                     onClick={(e) => {
                       if (toggleBookmarkStatus === 'pending') return;
@@ -111,11 +106,7 @@ export default function HiringFilter({
                     }}
                   >
                     <Image
-                      src={
-                        isBookmarked
-                          ? '/svg/bookmarked.svg'
-                          : '/svg/bookmark.svg'
-                      }
+                      src={isBookmarked ? '/svg/bookmarked.svg' : '/svg/bookmark.svg'}
                       alt="bookmark"
                       className="p-2"
                       style={{ objectFit: 'contain' }}
@@ -126,9 +117,7 @@ export default function HiringFilter({
                   </div>
 
                   <div className="w-full flex flex-col gap-0">
-                    <p className="text-base font-bold break-keep line-clamp-2">
-                      {x.title}
-                    </p>
+                    <p className="text-base font-bold break-keep line-clamp-2">{x.title}</p>
 
                     <div className="flex items-center gap-1 mt-2">
                       <div className="relative w-5 h-5 flex-shrink-0">
@@ -147,13 +136,9 @@ export default function HiringFilter({
                       </p>
                     </div>
 
-                    <p className="text-xs text-gray-500 mt-2">
-                      {x.short_address}
-                    </p>
+                    <p className="text-xs text-gray-500 mt-2">{x.short_address}</p>
 
-                    <p className="text-xs text-gray-500">
-                      경력 {formatPeriod(x.period)}
-                    </p>
+                    <p className="text-xs text-gray-500">경력 {formatPeriod(x.period)}</p>
                   </div>
                 </div>
               </Link>
@@ -177,10 +162,7 @@ export default function HiringFilter({
             이전
           </button>
 
-          {Array.from(
-            { length: endPage - startPage + 1 },
-            (_, i) => startPage + i
-          ).map((page) => (
+          {Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i).map((page) => (
             <button
               key={page}
               className={`min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border ${

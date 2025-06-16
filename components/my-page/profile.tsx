@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
-import { useDeleteAllUserData, useGetUserData } from '@/actions/auth';
-import { deleteUser } from '@/actions/server-action';
+import { useDeleteAllUserData, useGetUserData } from '@/api/auth';
+import { deleteUser } from '@/api/server-action';
 import GlobalSpinner from '@/components/common/global-spinner';
 import {
   Dialog,
@@ -51,12 +51,7 @@ export default function Profile() {
     }
   };
 
-  if (
-    userDataLoading ||
-    !userData ||
-    deleteAllUserDataStatus === 'pending' ||
-    isDeleting
-  ) {
+  if (userDataLoading || !userData || deleteAllUserDataStatus === 'pending' || isDeleting) {
     return <GlobalSpinner />;
   }
 
@@ -112,8 +107,8 @@ export default function Profile() {
           <DialogHeader>
             <DialogTitle>회원 탈퇴</DialogTitle>
             <DialogDescription>
-              회원 탈퇴 시 해당 아이디로 활동했던 모든 기록과 개인정보가
-              삭제되고 복구할 수 없습니다.(게시글, 댓글, 이미지, 이력서 등)
+              회원 탈퇴 시 해당 아이디로 활동했던 모든 기록과 개인정보가 삭제되고 복구할 수
+              없습니다.(게시글, 댓글, 이미지, 이력서 등)
               <br />
               정말로 탈퇴하시겠습니까?
             </DialogDescription>
@@ -132,9 +127,7 @@ export default function Profile() {
           <DialogFooter>
             <button
               className={`w-full sm:w-fit ${
-                isAgree
-                  ? 'bg-[#4C71BF] text-white'
-                  : 'bg-[#C3C4C5] text-gray-500'
+                isAgree ? 'bg-[#4C71BF] text-white' : 'bg-[#C3C4C5] text-gray-500'
               } mt-4 px-4 py-2 rounded self-end`}
               disabled={!isAgree}
               onClick={onDeleteUser}

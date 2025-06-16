@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { useSignInWithKakao } from '@/actions/auth';
-import { useGetUserData } from '@/actions/auth';
+import { useSignInWithKakao } from '@/api/auth';
+import { useGetUserData } from '@/api/auth';
 import { useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import GlobalSpinner from '@/components/common/global-spinner';
@@ -46,8 +46,7 @@ export default function Auth() {
       setTimeout(() => {
         toast({
           title: '기업 프로필을 먼저 등록해주세요.',
-          description:
-            '해당 서비스를 이용하기 위해서는 기업 프로필을 먼저 등록해주세요.',
+          description: '해당 서비스를 이용하기 위해서는 기업 프로필을 먼저 등록해주세요.',
           variant: 'warning',
         });
       }, 100);

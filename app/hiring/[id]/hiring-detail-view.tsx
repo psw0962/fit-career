@@ -1,28 +1,20 @@
 'use client';
 
 import BasicCarousel from '@/components/carousel/basic-carousel';
-import {
-  useCheckIsBookmarked,
-  useGetHiring,
-  useToggleBookmark,
-} from '@/actions/hiring';
+import { useCheckIsBookmarked, useGetHiring, useToggleBookmark } from '@/api/hiring';
 import Image from 'next/image';
 import { Map } from 'react-kakao-maps-sdk';
 import useKakaoLoader from '@/hooks/use-kakao-loader';
 import CustomMapMaker from '@/components/common/kakao-map/custom-map-maker';
 import { useRouter } from 'next/navigation';
-import { useGetResume } from '@/actions/resume';
+import { useGetResume } from '@/api/resume';
 import ResumeSelectModal from '@/components/my-page/resume/resume-select-modal';
 import { useState } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { formatPeriod } from '@/functions/formatPeriod';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 
-export default function HiringDetailView({
-  hiringId,
-}: {
-  hiringId: string;
-}): React.ReactElement {
+export default function HiringDetailView({ hiringId }: { hiringId: string }): React.ReactElement {
   useKakaoLoader();
   const router = useRouter();
 
@@ -33,8 +25,7 @@ export default function HiringDetailView({
     id: hiringId,
   });
   const { data: resumeData } = useGetResume();
-  const { mutate: toggleBookmark, status: toggleBookmarkStatus } =
-    useToggleBookmark();
+  const { mutate: toggleBookmark, status: toggleBookmarkStatus } = useToggleBookmark();
   const hiringIds = hiringData?.data.map((x: HiringDataResponse) => x.id) || [];
   const { data: bookmarkedStatus } = useCheckIsBookmarked(hiringIds);
 
@@ -69,10 +60,7 @@ export default function HiringDetailView({
 
       <div className="flex flex-col gap-3 sm:flex-row justify-between">
         <div className="flex flex-col gap-1 items-start sm:items-center md:flex-row mt-10">
-          <div
-            className="flex gap-2 items-center cursor-pointer"
-            onClick={handleNavigate}
-          >
+          <div className="flex gap-2 items-center cursor-pointer" onClick={handleNavigate}>
             <div className="relative w-8 h-8">
               <Image
                 src={
@@ -96,9 +84,7 @@ export default function HiringDetailView({
           </div>
 
           <div className="flex flex-row flex-wrap gap-1 mt-1 sm:mt-0">
-            <p className="text-sm text-gray-500">
-              ∙ {hiringData.data[0].short_address}
-            </p>
+            <p className="text-sm text-gray-500">∙ {hiringData.data[0].short_address}</p>
             <p className="text-sm text-gray-500">
               ∙ 경력 {formatPeriod(hiringData.data[0].period)}
             </p>
@@ -108,9 +94,7 @@ export default function HiringDetailView({
         <div className="flex gap-2 items-end">
           <div
             className={`relative w-10 h-10 bg-[#4c71c0] rounded-full ${
-              toggleBookmarkStatus === 'pending'
-                ? 'cursor-not-allowed'
-                : 'cursor-pointer'
+              toggleBookmarkStatus === 'pending' ? 'cursor-not-allowed' : 'cursor-pointer'
             }`}
             onClick={(e) => {
               if (toggleBookmarkStatus === 'pending') return;
@@ -119,11 +103,7 @@ export default function HiringDetailView({
             }}
           >
             <Image
-              src={
-                bookmarkedStatus?.[hiringId]
-                  ? '/svg/bookmarked.svg'
-                  : '/svg/bookmark.svg'
-              }
+              src={bookmarkedStatus?.[hiringId] ? '/svg/bookmarked.svg' : '/svg/bookmark.svg'}
               alt="bookmark"
               className="p-2"
               style={{ objectFit: 'contain' }}
@@ -147,24 +127,14 @@ export default function HiringDetailView({
       <div className="my-4 border"></div>
 
       <div>
-        <p className="text-xl font-bold break-keep">
-          {hiringData.data[0].title}
-        </p>
+        <p className="text-xl font-bold break-keep">{hiringData.data[0].title}</p>
 
         <div className="flex flex-col gap-0 mt-6">
           <p className="text-lg font-bold">채용 정보</p>
-          <p className="break-keep">
-            - 근무장소 : {hiringData.data[0].address}
-          </p>
-          <p className="break-keep">
-            - 필요 경력 : {formatPeriod(hiringData.data[0].period)}
-          </p>
-          <p className="break-keep">
-            - 채용 포지션 : {hiringData.data[0].position}
-          </p>
-          <p className="break-keep">
-            - 채용 마감일 : {hiringData.data[0].dead_line}
-          </p>
+          <p className="break-keep">- 근무장소 : {hiringData.data[0].address}</p>
+          <p className="break-keep">- 필요 경력 : {formatPeriod(hiringData.data[0].period)}</p>
+          <p className="break-keep">- 채용 포지션 : {hiringData.data[0].position}</p>
+          <p className="break-keep">- 채용 마감일 : {hiringData.data[0].dead_line}</p>
         </div>
 
         <div className="mt-10">
@@ -190,9 +160,7 @@ export default function HiringDetailView({
           }}
           level={4}
         >
-          <CustomMapMaker
-            address={hiringData.data[0].address_search_key ?? ''}
-          />
+          <CustomMapMaker address={hiringData.data[0].address_search_key ?? ''} />
         </Map>
 
         <div className="p-4 border-t border-gray-300">
@@ -201,9 +169,7 @@ export default function HiringDetailView({
       </div>
 
       <div className="flex flex-col gap-0 mt-4">
-        <p className=" text-sm text-gray-500">
-          * 등록일 : {hiringData.data[0].created_at}
-        </p>
+        <p className=" text-sm text-gray-500">* 등록일 : {hiringData.data[0].created_at}</p>
 
         <p className="text-sm text-gray-500">
           * 최근 수정일 :{' '}

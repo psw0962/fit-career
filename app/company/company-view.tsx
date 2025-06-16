@@ -1,10 +1,6 @@
 'use client';
 
-import {
-  useCheckIsBookmarked,
-  useGetHiring,
-  useToggleBookmark,
-} from '@/actions/hiring';
+import { useCheckIsBookmarked, useGetHiring, useToggleBookmark } from '@/api/hiring';
 import Image from 'next/image';
 import { Map } from 'react-kakao-maps-sdk';
 import CustomMapMaker from '@/components/common/kakao-map/custom-map-maker';
@@ -23,16 +19,14 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
   const [page, setPage] = useState(0);
 
   const { data: hiringData } = useGetHiring({ id: hiringId });
-  const { data: hiringDataByUserId, isLoading: hiringDataByUserIdIsLoading } =
-    useGetHiring({
-      user_id: hiringData?.data[0]?.user_id ?? '',
-      isVisibleFilter: true,
-      page,
-      pageSize: 12,
-    });
+  const { data: hiringDataByUserId, isLoading: hiringDataByUserIdIsLoading } = useGetHiring({
+    user_id: hiringData?.data[0]?.user_id ?? '',
+    isVisibleFilter: true,
+    page,
+    pageSize: 12,
+  });
 
-  const { mutate: toggleBookmark, status: toggleBookmarkStatus } =
-    useToggleBookmark();
+  const { mutate: toggleBookmark, status: toggleBookmarkStatus } = useToggleBookmark();
   const hiringIds = hiringData?.data.map((x: HiringDataResponse) => x.id) || [];
   const { data: bookmarkedStatus } = useCheckIsBookmarked(hiringIds);
 
@@ -87,27 +81,16 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
         </div>
 
         <div className="flex flex-row flex-wrap gap-1 mt-1 sm:mt-0">
+          <p className="text-gray-500">∙ {hiringData.data[0].enterprise_profile?.industry}</p>
           <p className="text-gray-500">
-            ∙ {hiringData.data[0].enterprise_profile?.industry}
+            ∙ {hiringData.data[0].enterprise_profile?.address.split(' ').slice(1, 3).join(' ')}
           </p>
           <p className="text-gray-500">
-            ∙{' '}
-            {hiringData.data[0].enterprise_profile?.address
-              .split(' ')
-              .slice(1, 3)
-              .join(' ')}
-          </p>
-          <p className="text-gray-500">
-            ∙{' '}
-            {calculateYearsInBusiness(
-              hiringData.data[0].enterprise_profile?.establishment ?? ''
-            )}
+            ∙ {calculateYearsInBusiness(hiringData.data[0].enterprise_profile?.establishment ?? '')}
             년차 (
             {parseInt(
-              hiringData.data[0].enterprise_profile?.establishment?.split(
-                '-'
-              )[0] ?? '0',
-              10
+              hiringData.data[0].enterprise_profile?.establishment?.split('-')[0] ?? '0',
+              10,
             )}
             )
           </p>
@@ -148,9 +131,7 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
 
                 <div
                   className={`absolute top-1 right-1 sm:top-2 sm:right-2 w-8 h-8 bg-[#4c71c0] rounded-full ${
-                    toggleBookmarkStatus === 'pending'
-                      ? 'cursor-not-allowed'
-                      : ''
+                    toggleBookmarkStatus === 'pending' ? 'cursor-not-allowed' : ''
                   }`}
                   onClick={(e) => {
                     if (toggleBookmarkStatus === 'pending') return;
@@ -159,9 +140,7 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
                   }}
                 >
                   <Image
-                    src={
-                      isBookmarked ? '/svg/bookmarked.svg' : '/svg/bookmark.svg'
-                    }
+                    src={isBookmarked ? '/svg/bookmarked.svg' : '/svg/bookmark.svg'}
                     alt="bookmark"
                     className="p-2"
                     style={{ objectFit: 'contain' }}
@@ -172,9 +151,7 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
                 </div>
 
                 <div className="w-full flex flex-col gap-0">
-                  <p className="text-base font-bold break-keep line-clamp-2">
-                    {x.title}
-                  </p>
+                  <p className="text-base font-bold break-keep line-clamp-2">{x.title}</p>
 
                   <div className="flex items-center gap-1 mt-2">
                     <div className="relative w-5 h-5">
@@ -197,12 +174,8 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
                     </p>
                   </div>
 
-                  <p className="text-xs text-gray-500 mt-2">
-                    {x.short_address}
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    경력 {formatPeriod(x.period)}
-                  </p>
+                  <p className="text-xs text-gray-500 mt-2">{x.short_address}</p>
+                  <p className="text-xs text-gray-500">경력 {formatPeriod(x.period)}</p>
                 </div>
               </div>
             </Link>
@@ -227,16 +200,9 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
           <button
             className="min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
             onClick={() =>
-              setPage(
-                Math.min(
-                  Math.ceil((hiringDataByUserId?.count ?? 0) / 12) - 1,
-                  page + 1
-                )
-              )
+              setPage(Math.min(Math.ceil((hiringDataByUserId?.count ?? 0) / 12) - 1, page + 1))
             }
-            disabled={
-              page >= Math.ceil((hiringDataByUserId?.count ?? 0) / 12) - 1
-            }
+            disabled={page >= Math.ceil((hiringDataByUserId?.count ?? 0) / 12) - 1}
           >
             다음
           </button>
@@ -256,17 +222,12 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
           level={4}
         >
           <CustomMapMaker
-            address={
-              hiringData.data[0].enterprise_profile?.address_search_key ?? ''
-            }
+            address={hiringData.data[0].enterprise_profile?.address_search_key ?? ''}
           />
         </Map>
 
         <div className="p-4 border-t border-gray-300">
-          {hiringData.data[0].enterprise_profile?.address
-            .split(' ')
-            .slice(1)
-            .join(' ')}
+          {hiringData.data[0].enterprise_profile?.address.split(' ').slice(1).join(' ')}
         </div>
       </div>
     </div>
