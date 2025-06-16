@@ -1,14 +1,21 @@
 'use client';
 
-import { AgGrid } from '@/components/common/grid';
 import { ColDef, GridOptions, RowClassParams, RowClassRules } from 'ag-grid-community';
 import { AgGridReact } from 'ag-grid-react';
-import { useMemo, useRef, useState } from 'react';
+import { lazy, useMemo, useRef, useState } from 'react';
 import { columnDefs, defaultRow, gridData } from './dummy';
 import GridHeader from '@/components/common/grid/grid-header';
 import { Grip } from 'lucide-react';
 import message from '@/components/common/message';
-import { CsvImporterDialog } from '@/components/common/csv-importer-dialog';
+
+const AgGrid = lazy(() =>
+  import('@/components/common/grid').then((module) => ({ default: module.AgGrid })),
+);
+const CsvImporterDialog = lazy(() =>
+  import('@/components/common/csv-importer-dialog').then((module) => ({
+    default: module.CsvImporterDialog,
+  })),
+);
 
 function GripCell() {
   return (
