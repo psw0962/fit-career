@@ -8,7 +8,7 @@ import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
 import { useToast } from '@/hooks/use-toast';
 import ResumePreview from '@/components/my-page/resume/resume-preview';
-import { useMarkResumeAsRead, useUpdateResumeStatus } from '@/actions/resume';
+import { useMarkResumeAsRead, useUpdateResumeStatus } from '@/api/resume';
 import {
   Dialog,
   DialogContent,
@@ -18,44 +18,27 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 
-export default function HiringResumeReceivedModal({
-  data,
-}: {
-  data: HiringDataResponse;
-}) {
-  const statusOptions = [
-    '서류접수',
-    '서류합격',
-    '면접합격',
-    '최종합격',
-    '불합격',
-  ];
+export default function HiringResumeReceivedModal({ data }: { data: HiringDataResponse }) {
+  const statusOptions = ['서류접수', '서류합격', '면접합격', '최종합격', '불합격'];
 
   const [isMobile, setIsMobile] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-  const [selectedResume, setSelectedResume] = useState<ResumeReceived | null>(
-    null
-  );
-  const [localResumes, setLocalResumes] = useState<ResumeReceived[]>(
-    data.resume_received
-  );
+  const [selectedResume, setSelectedResume] = useState<ResumeReceived | null>(null);
+  const [localResumes, setLocalResumes] = useState<ResumeReceived[]>(data.resume_received);
 
   const { toast } = useToast();
   const { mutate: markResumeAsRead } = useMarkResumeAsRead();
   const { mutate: updateResumeStatus } = useUpdateResumeStatus();
 
-  function handleStatusChange(
-    e: React.ChangeEvent<HTMLSelectElement>,
-    resumeId: string
-  ) {
+  function handleStatusChange(e: React.ChangeEvent<HTMLSelectElement>, resumeId: string) {
     const newStatus = e.target.value;
     setLocalResumes((prevResumes) =>
       prevResumes.map((resume) =>
         resume.id === resumeId
           ? { ...resume, status: newStatus as ResumeReceived['status'] }
-          : resume
-      )
+          : resume,
+      ),
     );
     updateResumeStatus({ hiringId: data.id, resumeId, status: newStatus });
   }
@@ -65,8 +48,7 @@ export default function HiringResumeReceivedModal({
   }, [data.resume_received]);
 
   useEffect(() => {
-    const userAgent =
-      typeof window !== 'undefined' ? window.navigator.userAgent : '';
+    const userAgent = typeof window !== 'undefined' ? window.navigator.userAgent : '';
     setIsMobile(/Mobi/i.test(userAgent));
   }, []);
 
@@ -82,9 +64,7 @@ export default function HiringResumeReceivedModal({
       </DialogTrigger>
 
       <DialogContent
-        className={`w-[90vw] max-w-[900px] min-w-[300px] ${
-          showPreview ? 'h-full' : 'h-fit'
-        }`}
+        className={`w-[90vw] max-w-[900px] min-w-[300px] ${showPreview ? 'h-full' : 'h-fit'}`}
         onInteractOutside={() => {
           setShowPreview(false);
           setSelectedResume(null);
@@ -94,22 +74,14 @@ export default function HiringResumeReceivedModal({
         }}
       >
         <DialogHeader>
-          <DialogTitle>
-            {`[${data.title}] 채용공고의 접수된 이력서`}
-          </DialogTitle>
+          <DialogTitle>{`[${data.title}] 채용공고의 접수된 이력서`}</DialogTitle>
           <DialogDescription className="hidden"></DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-0 mb-4">
-          <p className="text-sm text-gray-500">
-            - 채용공고 등록일 : {data.created_at}
-          </p>
-          <p className="text-sm text-gray-500">
-            - 채용공고 마감일 : {data.dead_line}
-          </p>
-          <p className="text-sm text-gray-500">
-            - 채용 포지션 : {data.position}
-          </p>
+          <p className="text-sm text-gray-500">- 채용공고 등록일 : {data.created_at}</p>
+          <p className="text-sm text-gray-500">- 채용공고 마감일 : {data.dead_line}</p>
+          <p className="text-sm text-gray-500">- 채용 포지션 : {data.position}</p>
         </div>
 
         <div className="flex flex-col gap-3 whitespace-nowrap overflow-auto max-h-[400px]">
@@ -162,10 +134,9 @@ export default function HiringResumeReceivedModal({
                               }
 
                               try {
-                                const response = await fetch(
-                                  resume.upload_resume,
-                                  { method: 'HEAD' }
-                                );
+                                const response = await fetch(resume.upload_resume, {
+                                  method: 'HEAD',
+                                });
 
                                 if (!response.ok) {
                                   toast({
@@ -197,24 +168,16 @@ export default function HiringResumeReceivedModal({
                       </td>
 
                       <td className="p-3 text-center">
-                        {resume.is_fitcareer_resume
-                          ? resume.name || '미작성'
-                          : '파일로 제출됨'}
+                        {resume.is_fitcareer_resume ? resume.name || '미작성' : '파일로 제출됨'}
                       </td>
                       <td className="p-3 text-center">
-                        {resume.is_fitcareer_resume
-                          ? resume.phone || '미작성'
-                          : '파일로 제출됨'}
+                        {resume.is_fitcareer_resume ? resume.phone || '미작성' : '파일로 제출됨'}
                       </td>
                       <td className="p-3 text-center">
-                        {resume.is_fitcareer_resume
-                          ? resume.email || '미작성'
-                          : '파일로 제출됨'}
+                        {resume.is_fitcareer_resume ? resume.email || '미작성' : '파일로 제출됨'}
                       </td>
                       <td className="p-3 text-center">{resume.submitted_at}</td>
-                      <td className="p-3 text-center">
-                        {resume.is_read ? '읽음' : '안읽음'}
-                      </td>
+                      <td className="p-3 text-center">{resume.is_read ? '읽음' : '안읽음'}</td>
                       <td className="p-3 text-center">
                         <select
                           value={resume.status}

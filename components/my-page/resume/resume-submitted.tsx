@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/common/spinner';
 import { useRouter } from 'next/navigation';
-import { useDeleteResumeFromHiring } from '@/actions/resume';
+import { useDeleteResumeFromHiring } from '@/api/resume';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
-import { useGetUserData } from '@/actions/auth';
-import { useGetHiringByUserSubmission } from '@/actions/hiring';
+import { useGetUserData } from '@/api/auth';
+import { useGetHiringByUserSubmission } from '@/api/hiring';
 import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
 import { useSessionStorage } from 'usehooks-ts';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
@@ -28,8 +28,7 @@ import {
 } from '@/components/ui/dialog';
 
 export default function ResumeSubmitted() {
-  const [openResumeDialog, setOpenResumeDialog] =
-    useState<ResumeReceived | null>(null);
+  const [openResumeDialog, setOpenResumeDialog] = useState<ResumeReceived | null>(null);
 
   const columns: ColumnDef<HiringDataResponse>[] = [
     {
@@ -63,9 +62,7 @@ export default function ResumeSubmitted() {
                 <DialogHeader>
                   <DialogTitle>지원 취소</DialogTitle>
 
-                  <DialogDescription>
-                    지원을 취소하시겠습니까?
-                  </DialogDescription>
+                  <DialogDescription>지원을 취소하시겠습니까?</DialogDescription>
                 </DialogHeader>
 
                 <DialogFooter>
@@ -206,11 +203,7 @@ export default function ResumeSubmitted() {
         const submissions = row.original.filtered_resume_received || [];
         const submission = Array.isArray(submissions) ? submissions[0] : null;
 
-        return (
-          <span className="text-gray-500 text-xs">
-            {submission?.submitted_at || '-'}
-          </span>
-        );
+        return <span className="text-gray-500 text-xs">{submission?.submitted_at || '-'}</span>;
       },
     },
   ];
@@ -224,14 +217,13 @@ export default function ResumeSubmitted() {
 
   const { data: userData } = useGetUserData();
   const { mutate: deleteResumeFromHiring } = useDeleteResumeFromHiring();
-  const { data: hiringData, isLoading: hiringDataIsLoading } =
-    useGetHiringByUserSubmission(
-      userData?.id ?? '',
-      { page, pageSize: 12 },
-      {
-        enabled: !!userData?.id,
-      }
-    );
+  const { data: hiringData, isLoading: hiringDataIsLoading } = useGetHiringByUserSubmission(
+    userData?.id ?? '',
+    { page, pageSize: 12 },
+    {
+      enabled: !!userData?.id,
+    },
+  );
 
   const table = useReactTable({
     data: hiringData?.data ?? [],
@@ -278,10 +270,7 @@ export default function ResumeSubmitted() {
                     key={header.id}
                     className="px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b whitespace-nowrap"
                   >
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                    {flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
                 ))}
               </tr>
@@ -306,10 +295,7 @@ export default function ResumeSubmitted() {
                         key={cell.id}
                         className="px-6 py-4 text-sm text-center text-gray-600 whitespace-nowrap"
                       >
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     );
                   })}
@@ -337,9 +323,7 @@ export default function ResumeSubmitted() {
 
         {Array.from({ length: table.getPageCount() }, (_, index) => index)
           .filter((pageIndex) => {
-            const currentGroup = Math.floor(
-              table.getState().pagination.pageIndex / 12
-            );
+            const currentGroup = Math.floor(table.getState().pagination.pageIndex / 12);
             const pageGroup = Math.floor(pageIndex / 12);
             return currentGroup === pageGroup;
           })

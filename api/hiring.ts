@@ -45,8 +45,7 @@ const postHiring = async (data: HiringData) => {
   const { error } = await supabase.from('hiring').insert([
     {
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
-      position:
-        data.position.job === '기타' ? data.position.etc : data.position.job,
+      position: data.position.job === '기타' ? data.position.etc : data.position.job,
       position_etc: data.position.job === '기타' ? true : false,
       period: data.periodValue,
       title: data.title,
@@ -62,11 +61,19 @@ const postHiring = async (data: HiringData) => {
   if (error) {
     throw new Error(error.message);
   }
+
+  try {
+    await fetch('/api/revalidate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ tag: 'hiring' }),
+    });
+  } catch (revalidateError) {
+    console.error('Failed to revalidate:', revalidateError);
+  }
 };
 
-export const usePostHiring = (
-  options?: UseMutationOptions<void, Error, HiringData, void>
-) => {
+export const usePostHiring = (options?: UseMutationOptions<void, Error, HiringData, void>) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
@@ -99,8 +106,7 @@ ${minutes}분 후에 다시 시도해 주세요.`,
         });
       } else {
         toast({
-          title:
-            '채용 공고 등록에 실패했습니다. 네트워크 에러, 잠시 후 다시 시도해주세요.',
+          title: '채용 공고 등록에 실패했습니다. 네트워크 에러, 잠시 후 다시 시도해주세요.',
           variant: 'warning',
         });
       }
@@ -128,22 +134,14 @@ interface FilterParams {
 
 const getHiring = async (params: FilterParams) => {
   const supabase = createBrowserSupabaseClient();
-  const {
-    page = 0,
-    pageSize = 12,
-    getAllData = false,
-    isVisibleFilter = false,
-    filters,
-  } = params;
+  const { page = 0, pageSize = 12, getAllData = false, isVisibleFilter = false, filters } = params;
 
   let query = supabase.from('hiring').select(`
       *,
       enterprise_profile:enterprise_profile!user_id(*)
     `);
 
-  let countQuery = supabase
-    .from('hiring')
-    .select('*', { count: 'exact', head: true });
+  let countQuery = supabase.from('hiring').select('*', { count: 'exact', head: true });
 
   // 기본 조건
   const matchCondition = params.id
@@ -163,9 +161,7 @@ const getHiring = async (params: FilterParams) => {
 
   // 지역 필터
   if (filters?.regions?.length) {
-    const regionFilter = filters.regions
-      .map((region) => `address.ilike.%${region}%`)
-      .join(',');
+    const regionFilter = filters.regions.map((region) => `address.ilike.%${region}%`).join(',');
     query = query.or(regionFilter);
     countQuery = countQuery.or(regionFilter);
   }
@@ -211,10 +207,7 @@ const getHiring = async (params: FilterParams) => {
     query = query.range(from, to);
   }
 
-  const [{ data, error }, { count, error: countError }] = await Promise.all([
-    query,
-    countQuery,
-  ]);
+  const [{ data, error }, { count, error: countError }] = await Promise.all([query, countQuery]);
 
   if (error || countError) {
     throw new Error(error?.message || countError?.message);
@@ -228,10 +221,7 @@ const getHiring = async (params: FilterParams) => {
 
 export const useGetHiring = (
   params: FilterParams,
-  options?: UseQueryOptions<
-    { data: HiringDataResponse[]; count: number },
-    Error
-  >
+  options?: UseQueryOptions<{ data: HiringDataResponse[]; count: number }, Error>,
 ) => {
   return useQuery<{ data: HiringDataResponse[]; count: number }, Error>({
     queryKey: ['hiringList', params],
@@ -252,7 +242,7 @@ const getHiringById = async (hiringId: string) => {
       `
       *,
       enterprise_profile:enterprise_profile!user_id(*)
-    `
+    `,
     )
     .eq('id', hiringId)
     .single();
@@ -266,7 +256,7 @@ const getHiringById = async (hiringId: string) => {
 
 export const useGetHiringById = (
   hiringId: string,
-  options?: UseQueryOptions<HiringDataResponse, Error>
+  options?: UseQueryOptions<HiringDataResponse, Error>,
 ) => {
   return useQuery<HiringDataResponse, Error>({
     queryKey: ['hiring', hiringId],
@@ -280,7 +270,7 @@ export const useGetHiringById = (
 // =========================================
 const getHiringByUserSubmission = async (
   userId: string,
-  { page, pageSize }: { page: number; pageSize: number }
+  { page, pageSize }: { page: number; pageSize: number },
 ): Promise<{ data: HiringDataResponse[]; count: number }> => {
   const supabase = createBrowserSupabaseClient();
 
@@ -313,9 +303,7 @@ const getHiringByUserSubmission = async (
 export const useGetHiringByUserSubmission = (
   userId: string,
   { page = 0, pageSize = 12 }: { page?: number; pageSize?: number } = {},
-  options?: Partial<
-    UseQueryOptions<{ data: HiringDataResponse[]; count: number }, Error>
-  >
+  options?: Partial<UseQueryOptions<{ data: HiringDataResponse[]; count: number }, Error>>,
 ) => {
   return useQuery<{ data: HiringDataResponse[]; count: number }, Error>({
     queryKey: ['hiringListByUserSubmission', userId, page, pageSize],
@@ -348,12 +336,7 @@ const updateHiringVisibility = async ({
 };
 
 export const useUpdateHiringVisibility = (
-  options?: UseMutationOptions<
-    void,
-    Error,
-    { hiringId: string; isVisible: boolean },
-    void
-  >
+  options?: UseMutationOptions<void, Error, { hiringId: string; isVisible: boolean }, void>,
 ) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -391,8 +374,7 @@ export const useUpdateHiringVisibility = (
     onError: (error: Error) => {
       console.error(error.message);
       toast({
-        description:
-          '상태 변경에 실패했습니다. 네트워크 에러, 잠시 후 다시 시도해주세요.',
+        description: '상태 변경에 실패했습니다. 네트워크 에러, 잠시 후 다시 시도해주세요.',
         variant: 'warning',
       });
     },
@@ -428,10 +410,7 @@ const deleteHiring = async (hiringId: string) => {
     console.error(`Failed to delete bookmarks: ${bookmarkDeleteError.message}`);
   }
 
-  const { error: deleteError } = await supabase
-    .from('hiring')
-    .delete()
-    .eq('id', hiringId);
+  const { error: deleteError } = await supabase.from('hiring').delete().eq('id', hiringId);
 
   if (deleteError) {
     throw new Error(deleteError.message);
@@ -451,9 +430,7 @@ const deleteHiring = async (hiringId: string) => {
   }
 };
 
-export const useDeleteHiring = (
-  options?: UseMutationOptions<void, Error, string, void>
-) => {
+export const useDeleteHiring = (options?: UseMutationOptions<void, Error, string, void>) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -508,12 +485,10 @@ const patchHiring = async (data: HiringData) => {
           .from('hiring')
           .upload(`hiring/${Date.now()}-${img.name}`, img);
         if (error) throw new Error(error.message);
-        const url = supabase.storage
-          .from('hiring')
-          .getPublicUrl(uploadData.path);
+        const url = supabase.storage.from('hiring').getPublicUrl(uploadData.path);
         return url.data.publicUrl;
       }
-    })
+    }),
   );
 
   for (const imageUrl of existingImages) {
@@ -533,8 +508,7 @@ const patchHiring = async (data: HiringData) => {
     .from('hiring')
     .update({
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
-      position:
-        data.position.job === '기타' ? data.position.etc : data.position.job,
+      position: data.position.job === '기타' ? data.position.etc : data.position.job,
       position_etc: data.position.job === '기타',
       period: data.periodValue,
       title: data.title,
@@ -550,9 +524,7 @@ const patchHiring = async (data: HiringData) => {
   if (error) throw new Error(error.message);
 };
 
-export const usePatchHiring = (
-  options?: UseMutationOptions<void, Error, HiringData, void>
-) => {
+export const usePatchHiring = (options?: UseMutationOptions<void, Error, HiringData, void>) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
@@ -641,26 +613,17 @@ export const useToggleBookmark = () => {
       });
 
       const previousBookmark =
-        queryClient.getQueryData<boolean>(['bookmarksHiring', hiringId]) ??
-        false;
+        queryClient.getQueryData<boolean>(['bookmarksHiring', hiringId]) ?? false;
 
-      queryClient.setQueryData(
-        ['bookmarksHiring', hiringId],
-        !previousBookmark
-      );
+      queryClient.setQueryData(['bookmarksHiring', hiringId], !previousBookmark);
 
       return { previousBookmark };
     },
     onSuccess: async (_, hiringId) => {
-      const isBookmarked = queryClient.getQueryData<boolean>([
-        'bookmarksHiring',
-        hiringId,
-      ]);
+      const isBookmarked = queryClient.getQueryData<boolean>(['bookmarksHiring', hiringId]);
 
       toast({
-        title: isBookmarked
-          ? '북마크가 추가되었습니다.'
-          : '북마크가 삭제되었습니다.',
+        title: isBookmarked ? '북마크가 추가되었습니다.' : '북마크가 삭제되었습니다.',
         variant: 'default',
       });
 
@@ -689,10 +652,7 @@ export const useToggleBookmark = () => {
       }
 
       if (context?.previousBookmark !== undefined) {
-        queryClient.setQueryData(
-          ['bookmarksHiring', hiringId],
-          context.previousBookmark
-        );
+        queryClient.setQueryData(['bookmarksHiring', hiringId], context.previousBookmark);
       }
       console.error(error.message);
       toast({
@@ -707,9 +667,7 @@ export const useToggleBookmark = () => {
 // =========================================
 // ============== check if post is bookmarked
 // =========================================
-const checkIsBookmarked = async (
-  hiringIds: string[]
-): Promise<Record<string, boolean>> => {
+const checkIsBookmarked = async (hiringIds: string[]): Promise<Record<string, boolean>> => {
   const supabase = createBrowserSupabaseClient();
   const {
     data: { user },
@@ -726,11 +684,9 @@ const checkIsBookmarked = async (
 
   if (error) throw new Error(error.message);
 
-  const bookmarkedIds = data.map(
-    (item: { hiring_id: string }) => item.hiring_id
-  );
+  const bookmarkedIds = data.map((item: { hiring_id: string }) => item.hiring_id);
   const bookmarkStatus = Object.fromEntries(
-    hiringIds.map((id) => [id, bookmarkedIds.includes(id)])
+    hiringIds.map((id) => [id, bookmarkedIds.includes(id)]),
   );
 
   return bookmarkStatus;
@@ -749,7 +705,7 @@ export const useCheckIsBookmarked = (hiringIds: string[]) => {
 // =========================================
 const getBookmarkedHiringsByUserId = async (
   page: number = 0,
-  pageSize: number = 12
+  pageSize: number = 12,
 ): Promise<{ data: HiringDataResponse[]; count: number }> => {
   const supabase = createBrowserSupabaseClient();
   const {
@@ -766,9 +722,7 @@ const getBookmarkedHiringsByUserId = async (
 
   if (bookmarkError) throw new Error(bookmarkError.message);
 
-  const hiringIds = bookmarkData.map(
-    (item: { hiring_id: string }) => item.hiring_id
-  );
+  const hiringIds = bookmarkData.map((item: { hiring_id: string }) => item.hiring_id);
 
   if (hiringIds.length === 0) {
     return { data: [], count: 0 };
@@ -784,16 +738,13 @@ const getBookmarkedHiringsByUserId = async (
         `
         *,
         enterprise_profile:enterprise_profile!user_id(*)
-      `
+      `,
       )
       .in('id', hiringIds)
       .order('created_at', { ascending: false })
       .range(from, to),
 
-    supabase
-      .from('hiring')
-      .select('*', { count: 'exact', head: true })
-      .in('id', hiringIds),
+    supabase.from('hiring').select('*', { count: 'exact', head: true }).in('id', hiringIds),
   ]);
 
   if (error || countError) {
@@ -809,10 +760,7 @@ const getBookmarkedHiringsByUserId = async (
 export const useGetBookmarkedHiringsByUserId = (
   page: number = 0,
   pageSize: number = 12,
-  options?: UseQueryOptions<
-    { data: HiringDataResponse[]; count: number },
-    Error
-  >
+  options?: UseQueryOptions<{ data: HiringDataResponse[]; count: number }, Error>,
 ) => {
   return useQuery<{ data: HiringDataResponse[]; count: number }, Error>({
     queryKey: ['bookmarkedHiringsByUserId', page, pageSize],

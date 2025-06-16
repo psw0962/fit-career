@@ -1,23 +1,17 @@
 'use client';
 
 import Image from 'next/image';
-import { useGetUserData } from '@/actions/auth';
+import { useGetUserData } from '@/api/auth';
 import GlobalSpinner from '@/components/common/global-spinner';
 import Spinner from '@/components/common/spinner';
-import {
-  useGetResume,
-  usePostNewResume,
-  useUploadResume,
-} from '@/actions/resume';
+import { useGetResume, usePostNewResume, useUploadResume } from '@/api/resume';
 import ResumeCard from '@/components/my-page/resume/resume-card';
 
 export default function Resume() {
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
   const { data: resumeListData } = useGetResume();
-  const { mutate: postNewResumeMutate, status: postNewResumeStatus } =
-    usePostNewResume();
-  const { mutate: uploadResumeMutate, status: uploadResumeStatus } =
-    useUploadResume();
+  const { mutate: postNewResumeMutate, status: postNewResumeStatus } = usePostNewResume();
+  const { mutate: uploadResumeMutate, status: uploadResumeStatus } = useUploadResume();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -106,11 +100,7 @@ export default function Resume() {
 
       <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {resumeListData
-          ?.sort(
-            (a, b) =>
-              new Date(b.updated_at).getTime() -
-              new Date(a.updated_at).getTime()
-          )
+          ?.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
           .map((data) => {
             return <ResumeCard key={data.id} data={data} />;
           })}

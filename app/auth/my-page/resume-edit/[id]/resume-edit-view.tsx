@@ -5,18 +5,12 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
 import { validateInput } from '@/functions/validateInput';
 import GlobalSpinner from '@/components/common/global-spinner';
-import { useGetResume, usePatchResume } from '@/actions/resume';
+import { useGetResume, usePatchResume } from '@/api/resume';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
-import {
-  Education,
-  Experience,
-  Certificate,
-  Award,
-  LinkData,
-} from '@/types/resume/resume';
+import { Education, Experience, Certificate, Award, LinkData } from '@/types/resume/resume';
 
 export default function ResumeEditView({ resumeId }: { resumeId: string }) {
   const titleRef = useRef<HTMLInputElement>(null);
@@ -63,13 +57,10 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
   const { toast } = useToast();
 
-  const { data: resumeData, isLoading: isResumeLoading } =
-    useGetResume(resumeId);
+  const { data: resumeData, isLoading: isResumeLoading } = useGetResume(resumeId);
   const { mutate: patchResumeMutate, status: patchStatus } = usePatchResume();
 
-  const handleResumeImageUpload = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleResumeImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
       setResumeImage([...resumeImage, ...Array.from(files)]);
@@ -80,10 +71,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
     setResumeImage(resumeImage.filter((_, i) => i !== index));
   };
 
-  const addField = <T,>(
-    setter: React.Dispatch<React.SetStateAction<T[]>>,
-    defaultItem: T
-  ) => {
+  const addField = <T,>(setter: React.Dispatch<React.SetStateAction<T[]>>, defaultItem: T) => {
     setter((prev) => {
       if (prev.length < 10) {
         return [...prev, defaultItem];
@@ -96,17 +84,12 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
     index: number,
     field: keyof T,
     value: string | boolean,
-    setter: React.Dispatch<React.SetStateAction<T[]>>
+    setter: React.Dispatch<React.SetStateAction<T[]>>,
   ) => {
-    setter((prev) =>
-      prev.map((item, i) => (i === index ? { ...item, [field]: value } : item))
-    );
+    setter((prev) => prev.map((item, i) => (i === index ? { ...item, [field]: value } : item)));
   };
 
-  const removeField = <T,>(
-    index: number,
-    setter: React.Dispatch<React.SetStateAction<T[]>>
-  ) => {
+  const removeField = <T,>(index: number, setter: React.Dispatch<React.SetStateAction<T[]>>) => {
     setter((prev) => {
       if (prev.length <= 1) return prev;
       return prev.filter((_, i) => i !== index);
@@ -186,11 +169,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
   }, [introduction, editor]);
 
   useEffect(() => {
-    if (
-      resumeData?.length !== 0 &&
-      resumeData !== undefined &&
-      resumeData !== null
-    ) {
+    if (resumeData?.length !== 0 && resumeData !== undefined && resumeData !== null) {
       setTitle(resumeData?.[0]?.title || '');
       setCurrentResumeImage(resumeData?.[0]?.resume_image[0] || '');
       setName(resumeData?.[0]?.name || '');
@@ -214,7 +193,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 schoolName: '',
                 majorAndDegree: '',
               },
-            ]
+            ],
       );
 
       setExperience(
@@ -230,7 +209,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 jobTitle: '',
                 description: '',
               },
-            ]
+            ],
       );
 
       setCertificates(
@@ -242,7 +221,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 date: '',
                 certificateName: '',
               },
-            ]
+            ],
       );
 
       setAwards(
@@ -254,7 +233,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 date: '',
                 awardName: '',
               },
-            ]
+            ],
       );
 
       setLinks(
@@ -266,7 +245,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 title: '',
                 url: '',
               },
-            ]
+            ],
       );
     }
   }, [resumeData]);
@@ -291,18 +270,16 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         <p className="text-2xl font-bold mb-2">이력서 작성 TIP</p>
 
         <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
+          <p className="font-bold text-sm">• 모든 항목을 작성할 필요는 없어요.</p>
+
           <p className="font-bold text-sm">
-            • 모든 항목을 작성할 필요는 없어요.
+            • 글자수를 채우는 이력서 보다는 내가 어떤 사람인지 보여줄 수 있는 간결한 이력서가
+            좋아요.
           </p>
 
           <p className="font-bold text-sm">
-            • 글자수를 채우는 이력서 보다는 내가 어떤 사람인지 보여줄 수 있는
-            간결한 이력서가 좋아요.
-          </p>
-
-          <p className="font-bold text-sm">
-            • 내가 지원하는 직무에서 어떤 경험, 역량을 가지고 있는지에 대한
-            부분을 위주로 작성하는게 좋아요.
+            • 내가 지원하는 직무에서 어떤 경험, 역량을 가지고 있는지에 대한 부분을 위주로 작성하는게
+            좋아요.
           </p>
         </div>
       </div>
@@ -326,13 +303,8 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
         <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>• 가장 많이 쓰는 이력서 사진 파일의 해상도는 300x400입니다.</p>
-          <p>
-            • 이력서 파일에서 지원하는 이미지 파일 확장자는 .jpg, .jpeg, .png
-            입니다.
-          </p>
-          <p>
-            • 증명사진의 형태가 전문성 있는 이미지와 신뢰도를 높일 수 있어요.
-          </p>
+          <p>• 이력서 파일에서 지원하는 이미지 파일 확장자는 .jpg, .jpeg, .png 입니다.</p>
+          <p>• 증명사진의 형태가 전문성 있는 이미지와 신뢰도를 높일 수 있어요.</p>
         </div>
 
         <div>
@@ -517,10 +489,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         <p className="text-2xl font-bold mb-2">간단 소개</p>
 
         <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
-          <p>
-            • 본인의 업무 경험을 기반으로 핵심 역량과 업무 스킬을 간단히 작성해
-            주세요.
-          </p>
+          <p>• 본인의 업무 경험을 기반으로 핵심 역량과 업무 스킬을 간단히 작성해 주세요.</p>
           <p>• 3~5줄로 요약하여 작성하는 것을 추천해요.</p>
         </div>
 
@@ -574,16 +543,10 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
                         let formattedValue = value;
                         if (value.length > 4) {
-                          formattedValue =
-                            value.slice(0, 4) + '.' + value.slice(4, 6);
+                          formattedValue = value.slice(0, 4) + '.' + value.slice(4, 6);
                         }
 
-                        updateField<Education>(
-                          index,
-                          'startDate',
-                          formattedValue,
-                          setEducation
-                        );
+                        updateField<Education>(index, 'startDate', formattedValue, setEducation);
                       }}
                       className="w-full h-10 p-2 border rounded"
                     />
@@ -603,16 +566,10 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
                         let formattedValue = value;
                         if (value.length > 4) {
-                          formattedValue =
-                            value.slice(0, 4) + '.' + value.slice(4, 6);
+                          formattedValue = value.slice(0, 4) + '.' + value.slice(4, 6);
                         }
 
-                        updateField<Education>(
-                          index,
-                          'endDate',
-                          formattedValue,
-                          setEducation
-                        );
+                        updateField<Education>(index, 'endDate', formattedValue, setEducation);
                       }}
                       className="w-full h-10 p-2 border rounded"
                     />
@@ -624,15 +581,13 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                         id={`currentlyEnrolled-${edu.id}`}
                         name={`currentlyEnrolled-${edu.id}`}
                         type="radio"
-                        checked={
-                          edu.isCurrentlyEnrolled === 'currentlyEnrolled'
-                        }
+                        checked={edu.isCurrentlyEnrolled === 'currentlyEnrolled'}
                         onChange={() => {
                           updateField<Education>(
                             index,
                             'isCurrentlyEnrolled',
                             'currentlyEnrolled',
-                            setEducation
+                            setEducation,
                           );
                         }}
                       />
@@ -655,14 +610,11 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                             index,
                             'isCurrentlyEnrolled',
                             'graduated',
-                            setEducation
+                            setEducation,
                           );
                         }}
                       />
-                      <label
-                        htmlFor={`graduated-${edu.id}`}
-                        className="mr-2 text-sm text-gray-500"
-                      >
+                      <label htmlFor={`graduated-${edu.id}`} className="mr-2 text-sm text-gray-500">
                         졸업
                       </label>
                     </div>
@@ -674,18 +626,10 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                         type="radio"
                         checked={edu.isCurrentlyEnrolled === 'etc'}
                         onChange={() => {
-                          updateField<Education>(
-                            index,
-                            'isCurrentlyEnrolled',
-                            'etc',
-                            setEducation
-                          );
+                          updateField<Education>(index, 'isCurrentlyEnrolled', 'etc', setEducation);
                         }}
                       />
-                      <label
-                        htmlFor={`etc-${edu.id}`}
-                        className="mr-2 text-sm text-gray-500"
-                      >
+                      <label htmlFor={`etc-${edu.id}`} className="mr-2 text-sm text-gray-500">
                         그 외(졸업예정, 휴학, 자퇴 등)
                       </label>
                     </div>
@@ -702,12 +646,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                     placeholder="학교명"
                     value={edu.schoolName}
                     onChange={(e) =>
-                      updateField<Education>(
-                        index,
-                        'schoolName',
-                        e.target.value,
-                        setEducation
-                      )
+                      updateField<Education>(index, 'schoolName', e.target.value, setEducation)
                     }
                     className="w-full h-10 p-2 border rounded"
                   />
@@ -719,12 +658,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                     placeholder="전공 및 학위 ex) 체육학 학사"
                     value={edu.majorAndDegree}
                     onChange={(e) =>
-                      updateField<Education>(
-                        index,
-                        'majorAndDegree',
-                        e.target.value,
-                        setEducation
-                      )
+                      updateField<Education>(index, 'majorAndDegree', e.target.value, setEducation)
                     }
                     className="w-full h-10 p-2 border rounded"
                   />
@@ -775,13 +709,12 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>• 최신순으로 작성해 주세요.</p>
           <p>
-            • 신입의 경우 지원하는 직무를 준비하는 과정에서 어떤 노력을 했고
-            어떤 경험을 얻었는지 작성하거나 직무와 관련된 대외활동/인턴/계약직
-            경험 등이 있다면 작성해 주세요.
+            • 신입의 경우 지원하는 직무를 준비하는 과정에서 어떤 노력을 했고 어떤 경험을 얻었는지
+            작성하거나 직무와 관련된 대외활동/인턴/계약직 경험 등이 있다면 작성해 주세요.
           </p>
           <p>
-            • 업무 또는 활동 시 담당했던 역할과 과정, 성과에 대해 구체적인 숫자
-            혹은 %로 자세히 작성하면 좋아요.
+            • 업무 또는 활동 시 담당했던 역할과 과정, 성과에 대해 구체적인 숫자 혹은 %로 자세히
+            작성하면 좋아요.
           </p>
           <p>• 최대 10개까지 등록할 수 있어요.</p>
         </div>
@@ -801,15 +734,9 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                         if (value.length > 6) return;
                         let formattedValue = value;
                         if (value.length > 4) {
-                          formattedValue =
-                            value.slice(0, 4) + '.' + value.slice(4, 6);
+                          formattedValue = value.slice(0, 4) + '.' + value.slice(4, 6);
                         }
-                        updateField<Experience>(
-                          index,
-                          'startDate',
-                          formattedValue,
-                          setExperience
-                        );
+                        updateField<Experience>(index, 'startDate', formattedValue, setExperience);
                       }}
                       className="w-full h-10 p-2 border rounded"
                     />
@@ -825,15 +752,9 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                         if (value.length > 6) return;
                         let formattedValue = value;
                         if (value.length > 4) {
-                          formattedValue =
-                            value.slice(0, 4) + '.' + value.slice(4, 6);
+                          formattedValue = value.slice(0, 4) + '.' + value.slice(4, 6);
                         }
-                        updateField<Experience>(
-                          index,
-                          'endDate',
-                          formattedValue,
-                          setExperience
-                        );
+                        updateField<Experience>(index, 'endDate', formattedValue, setExperience);
                       }}
                       className="w-full h-10 p-2 border rounded"
                     />
@@ -850,7 +771,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                           index,
                           'isCurrentlyEmployed',
                           !exp.isCurrentlyEmployed,
-                          setExperience
+                          setExperience,
                         );
                       }}
                     />
@@ -871,12 +792,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                     placeholder="회사명"
                     value={exp.companyName}
                     onChange={(e) =>
-                      updateField<Experience>(
-                        index,
-                        'companyName',
-                        e.target.value,
-                        setExperience
-                      )
+                      updateField<Experience>(index, 'companyName', e.target.value, setExperience)
                     }
                     className="w-full h-10 p-2 border rounded"
                   />
@@ -886,12 +802,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                     placeholder="직무"
                     value={exp.jobTitle}
                     onChange={(e) =>
-                      updateField<Experience>(
-                        index,
-                        'jobTitle',
-                        e.target.value,
-                        setExperience
-                      )
+                      updateField<Experience>(index, 'jobTitle', e.target.value, setExperience)
                     }
                     className="w-full h-10 p-2 border rounded"
                   />
@@ -901,12 +812,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                     value={exp.description}
                     className="w-full h-32 p-2 border rounded"
                     onChange={(e) =>
-                      updateField<Experience>(
-                        index,
-                        'description',
-                        e.target.value,
-                        setExperience
-                      )
+                      updateField<Experience>(index, 'description', e.target.value, setExperience)
                     }
                   />
                 </div>
@@ -957,10 +863,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         </div>
 
         {certificates.map((cert, index) => (
-          <div
-            key={cert.id}
-            className="flex items-center mb-10 relative sm:mb-2"
-          >
+          <div key={cert.id} className="flex items-center mb-10 relative sm:mb-2">
             <div className="w-full flex flex-col items-center gap-2 sm:flex-row">
               <input
                 type="text"
@@ -975,16 +878,10 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
                   let formattedValue = value;
                   if (value.length > 4) {
-                    formattedValue =
-                      value.slice(0, 4) + '.' + value.slice(4, 6);
+                    formattedValue = value.slice(0, 4) + '.' + value.slice(4, 6);
                   }
 
-                  updateField<Certificate>(
-                    index,
-                    'date',
-                    formattedValue,
-                    setCertificates
-                  );
+                  updateField<Certificate>(index, 'date', formattedValue, setCertificates);
                 }}
                 className="w-full h-10 sm:w-[20%] p-2 border rounded"
               />
@@ -998,7 +895,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                     index,
                     'certificateName',
                     e.target.value,
-                    setCertificates
+                    setCertificates,
                   )
                 }
                 className="w-full h-10 sm:w-[80%] p-2 border rounded"
@@ -1045,10 +942,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         </div>
 
         {awards.map((award, index) => (
-          <div
-            key={award.id}
-            className="flex items-center mb-10 relative sm:mb-2"
-          >
+          <div key={award.id} className="flex items-center mb-10 relative sm:mb-2">
             <div className="w-full flex flex-col items-center gap-2 sm:flex-row">
               <input
                 type="text"
@@ -1063,8 +957,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
                   let formattedValue = value;
                   if (value.length > 4) {
-                    formattedValue =
-                      value.slice(0, 4) + '.' + value.slice(4, 6);
+                    formattedValue = value.slice(0, 4) + '.' + value.slice(4, 6);
                   }
 
                   updateField<Award>(index, 'date', formattedValue, setAwards);
@@ -1076,14 +969,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 type="text"
                 placeholder="수상 경력 및 활동 내용"
                 value={award.awardName}
-                onChange={(e) =>
-                  updateField<Award>(
-                    index,
-                    'awardName',
-                    e.target.value,
-                    setAwards
-                  )
-                }
+                onChange={(e) => updateField<Award>(index, 'awardName', e.target.value, setAwards)}
                 className="w-full h-10 sm:w-[80%] p-2 border rounded"
               />
 
@@ -1122,30 +1008,20 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
         <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
           <p>
-            • 자신을 어필할 수 있는 포트폴리오가 있다면 링크도 첨부해 주세요.
-            ex)인스타그램, 블로그, 비포애프터 자료 등
+            • 자신을 어필할 수 있는 포트폴리오가 있다면 링크도 첨부해 주세요. ex)인스타그램, 블로그,
+            비포애프터 자료 등
             <br />• 최대 10개까지 등록할 수 있어요.
           </p>
         </div>
 
         {links.map((link, index) => (
-          <div
-            key={link.id}
-            className="flex items-center mb-10 relative sm:mb-2"
-          >
+          <div key={link.id} className="flex items-center mb-10 relative sm:mb-2">
             <div className="w-full flex flex-col items-center gap-2 sm:flex-row">
               <input
                 type="text"
                 placeholder="링크 제목"
                 value={link.title}
-                onChange={(e) =>
-                  updateField<LinkData>(
-                    index,
-                    'title',
-                    e.target.value,
-                    setLinks
-                  )
-                }
+                onChange={(e) => updateField<LinkData>(index, 'title', e.target.value, setLinks)}
                 className="w-full h-10 sm:w-[20%] p-2 border rounded"
               />
 
@@ -1153,9 +1029,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 type="text"
                 placeholder="URL"
                 value={link.url}
-                onChange={(e) =>
-                  updateField<LinkData>(index, 'url', e.target.value, setLinks)
-                }
+                onChange={(e) => updateField<LinkData>(index, 'url', e.target.value, setLinks)}
                 className="w-full h-10 sm:w-[80%] p-2 border rounded"
               />
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetUserData, useSignOut } from '@/actions/auth';
+import { useGetUserData, useSignOut } from '@/api/auth';
 import Spinner from './spinner';
 import Image from 'next/image';
 import Link from 'next/link';

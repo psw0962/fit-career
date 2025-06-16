@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import GlobalSpinner from '../common/global-spinner';
-import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
+import { useGetEnterpriseProfile, useGetUserData } from '@/api/auth';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -10,8 +10,9 @@ import Link from 'next/link';
 export default function EnterpriseProfile() {
   const router = useRouter();
   const { data: userData } = useGetUserData();
-  const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
-    useGetEnterpriseProfile(userData?.id ?? '');
+  const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } = useGetEnterpriseProfile(
+    userData?.id ?? '',
+  );
 
   if (enterpriseProfileLoading || !enterpriseProfile) {
     return <GlobalSpinner />;
@@ -50,24 +51,10 @@ export default function EnterpriseProfile() {
 
               <div className="flex flex-row flex-wrap gap-1 mt-1 sm:mt-2">
                 <p>∙ {enterpriseProfile[0]?.industry}</p>
+                <p>∙ {enterpriseProfile[0]?.address.split(' ').slice(1, 3).join(' ')}</p>
                 <p>
-                  ∙{' '}
-                  {enterpriseProfile[0]?.address
-                    .split(' ')
-                    .slice(1, 3)
-                    .join(' ')}
-                </p>
-                <p>
-                  ∙{' '}
-                  {calculateYearsInBusiness(
-                    enterpriseProfile[0]?.establishment
-                  )}
-                  년차 (
-                  {parseInt(
-                    enterpriseProfile[0]?.establishment.split('-')[0],
-                    10
-                  )}
-                  )
+                  ∙ {calculateYearsInBusiness(enterpriseProfile[0]?.establishment)}
+                  년차 ({parseInt(enterpriseProfile[0]?.establishment.split('-')[0], 10)})
                 </p>
               </div>
             </div>

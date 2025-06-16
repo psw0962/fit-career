@@ -1,14 +1,15 @@
+import Script from 'next/script';
 import type { Metadata } from 'next';
-import '../public/styles/global.css';
 import Nav from '@/components/common/nav';
 import Footer from '@/components/common/footer';
 import ReactQueryClientProvider from '@/config/react-query-client-provider';
-import { Toaster } from '@/components/ui/toaster';
-import { Analytics } from '@vercel/analytics/react';
-import { pretendard } from './fonts';
-import Script from 'next/script';
 import AdsenseAd from '@/components/common/adsense-ad';
 import AdsenseInit from '@/components/common/adsense-init';
+import { Toaster } from '@/components/ui/toaster';
+import { AlertDialog, ConfirmDialog } from '@/components/common/message';
+import { Analytics } from '@vercel/analytics/react';
+import { pretendard } from './fonts';
+import '../public/styles/global.css';
 
 export const viewport = {
   width: 'device-width',
@@ -113,10 +114,7 @@ export default function RootLayout({
           />
         </head>
 
-        <body
-          className="overflow-x-auto font-sans antialiased"
-          suppressHydrationWarning={true}
-        >
+        <body className="overflow-x-auto font-sans antialiased" suppressHydrationWarning={true}>
           <div className="flex flex-col min-w-[350px] min-h-screen">
             <Nav />
 
@@ -133,10 +131,13 @@ export default function RootLayout({
             <Footer />
           </div>
 
+          <Toaster />
+          <AlertDialog />
+          <ConfirmDialog />
+
           <AdsenseInit />
           <AdsenseAd />
           <Analytics />
-          <Toaster />
         </body>
       </html>
     </ReactQueryClientProvider>

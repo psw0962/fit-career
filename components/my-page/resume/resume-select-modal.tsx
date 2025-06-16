@@ -10,12 +10,12 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import Image from 'next/image';
-import { usePostResumeToHiring } from '@/actions/resume';
+import { usePostResumeToHiring } from '@/api/resume';
 import { HiringDataResponse, ResumeReceived } from '@/types/hiring/hiring';
 import { usePathname, useRouter } from 'next/navigation';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
 import { useSessionStorage } from 'usehooks-ts';
-import { useGetUserData } from '@/actions/auth';
+import { useGetUserData } from '@/api/auth';
 import { useToast } from '@/hooks/use-toast';
 
 export default function ResumeSelectIdModal({
@@ -49,15 +49,10 @@ export default function ResumeSelectIdModal({
     }
 
     const resumeReceived = hiringData?.[0].resume_received as ResumeReceived[];
-    const selectedResume = resumeData?.find(
-      (resume) => resume.id === selectedResumeId
-    );
+    const selectedResume = resumeData?.find((resume) => resume.id === selectedResumeId);
     const userIdToCheck = selectedResume?.user_id ?? userData?.id;
 
-    return (
-      resumeReceived?.some((resume) => resume.user_id === userIdToCheck) ??
-      false
-    );
+    return resumeReceived?.some((resume) => resume.user_id === userIdToCheck) ?? false;
   };
 
   const isDeadlinePassed = () => {
@@ -85,10 +80,7 @@ export default function ResumeSelectIdModal({
   };
 
   return (
-    <Dialog
-      open={resumeUserIdModalIsOpen}
-      onOpenChange={setResumeUserIdModalIsOpen}
-    >
+    <Dialog open={resumeUserIdModalIsOpen} onOpenChange={setResumeUserIdModalIsOpen}>
       <DialogTrigger asChild>
         <button
           className={`w-fit h-fit bg-[#4C71C0] ${
@@ -99,9 +91,7 @@ export default function ResumeSelectIdModal({
 
             if (!userData) {
               router.push(
-                `/auth?message=login_required&redirect=${encodeURIComponent(
-                  pathname || '/'
-                )}`
+                `/auth?message=login_required&redirect=${encodeURIComponent(pathname || '/')}`,
               );
               return;
             }
@@ -165,14 +155,10 @@ export default function ResumeSelectIdModal({
                           />
                         </div>
 
-                        <p className="max-w-[200px] break-all line-clamp-1">
-                          {resume.title}
-                        </p>
+                        <p className="max-w-[200px] break-all line-clamp-1">{resume.title}</p>
                       </div>
 
-                      <p className="text-xs text-gray-500">
-                        최근 수정일 : {resume.updated_at}
-                      </p>
+                      <p className="text-xs text-gray-500">최근 수정일 : {resume.updated_at}</p>
                     </div>
                   )}
 
@@ -194,9 +180,7 @@ export default function ResumeSelectIdModal({
                         </p>
                       </div>
 
-                      <p className="text-xs text-gray-500">
-                        최근 수정일 : {resume.updated_at}
-                      </p>
+                      <p className="text-xs text-gray-500">최근 수정일 : {resume.updated_at}</p>
                     </div>
                   )}
                 </label>
@@ -206,20 +190,14 @@ export default function ResumeSelectIdModal({
             {resumeData && resumeData.length > 0 && (
               <button
                 className={`w-fit mx-auto px-8 py-2 text-white text-sm cursor-pointer rounded ${
-                  confirmSubmitted()
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-[#4C71C0]'
+                  confirmSubmitted() ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#4C71C0]'
                 }`}
                 onClick={() => handlePostResumeToHiring()}
                 disabled={confirmSubmitted()}
               >
-                {confirmSubmitted() &&
-                  hiringData?.[0].is_visible &&
-                  '이미 지원한 채용공고입니다.'}
+                {confirmSubmitted() && hiringData?.[0].is_visible && '이미 지원한 채용공고입니다.'}
 
-                {confirmSubmitted() === false &&
-                  hiringData?.[0].is_visible &&
-                  '제출하기'}
+                {confirmSubmitted() === false && hiringData?.[0].is_visible && '제출하기'}
 
                 {hiringData?.[0].is_visible === false && (
                   <>
@@ -232,9 +210,7 @@ export default function ResumeSelectIdModal({
             )}
 
             {confirmSubmitted() && (
-              <p className="text-xs text-[red] mt-2">
-                *지원 취소는 마이페이지에서 할 수 있어요.
-              </p>
+              <p className="text-xs text-[red] mt-2">*지원 취소는 마이페이지에서 할 수 있어요.</p>
             )}
           </div>
         </DialogContent>

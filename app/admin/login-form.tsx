@@ -1,6 +1,6 @@
 'use client';
 
-import { useSignInWithEmail } from '@/actions/auth';
+import { useSignInWithEmail } from '@/api/auth';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { validateInput } from '@/functions/validateInput';
 import { useState } from 'react';
@@ -36,9 +36,7 @@ export default function LoginForm() {
   return (
     <div className="w-full mx-auto min-h-[50vh] flex flex-col justify-center">
       <div className="flex flex-col gap-2 justify-center items-center">
-        <p className="text-center text-2xl font-bold break-keep">
-          {`[관리자 로그인]`}
-        </p>
+        <p className="text-center text-2xl font-bold break-keep">{`[관리자 로그인]`}</p>
 
         <p className="text-center text-2xl font-bold break-keep">
           피트니스의 모든 정보, FIT Career
@@ -51,10 +49,7 @@ export default function LoginForm() {
         </p>
       </div>
 
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-4 mx-auto mt-10"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-4 mx-auto mt-10">
         <div className="flex flex-col gap-1">
           <input
             type="email"
@@ -76,9 +71,7 @@ export default function LoginForm() {
             autoComplete="email"
           />
           {emailError && (
-            <span className="text-red-500 text-sm">
-              올바른 이메일 형식이 아닙니다.
-            </span>
+            <span className="text-red-500 text-sm">올바른 이메일 형식이 아닙니다.</span>
           )}
         </div>
 
@@ -97,11 +90,7 @@ export default function LoginForm() {
             }`}
             autoComplete="current-password"
           />
-          {passwordError && (
-            <span className="text-red-500 text-sm">
-              비밀번호를 입력해주세요.
-            </span>
-          )}
+          {passwordError && <span className="text-red-500 text-sm">비밀번호를 입력해주세요.</span>}
         </div>
 
         <button

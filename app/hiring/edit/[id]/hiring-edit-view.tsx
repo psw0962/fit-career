@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetHiringById, usePatchHiring } from '@/actions/hiring';
+import { useGetHiringById, usePatchHiring } from '@/api/hiring';
 import * as Slider from '@radix-ui/react-slider';
 import Image from 'next/image';
 import { format, parse } from 'date-fns';
@@ -11,7 +11,7 @@ import DatePicker from 'react-datepicker';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import 'react-datepicker/dist/react-datepicker.css';
 import GlobalSpinner from '@/components/common/global-spinner';
-import { useGetEnterpriseProfile, useGetUserData } from '@/actions/auth';
+import { useGetEnterpriseProfile, useGetUserData } from '@/api/auth';
 import { POSITIONS } from '@/constant/position';
 import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
@@ -29,11 +29,7 @@ import {
   TouchSensor,
   MouseSensor,
 } from '@dnd-kit/core';
-import {
-  SortableContext,
-  arrayMove,
-  horizontalListSortingStrategy,
-} from '@dnd-kit/sortable';
+import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable';
 
 interface UploadedImage {
   id: string;
@@ -67,9 +63,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
   const [periodValue, setPeriodValue] = useState<number[]>([0, 10]);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
-  const [deadLine, setDeadLine] = useState<string>(
-    format(new Date(), 'yyyy-MM-dd')
-  );
+  const [deadLine, setDeadLine] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const [images, setImages] = useState<UploadedImage[]>([]);
 
   const editor = useEditor({
@@ -87,11 +81,11 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
   });
 
   const { mutate: patchHiring, status: patchHiringStatus } = usePatchHiring();
-  const { data: hiringData, isLoading: hiringDataLoading } =
-    useGetHiringById(hiringId);
+  const { data: hiringData, isLoading: hiringDataLoading } = useGetHiringById(hiringId);
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
-  const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } =
-    useGetEnterpriseProfile(userData?.id ?? '');
+  const { data: enterpriseProfile, isLoading: enterpriseProfileLoading } = useGetEnterpriseProfile(
+    userData?.id ?? '',
+  );
 
   const mouseSensor = useSensor(MouseSensor, {
     activationConstraint: {
@@ -120,9 +114,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
     setPeriodValue(value);
   };
 
-  const handleImageUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
       const fileArray = Array.from(files);
@@ -137,9 +129,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
           };
 
           const compressedBlob = await imageCompression(file, options);
-          const uniqueSuffix = `${Date.now()}-${Math.round(
-            Math.random() * 1e9
-          )}`;
+          const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
           const uniqueId = `${uniqueSuffix}-${file.name}`;
           const compressedFile = new File([compressedBlob], file.name, {
             type: file.type,
@@ -292,11 +282,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
 
   useEffect(() => {
     if (!userDataLoading && !userData) {
-      router.push(
-        `/auth?message=login_required&redirect=${encodeURIComponent(
-          pathname || '/'
-        )}`
-      );
+      router.push(`/auth?message=login_required&redirect=${encodeURIComponent(pathname || '/')}`);
       return;
     }
 
@@ -346,7 +332,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
         hiringData.images.map((img: string) => ({
           id: img,
           file: img,
-        }))
+        })),
       );
     }
   }, [hiringData]);
@@ -368,24 +354,22 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
 
       <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
         <p className="font-bold text-sm">
-          • 무분별한 도배 게시글 방지를 위해 채용공고 등록은 24시간마다 한 번만
-          할 수 있어요.
+          • 무분별한 도배 게시글 방지를 위해 채용공고 등록은 24시간마다 한 번만 할 수 있어요.
         </p>
         <p className="text-sm">
-          • 지원자가 한눈에 직무와 관련된 정보를 파악할 수 있도록 명확하고
-          간결한 제목을 작성하면 좋아요.
+          • 지원자가 한눈에 직무와 관련된 정보를 파악할 수 있도록 명확하고 간결한 제목을 작성하면
+          좋아요.
         </p>
         <p className="text-sm">
-          • 회사의 비전, 미션, 문화 등을 간단히 소개하여 지원자가 회사에 대한
-          이해를 높일 수 있도록 하면 좋아요.
+          • 회사의 비전, 미션, 문화 등을 간단히 소개하여 지원자가 회사에 대한 이해를 높일 수 있도록
+          하면 좋아요.
         </p>
         <p className="text-sm">
-          • 필수 자격 요건과 우대 사항을 명확히 구분하여 작성하고, 근무 지역과
-          회사가 제공하는 혜택과 복지를 명시하여 지원률을 높일 수 있어요.
+          • 필수 자격 요건과 우대 사항을 명확히 구분하여 작성하고, 근무 지역과 회사가 제공하는
+          혜택과 복지를 명시하여 지원률을 높일 수 있어요.
         </p>
         <p className="text-sm">
-          • 지원 절차와 채용 프로세스를 명확히 안내하여 지원자가 쉽게 지원할 수
-          있도록 하면 좋아요.
+          • 지원 절차와 채용 프로세스를 명확히 안내하여 지원자가 쉽게 지원할 수 있도록 하면 좋아요.
         </p>
       </div>
 
@@ -426,12 +410,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
               <p className="mt-2 text-sm">
                 {enterpriseProfile[0]?.industry} /{' '}
                 {calculateYearsInBusiness(enterpriseProfile[0]?.establishment)}
-                년차 (
-                {parseInt(
-                  enterpriseProfile[0]?.establishment.split('-')[0],
-                  10
-                )}
-                )
+                년차 ({parseInt(enterpriseProfile[0]?.establishment.split('-')[0], 10)})
               </p>
 
               <div className="mt-2 text-[#707173] text-sm">
@@ -481,9 +460,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
               type="text"
               id="address-detail"
               name="address-detail"
-              onChange={(e) =>
-                setAddress({ ...address, detailAddress: e.target.value })
-              }
+              onChange={(e) => setAddress({ ...address, detailAddress: e.target.value })}
               value={address.detailAddress}
               placeholder="상세 주소 입력"
               className="border p-2"
@@ -626,22 +603,14 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
         <p className="text-2xl font-bold mb-2">회사 이미지</p>
 
         <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
-          <p className="font-bold text-sm">
-            • 이미지는 최대 5개까지 업로드 가능해요
-          </p>
+          <p className="font-bold text-sm">• 이미지는 최대 5개까지 업로드 가능해요</p>
           <p className="text-sm">
-            • <span className="font-bold">가로 방향</span>의 사진이 회사의
-            전체적인 모습을 더 잘 보여줄 수 있습니다.
+            • <span className="font-bold">가로 방향</span>의 사진이 회사의 전체적인 모습을 더 잘
+            보여줄 수 있습니다.
           </p>
-          <p className="text-sm">
-            • 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.
-          </p>
-          <p className="text-sm">
-            • 첫 번째 이미지가 채용공고 대표 이미지로 사용돼요.
-          </p>
-          <p className="text-sm">
-            • 이미지를 드래그하면 업로드될 이미지 순서를 변경할 수 있어요.
-          </p>
+          <p className="text-sm">• 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.</p>
+          <p className="text-sm">• 첫 번째 이미지가 채용공고 대표 이미지로 사용돼요.</p>
+          <p className="text-sm">• 이미지를 드래그하면 업로드될 이미지 순서를 변경할 수 있어요.</p>
         </div>
 
         <div className="relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
@@ -682,9 +651,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
                   image={img.file}
                   onRemove={() => removeImage(img.id)}
                 />
-                {index === 0 && (
-                  <p className="text-xs sm:text-sm font-bold">대표 이미지</p>
-                )}
+                {index === 0 && <p className="text-xs sm:text-sm font-bold">대표 이미지</p>}
               </div>
             ))}
           </div>
