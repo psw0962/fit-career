@@ -3,13 +3,27 @@
 import { useGetHiring } from '@/api/hiring';
 import Image from 'next/image';
 import { HiringFilterProps } from '@/types/hiring/filter-type';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { formatPeriod } from '@/functions/formatPeriod';
 import Link from 'next/link';
 import { HiringDataResponse } from '@/types/hiring/hiring';
-import GlobalSpinner from '@/components/common/global-spinner';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import { useCheckIsBookmarked, useToggleBookmark } from '@/api/hiring';
+
+const HiringCardSkeleton = () => (
+  <div className="relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded animate-pulse">
+    <div className="relative w-full aspect-[4/3] mx-auto mb-4 bg-gray-200 rounded"></div>
+    <div className="w-full flex flex-col gap-2">
+      <div className="h-5 bg-gray-200 rounded w-3/4"></div>
+      <div className="flex items-center gap-1 mt-2">
+        <div className="w-5 h-5 bg-gray-200 rounded-full"></div>
+        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+      </div>
+      <div className="h-3 bg-gray-200 rounded w-1/3 mt-2"></div>
+      <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+    </div>
+  </div>
+);
 
 export default function HiringFilter({
   regionFilter,
@@ -19,6 +33,8 @@ export default function HiringFilter({
   setCurrentPage,
 }: HiringFilterProps) {
   const itemsPerPage = 12;
+
+  const [imagesLoaded, setImagesLoaded] = useState<Record<string, boolean>>({});
 
   useScrollRestoration('hiring-list');
 
@@ -50,6 +66,10 @@ export default function HiringFilter({
     }, 0);
   };
 
+  const handleImageLoad = (id: string) => {
+    setImagesLoaded((prev) => ({ ...prev, [id]: true }));
+  };
+
   useEffect(() => {
     const savedPage = sessionStorage.getItem('hiring-current-page');
     if (savedPage) {
@@ -58,7 +78,13 @@ export default function HiringFilter({
   }, [setCurrentPage]);
 
   if (hiringDataIsLoading) {
-    return <GlobalSpinner />;
+    return (
+      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        {Array.from({ length: itemsPerPage }).map((_, index) => (
+          <HiringCardSkeleton key={index} />
+        ))}
+      </div>
+    );
   }
 
   return (
@@ -81,6 +107,10 @@ export default function HiringFilter({
               >
                 <div className="relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
                   <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
+                    {!imagesLoaded[x.id] && (
+                      <div className="absolute inset-0 bg-gray-100 rounded" />
+                    )}
+
                     <Image
                       src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
                       alt={`${x.title} 이미지`}
@@ -92,6 +122,7 @@ export default function HiringFilter({
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                       placeholder="blur"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                      onLoad={() => handleImageLoad(x.id)}
                     />
                   </div>
 
@@ -111,7 +142,8 @@ export default function HiringFilter({
                       className="p-2"
                       style={{ objectFit: 'contain' }}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      sizes="32px"
+                      loading="lazy"
                       blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
                     />
                   </div>
@@ -126,7 +158,8 @@ export default function HiringFilter({
                           alt={`${x.enterprise_profile?.name} 로고`}
                           className="rounded"
                           fill
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                          sizes="20px"
+                          loading="lazy"
                           style={{ objectFit: 'contain' }}
                         />
                       </div>
