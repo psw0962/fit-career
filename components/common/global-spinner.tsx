@@ -23,14 +23,14 @@ export default function GlobalSpinner({
 
   return (
     <div
-      className="absolute inset-0 flex items-center justify-center z-50 bg-white/80 backdrop-blur-sm"
+      className='absolute inset-0 flex items-center justify-center z-50 bg-white/80 backdrop-blur-sm'
       onClick={(e) => e.preventDefault()}
       onTouchStart={(e) => e.preventDefault()}
       style={{ cursor: 'not-allowed' }}
     >
-      <div className="flex space-x-2">
+      <div className='flex space-x-2'>
         <div
-          className="rounded-full animate-bounce"
+          className='rounded-full animate-bounce'
           style={{
             width,
             height,
@@ -39,7 +39,7 @@ export default function GlobalSpinner({
           }}
         ></div>
         <div
-          className="rounded-full animate-bounce"
+          className='rounded-full animate-bounce'
           style={{
             width,
             height,
@@ -48,7 +48,7 @@ export default function GlobalSpinner({
           }}
         ></div>
         <div
-          className="rounded-full animate-bounce"
+          className='rounded-full animate-bounce'
           style={{
             width,
             height,

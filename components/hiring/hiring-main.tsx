@@ -11,37 +11,26 @@ import useDebounce from '@/hooks/use-debounce';
 import { useSessionStorage } from 'usehooks-ts';
 
 export default function HiringMain() {
-  const [regionFilter, setRegionFilter] = useSessionStorage<RegionFilter>(
-    'regionFilter',
-    {
-      selectedCity: null,
-      allSelectedCities: [],
-      selectedCounties: [],
-    }
-  );
-  const [positionFilter, setPositionFilter] = useSessionStorage<string[]>(
-    'positionFilter',
-    []
-  );
+  const [regionFilter, setRegionFilter] = useSessionStorage<RegionFilter>('regionFilter', {
+    selectedCity: null,
+    allSelectedCities: [],
+    selectedCounties: [],
+  });
+  const [positionFilter, setPositionFilter] = useSessionStorage<string[]>('positionFilter', []);
 
   const [periodValueFilter, setPeriodValueFilter] = useSessionStorage<number[]>(
     'periodValueFilter',
-    [0, 10]
+    [0, 10],
   );
 
-  const [currentPage, setCurrentPage] = useSessionStorage(
-    'hiring-current-page',
-    1
-  );
+  const [currentPage, setCurrentPage] = useSessionStorage('hiring-current-page', 1);
 
   const debouncedRegionFilter = useDebounce(regionFilter);
   const debouncedPositionFilter = useDebounce(positionFilter);
   const debouncedPeriodValueFilter = useDebounce(periodValueFilter);
 
   const handleFilterChange = {
-    region: (
-      newFilter: RegionFilter | ((prev: RegionFilter) => RegionFilter)
-    ) => {
+    region: (newFilter: RegionFilter | ((prev: RegionFilter) => RegionFilter)) => {
       setRegionFilter(newFilter);
       setCurrentPage(1);
     },
@@ -68,41 +57,38 @@ export default function HiringMain() {
 
   return (
     <div>
-      <div className="flex justify-between items-center">
-        <p className="text-2xl font-bold underline underline-offset-4 decoration-[#4C71C0]">
+      <div className='flex justify-between items-center'>
+        <p className='text-2xl font-bold underline underline-offset-4 decoration-[#4C71C0]'>
           채용정보
         </p>
 
-        <Link href="/hiring/write" passHref>
-          <p className="w-fit px-4 py-2 text-white text-sm bg-[#4C71C0] rounded  cursor-pointer">
+        <Link href='/hiring/write' passHref>
+          <p className='w-fit px-4 py-2 text-white text-sm bg-[#4C71C0] rounded  cursor-pointer'>
             채용공고 등록
           </p>
         </Link>
       </div>
 
-      <div className="flex gap-1.5 mt-4 overflow-x-auto scrollbar-hide whitespace-nowrap">
+      <div className='flex gap-1.5 mt-4 overflow-x-auto scrollbar-hide whitespace-nowrap'>
         <button
-          className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-2 cursor-pointer"
-          aria-haspopup="dialog"
-          aria-expanded="false"
+          className='flex gap-1 items-center justify-center rounded bg-white border px-2 py-2 cursor-pointer'
+          aria-haspopup='dialog'
+          aria-expanded='false'
           onClick={() => resetFilters()}
         >
-          <div className="relative w-4 h-4">
+          <div className='relative w-4 h-4'>
             <Image
-              src="/svg/reset.svg"
-              alt="reset"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              src='/svg/reset.svg'
+              alt='reset'
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
               fill
               style={{ objectFit: 'cover' }}
             />
           </div>
-          <p className="text-sm">전체 초기화</p>
+          <p className='text-sm'>전체 초기화</p>
         </button>
 
-        <RegionsFilter
-          regionFilter={regionFilter}
-          setRegionFilter={handleFilterChange.region}
-        />
+        <RegionsFilter regionFilter={regionFilter} setRegionFilter={handleFilterChange.region} />
         <PositionFilter
           positionFilter={positionFilter}
           setPositionFilter={handleFilterChange.position}
@@ -113,7 +99,7 @@ export default function HiringMain() {
         />
       </div>
 
-      <div className="w-full h-[1px] my-4 bg-gray-200" />
+      <div className='w-full h-[1px] my-4 bg-gray-200' />
 
       <HiringFilter
         regionFilter={debouncedRegionFilter}

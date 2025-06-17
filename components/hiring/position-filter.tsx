@@ -14,10 +14,7 @@ import {
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/common/spinner';
 
-export default function PositionFilter({
-  positionFilter,
-  setPositionFilter,
-}: PositionFilterProps) {
+export default function PositionFilter({ positionFilter, setPositionFilter }: PositionFilterProps) {
   const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempFilter, setTempFilter] = useState<string[]>([]);
@@ -44,8 +41,8 @@ export default function PositionFilter({
 
   if (!mounted) {
     return (
-      <button className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded">
-        <Spinner width="10px" height="10px" />
+      <button className='flex items-center justify-center gap-0.5 py-2 px-2 border rounded'>
+        <Spinner width='10px' height='10px' />
       </button>
     );
   }
@@ -54,35 +51,33 @@ export default function PositionFilter({
     <Dialog open={isModalOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         <button
-          className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded"
-          aria-haspopup="dialog"
+          className='flex items-center justify-center gap-0.5 py-2 px-2 border rounded'
+          aria-haspopup='dialog'
           aria-expanded={isModalOpen}
         >
-          <p className="text-sm">직무필터</p>
-          <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">
-            {positionFilter.length}
-          </p>
+          <p className='text-sm'>직무필터</p>
+          <p className='bg-[#4C71C0] rounded px-1 text-white text-xs'>{positionFilter.length}</p>
         </button>
       </DialogTrigger>
 
-      <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
+      <DialogContent className='w-[90vw] max-w-[500px] min-w-[300px]'>
         <DialogHeader>
           <DialogTitle>직무필터</DialogTitle>
-          <DialogDescription className="hidden"></DialogDescription>
+          <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-3 mt-3">
+        <div className='flex flex-col gap-3 mt-3'>
           <button
-            className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
+            className='flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer'
             onClick={() => {
               setTempFilter([]);
             }}
           >
-            <div className="relative w-4 h-4">
+            <div className='relative w-4 h-4'>
               <Image
-                src="/svg/reset.svg"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                alt="reset"
+                src='/svg/reset.svg'
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                alt='reset'
                 fill
                 style={{ objectFit: 'cover' }}
               />
@@ -90,14 +85,11 @@ export default function PositionFilter({
             <p>초기화</p>
           </button>
 
-          <div className="flex flex-wrap gap-2 border rounded p-4">
+          <div className='flex flex-wrap gap-2 border rounded p-4'>
             {POSITIONS.map((position) => (
-              <label
-                key={position.id}
-                className="flex items-center gap-2 break-keep"
-              >
+              <label key={position.id} className='flex items-center gap-2 break-keep'>
                 <input
-                  type="checkbox"
+                  type='checkbox'
                   checked={tempFilter.includes(position.position)}
                   onChange={() => handleCheckboxChange(position.position)}
                 />
@@ -107,7 +99,7 @@ export default function PositionFilter({
           </div>
 
           <button
-            className="w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white text-sm rounded"
+            className='w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white text-sm rounded'
             onClick={() => {
               setPositionFilter(tempFilter);
               setIsModalOpen(false);

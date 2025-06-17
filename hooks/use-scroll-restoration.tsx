@@ -5,10 +5,7 @@ import { useEffect } from 'react';
 export function useScrollRestoration(key: string) {
   useEffect(() => {
     const handleBeforeUnload = () => {
-      sessionStorage.setItem(
-        `scroll-${key}`,
-        JSON.stringify({ scroll: window.scrollY })
-      );
+      sessionStorage.setItem(`scroll-${key}`, JSON.stringify({ scroll: window.scrollY }));
     };
 
     const restoreScroll = () => {

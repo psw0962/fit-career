@@ -265,43 +265,43 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
   }
 
   return (
-    <div className="flex flex-col mb-20">
-      <div className="flex flex-col mb-20">
-        <p className="text-2xl font-bold mb-2">이력서 작성 TIP</p>
+    <div className='flex flex-col mb-20'>
+      <div className='flex flex-col mb-20'>
+        <p className='text-2xl font-bold mb-2'>이력서 작성 TIP</p>
 
-        <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
-          <p className="font-bold text-sm">• 모든 항목을 작성할 필요는 없어요.</p>
+        <div className='text-xs p-2 bg-[#EAEAEC] rounded break-keep'>
+          <p className='font-bold text-sm'>• 모든 항목을 작성할 필요는 없어요.</p>
 
-          <p className="font-bold text-sm">
+          <p className='font-bold text-sm'>
             • 글자수를 채우는 이력서 보다는 내가 어떤 사람인지 보여줄 수 있는 간결한 이력서가
             좋아요.
           </p>
 
-          <p className="font-bold text-sm">
+          <p className='font-bold text-sm'>
             • 내가 지원하는 직무에서 어떤 경험, 역량을 가지고 있는지에 대한 부분을 위주로 작성하는게
             좋아요.
           </p>
         </div>
       </div>
 
-      <div className="flex flex-col mb-20" ref={titleRef}>
-        <p className="text-2xl font-bold mb-2">
-          이력서 제목 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={titleRef}>
+        <p className='text-2xl font-bold mb-2'>
+          이력서 제목 <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
         <input
-          type="text"
+          type='text'
           onChange={(e) => setTitle(e.target.value)}
           value={title}
-          placeholder="홍길동_이력서_퍼스널트레이너"
-          className="border p-2 rounded"
+          placeholder='홍길동_이력서_퍼스널트레이너'
+          className='border p-2 rounded'
         />
       </div>
 
-      <div className="flex flex-col mb-20">
-        <p className="text-2xl font-bold mb-2">이력서 사진</p>
+      <div className='flex flex-col mb-20'>
+        <p className='text-2xl font-bold mb-2'>이력서 사진</p>
 
-        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className='text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep'>
           <p>• 가장 많이 쓰는 이력서 사진 파일의 해상도는 300x400입니다.</p>
           <p>• 이력서 파일에서 지원하는 이미지 파일 확장자는 .jpg, .jpeg, .png 입니다.</p>
           <p>• 증명사진의 형태가 전문성 있는 이미지와 신뢰도를 높일 수 있어요.</p>
@@ -310,57 +310,57 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         <div>
           {/*  이미지가 업로드 되기 전 */}
           {!currentResumeImage && resumeImage.length === 0 && (
-            <div className="relative flex items-center justify-center w-36 h-36 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all">
+            <div className='relative flex items-center justify-center w-36 h-36 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all'>
               <input
-                type="file"
-                id="file-upload"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                accept="image/*"
+                type='file'
+                id='file-upload'
+                className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+                accept='image/*'
                 onChange={handleResumeImageUpload}
               />
-              <div className="flex flex-col items-center">
+              <div className='flex flex-col items-center'>
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 text-gray-400 mb-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  xmlns='http://www.w3.org/2000/svg'
+                  className='h-12 w-12 text-gray-400 mb-2'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
                     strokeWidth={2}
-                    d="M7 16V12M7 8h.01M16 12V8m0 8h.01M16 12h.01m0 0L12 16l-4-4"
+                    d='M7 16V12M7 8h.01M16 12V8m0 8h.01M16 12h.01m0 0L12 16l-4-4'
                   />
                 </svg>
-                <span className="text-gray-600">이미지 업로드</span>
+                <span className='text-gray-600'>이미지 업로드</span>
               </div>
             </div>
           )}
 
           {/* 현재 상태 이미지가 업로드 된 경우 */}
           {resumeImage.length > 0 && (
-            <div className="relative w-20 h-20 border-gray-300">
+            <div className='relative w-20 h-20 border-gray-300'>
               <Image
                 src={resumeImageUrl ?? ''}
-                alt="resume image"
+                alt='resume image'
                 fill
                 style={{ objectFit: 'cover' }}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                className="rounded"
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
+                className='rounded'
               />
 
               <button
                 onClick={() => removeResumeImage(0)}
-                className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
+                className='absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]'
               >
                 <Image
-                  src="/svg/close.svg"
-                  alt="close"
+                  src='/svg/close.svg'
+                  alt='close'
                   width={12}
                   height={12}
-                  className="invert brightness-0"
+                  className='invert brightness-0'
                   draggable={false}
                 />
               </button>
@@ -371,27 +371,27 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
           {resumeData &&
             resumeData?.[0]?.resume_image[0]?.length > 0 &&
             currentResumeImage !== '' && (
-              <div className="relative w-20 h-20 border-gray-300">
+              <div className='relative w-20 h-20 border-gray-300'>
                 <Image
                   src={currentResumeImage}
-                  alt="resume image"
+                  alt='resume image'
                   fill
                   style={{ objectFit: 'cover' }}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
-                  className="rounded"
+                  sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                  blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
+                  className='rounded'
                 />
 
                 <button
                   onClick={() => setCurrentResumeImage('')}
-                  className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
+                  className='absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]'
                 >
                   <Image
-                    src="/svg/close.svg"
-                    alt="close"
+                    src='/svg/close.svg'
+                    alt='close'
                     width={12}
                     height={12}
-                    className="invert brightness-0"
+                    className='invert brightness-0'
                     draggable={false}
                   />
                 </button>
@@ -400,28 +400,28 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         </div>
       </div>
 
-      <div className="flex flex-col mb-20" ref={nameRef}>
-        <p className="text-2xl font-bold mb-2">
-          이름 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={nameRef}>
+        <p className='text-2xl font-bold mb-2'>
+          이름 <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
         <input
-          type="text"
+          type='text'
           onChange={(e) => setName(e.target.value)}
           value={name}
-          placeholder="이름을 입력해 주세요"
-          className="border p-2 rounded"
+          placeholder='이름을 입력해 주세요'
+          className='border p-2 rounded'
         />
       </div>
 
-      <div className="flex flex-col mb-20" ref={phoneRef}>
-        <p className="text-2xl font-bold mb-2">
-          연락처 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={phoneRef}>
+        <p className='text-2xl font-bold mb-2'>
+          연락처 <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
-        <div className="flex gap-2">
+        <div className='flex gap-2'>
           <input
-            type="text"
+            type='text'
             value={phone.part1}
             onChange={(e) => {
               const value = e.target.value;
@@ -429,12 +429,12 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 setPhone((prev) => ({ ...prev, part1: value }));
               }
             }}
-            placeholder="010"
-            className="border p-2 rounded w-20"
+            placeholder='010'
+            className='border p-2 rounded w-20'
           />
 
           <input
-            type="text"
+            type='text'
             value={phone.part2}
             onChange={(e) => {
               const value = e.target.value;
@@ -442,12 +442,12 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 setPhone((prev) => ({ ...prev, part2: value }));
               }
             }}
-            placeholder="0000"
-            className="border p-2 rounded w-20"
+            placeholder='0000'
+            className='border p-2 rounded w-20'
           />
 
           <input
-            type="text"
+            type='text'
             value={phone.part3}
             onChange={(e) => {
               const value = e.target.value;
@@ -455,19 +455,19 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 setPhone((prev) => ({ ...prev, part3: value }));
               }
             }}
-            placeholder="0000"
-            className="border p-2 rounded w-20"
+            placeholder='0000'
+            className='border p-2 rounded w-20'
           />
         </div>
       </div>
 
-      <div className="flex flex-col mb-20" ref={emailRef}>
-        <p className="text-2xl font-bold mb-2">
-          이메일 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={emailRef}>
+        <p className='text-2xl font-bold mb-2'>
+          이메일 <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
         <input
-          type="text"
+          type='text'
           onChange={(e) => {
             const value = e.target.value;
             setEmail(value);
@@ -478,17 +478,17 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
             }
           }}
           value={email}
-          placeholder="이메일을 입력해 주세요"
-          className="border p-2 rounded"
+          placeholder='이메일을 입력해 주세요'
+          className='border p-2 rounded'
         />
 
-        {emailError && <p className="text-red-500 mt-2">{emailError}</p>}
+        {emailError && <p className='text-red-500 mt-2'>{emailError}</p>}
       </div>
 
-      <div className="flex flex-col mb-20">
-        <p className="text-2xl font-bold mb-2">간단 소개</p>
+      <div className='flex flex-col mb-20'>
+        <p className='text-2xl font-bold mb-2'>간단 소개</p>
 
-        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className='text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep'>
           <p>• 본인의 업무 경험을 기반으로 핵심 역량과 업무 스킬을 간단히 작성해 주세요.</p>
           <p>• 3~5줄로 요약하여 작성하는 것을 추천해요.</p>
         </div>
@@ -496,9 +496,9 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         <EditorContent editor={editor} />
       </div>
 
-      <div className="flex flex-col mb-20">
-        <div className="flex gap-3 items-center mb-2">
-          <p className="text-2xl font-bold">학력</p>
+      <div className='flex flex-col mb-20'>
+        <div className='flex gap-3 items-center mb-2'>
+          <p className='text-2xl font-bold'>학력</p>
 
           <button
             onClick={() =>
@@ -511,13 +511,13 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 majorAndDegree: '',
               })
             }
-            className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
+            className='bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit'
           >
             + 학력 추가
           </button>
         </div>
 
-        <div className="text-xs p-2 mb-7 bg-[#EAEAEC] rounded break-keep">
+        <div className='text-xs p-2 mb-7 bg-[#EAEAEC] rounded break-keep'>
           <p>
             • 최신순으로 작성해 주세요.
             <br />• 최대 10개까지 등록할 수 있어요.
@@ -527,12 +527,12 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         {education.map((edu, index) => (
           <React.Fragment key={edu.id}>
             <div className={`flex items-center`}>
-              <div className="relative w-full flex flex-col gap-2 [@media(min-width:1150px)]:flex-row">
-                <div className="w-full [@media(min-width:1150px)]:w-[20%] flex flex-col gap-2">
-                  <div className="w-full flex gap-1 items-center">
+              <div className='relative w-full flex flex-col gap-2 [@media(min-width:1150px)]:flex-row'>
+                <div className='w-full [@media(min-width:1150px)]:w-[20%] flex flex-col gap-2'>
+                  <div className='w-full flex gap-1 items-center'>
                     <input
-                      type="text"
-                      placeholder="YYYY.MM"
+                      type='text'
+                      placeholder='YYYY.MM'
                       value={edu.startDate}
                       onChange={(e) => {
                         const value = e.target.value.replace(/[^0-9]/g, '');
@@ -548,14 +548,14 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
                         updateField<Education>(index, 'startDate', formattedValue, setEducation);
                       }}
-                      className="w-full h-10 p-2 border rounded"
+                      className='w-full h-10 p-2 border rounded'
                     />
 
                     <p>~</p>
 
                     <input
-                      type="text"
-                      placeholder="YYYY.MM"
+                      type='text'
+                      placeholder='YYYY.MM'
                       value={edu.endDate}
                       onChange={(e) => {
                         const value = e.target.value.replace(/[^0-9]/g, '');
@@ -571,16 +571,16 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
                         updateField<Education>(index, 'endDate', formattedValue, setEducation);
                       }}
-                      className="w-full h-10 p-2 border rounded"
+                      className='w-full h-10 p-2 border rounded'
                     />
                   </div>
 
                   <div>
-                    <div className="flex items-center gap-1">
+                    <div className='flex items-center gap-1'>
                       <input
                         id={`currentlyEnrolled-${edu.id}`}
                         name={`currentlyEnrolled-${edu.id}`}
-                        type="radio"
+                        type='radio'
                         checked={edu.isCurrentlyEnrolled === 'currentlyEnrolled'}
                         onChange={() => {
                           updateField<Education>(
@@ -593,17 +593,17 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                       />
                       <label
                         htmlFor={`currentlyEnrolled-${edu.id}`}
-                        className="mr-2 text-sm text-gray-500"
+                        className='mr-2 text-sm text-gray-500'
                       >
                         현재 재학중
                       </label>
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    <div className='flex items-center gap-1'>
                       <input
                         id={`graduated-${edu.id}`}
                         name={`graduated-${edu.id}`}
-                        type="radio"
+                        type='radio'
                         checked={edu.isCurrentlyEnrolled === 'graduated'}
                         onChange={() => {
                           updateField<Education>(
@@ -614,22 +614,22 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                           );
                         }}
                       />
-                      <label htmlFor={`graduated-${edu.id}`} className="mr-2 text-sm text-gray-500">
+                      <label htmlFor={`graduated-${edu.id}`} className='mr-2 text-sm text-gray-500'>
                         졸업
                       </label>
                     </div>
 
-                    <div className="flex items-center gap-1">
+                    <div className='flex items-center gap-1'>
                       <input
                         id={`etc-${edu.id}`}
                         name={`etc-${edu.id}`}
-                        type="radio"
+                        type='radio'
                         checked={edu.isCurrentlyEnrolled === 'etc'}
                         onChange={() => {
                           updateField<Education>(index, 'isCurrentlyEnrolled', 'etc', setEducation);
                         }}
                       />
-                      <label htmlFor={`etc-${edu.id}`} className="mr-2 text-sm text-gray-500">
+                      <label htmlFor={`etc-${edu.id}`} className='mr-2 text-sm text-gray-500'>
                         그 외(졸업예정, 휴학, 자퇴 등)
                       </label>
                     </div>
@@ -642,35 +642,35 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                   <input
                     id={`schoolName-${edu.id}`}
                     name={`schoolName-${edu.id}`}
-                    type="text"
-                    placeholder="학교명"
+                    type='text'
+                    placeholder='학교명'
                     value={edu.schoolName}
                     onChange={(e) =>
                       updateField<Education>(index, 'schoolName', e.target.value, setEducation)
                     }
-                    className="w-full h-10 p-2 border rounded"
+                    className='w-full h-10 p-2 border rounded'
                   />
 
                   <input
                     id={`majorAndDegree-${edu.id}`}
                     name={`majorAndDegree-${edu.id}`}
-                    type="text"
-                    placeholder="전공 및 학위 ex) 체육학 학사"
+                    type='text'
+                    placeholder='전공 및 학위 ex) 체육학 학사'
                     value={edu.majorAndDegree}
                     onChange={(e) =>
                       updateField<Education>(index, 'majorAndDegree', e.target.value, setEducation)
                     }
-                    className="w-full h-10 p-2 border rounded"
+                    className='w-full h-10 p-2 border rounded'
                   />
                 </div>
 
                 {education.length > 1 && (
                   <Image
-                    src="/svg/close.svg"
-                    alt="close"
+                    src='/svg/close.svg'
+                    alt='close'
                     width={15}
                     height={15}
-                    className="w-auto h-4 cursor-pointer absolute right-0 top-[-20px] [@media(min-width:1150px)]:right-[10px] [@media(min-width:1150px)]:top-[35px]"
+                    className='w-auto h-4 cursor-pointer absolute right-0 top-[-20px] [@media(min-width:1150px)]:right-[10px] [@media(min-width:1150px)]:top-[35px]'
                     onClick={() => removeField(index, setEducation)}
                   />
                 )}
@@ -678,15 +678,15 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
             </div>
 
             {education.length > 1 && (
-              <div className="border border-gray-300 my-11 [@media(min-width:1150px)]:my-10"></div>
+              <div className='border border-gray-300 my-11 [@media(min-width:1150px)]:my-10'></div>
             )}
           </React.Fragment>
         ))}
       </div>
 
-      <div className="flex flex-col mb-20">
-        <div className="flex gap-3 items-center mb-2">
-          <p className="text-2xl font-bold">경력</p>
+      <div className='flex flex-col mb-20'>
+        <div className='flex gap-3 items-center mb-2'>
+          <p className='text-2xl font-bold'>경력</p>
 
           <button
             onClick={() =>
@@ -700,13 +700,13 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 description: '',
               })
             }
-            className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
+            className='bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit'
           >
             + 경력 추가
           </button>
         </div>
 
-        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className='text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep'>
           <p>• 최신순으로 작성해 주세요.</p>
           <p>
             • 신입의 경우 지원하는 직무를 준비하는 과정에서 어떤 노력을 했고 어떤 경험을 얻었는지
@@ -722,12 +722,12 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         {experience.map((exp, index) => (
           <React.Fragment key={index}>
             <div className={`flex items-center`}>
-              <div className="relative w-full flex flex-col gap-2 [@media(min-width:1150px)]:flex-row">
-                <div className="w-full [@media(min-width:1150px)]:w-[20%] flex flex-col gap-2">
-                  <div className="w-full flex gap-1 items-center">
+              <div className='relative w-full flex flex-col gap-2 [@media(min-width:1150px)]:flex-row'>
+                <div className='w-full [@media(min-width:1150px)]:w-[20%] flex flex-col gap-2'>
+                  <div className='w-full flex gap-1 items-center'>
                     <input
-                      type="text"
-                      placeholder="YYYY.MM"
+                      type='text'
+                      placeholder='YYYY.MM'
                       value={exp.startDate}
                       onChange={(e) => {
                         const value = e.target.value.replace(/[^0-9]/g, '');
@@ -738,14 +738,14 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                         }
                         updateField<Experience>(index, 'startDate', formattedValue, setExperience);
                       }}
-                      className="w-full h-10 p-2 border rounded"
+                      className='w-full h-10 p-2 border rounded'
                     />
 
                     <p>~</p>
 
                     <input
-                      type="text"
-                      placeholder="YYYY.MM"
+                      type='text'
+                      placeholder='YYYY.MM'
                       value={exp.endDate}
                       onChange={(e) => {
                         const value = e.target.value.replace(/[^0-9]/g, '');
@@ -756,15 +756,15 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                         }
                         updateField<Experience>(index, 'endDate', formattedValue, setExperience);
                       }}
-                      className="w-full h-10 p-2 border rounded"
+                      className='w-full h-10 p-2 border rounded'
                     />
                   </div>
 
-                  <div className="flex items-center gap-1">
+                  <div className='flex items-center gap-1'>
                     <input
                       id={`currentlyEmployed-${exp.id}`}
                       name={`currentlyEmployed-${exp.id}`}
-                      type="checkbox"
+                      type='checkbox'
                       checked={exp.isCurrentlyEmployed}
                       onChange={() => {
                         updateField<Experience>(
@@ -777,7 +777,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                     />
                     <label
                       htmlFor={`currentlyEmployed-${exp.id}`}
-                      className="mr-2 text-sm text-gray-500"
+                      className='mr-2 text-sm text-gray-500'
                     >
                       현재 재직중
                     </label>
@@ -788,29 +788,29 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                   className={`flex flex-col gap-2 ${experience.length > 1 ? 'w-[75%]' : 'w-[80%]'} [@media(max-width:1150px)]:w-full`}
                 >
                   <input
-                    type="text"
-                    placeholder="회사명"
+                    type='text'
+                    placeholder='회사명'
                     value={exp.companyName}
                     onChange={(e) =>
                       updateField<Experience>(index, 'companyName', e.target.value, setExperience)
                     }
-                    className="w-full h-10 p-2 border rounded"
+                    className='w-full h-10 p-2 border rounded'
                   />
 
                   <input
-                    type="text"
-                    placeholder="직무"
+                    type='text'
+                    placeholder='직무'
                     value={exp.jobTitle}
                     onChange={(e) =>
                       updateField<Experience>(index, 'jobTitle', e.target.value, setExperience)
                     }
-                    className="w-full h-10 p-2 border rounded"
+                    className='w-full h-10 p-2 border rounded'
                   />
 
                   <textarea
-                    placeholder="주요 성과"
+                    placeholder='주요 성과'
                     value={exp.description}
-                    className="w-full h-32 p-2 border rounded"
+                    className='w-full h-32 p-2 border rounded'
                     onChange={(e) =>
                       updateField<Experience>(index, 'description', e.target.value, setExperience)
                     }
@@ -819,11 +819,11 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
                 {experience.length > 1 && (
                   <Image
-                    src="/svg/close.svg"
-                    alt="close"
+                    src='/svg/close.svg'
+                    alt='close'
                     width={15}
                     height={15}
-                    className="w-auto h-4 cursor-pointer absolute right-0 top-[-20px] [@media(min-width:1150px)]:right-[15px] [@media(min-width:1150px)]:top-[0px]"
+                    className='w-auto h-4 cursor-pointer absolute right-0 top-[-20px] [@media(min-width:1150px)]:right-[15px] [@media(min-width:1150px)]:top-[0px]'
                     onClick={() => removeField(index, setExperience)}
                   />
                 )}
@@ -831,15 +831,15 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
             </div>
 
             {experience.length > 1 && (
-              <div className="border border-gray-300 my-11 [@media(min-width:1150px)]:my-10"></div>
+              <div className='border border-gray-300 my-11 [@media(min-width:1150px)]:my-10'></div>
             )}
           </React.Fragment>
         ))}
       </div>
 
-      <div className="flex flex-col mb-20">
-        <div className="flex gap-3 items-center mb-2">
-          <p className="text-2xl font-bold">자격사항</p>
+      <div className='flex flex-col mb-20'>
+        <div className='flex gap-3 items-center mb-2'>
+          <p className='text-2xl font-bold'>자격사항</p>
 
           <button
             onClick={() =>
@@ -849,13 +849,13 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 certificateName: '',
               })
             }
-            className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
+            className='bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit'
           >
             + 자격사항 추가
           </button>
         </div>
 
-        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className='text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep'>
           <p>
             • 최신순으로 작성해 주세요.
             <br />• 최대 10개까지 등록할 수 있어요.
@@ -863,11 +863,11 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         </div>
 
         {certificates.map((cert, index) => (
-          <div key={cert.id} className="flex items-center mb-10 relative sm:mb-2">
-            <div className="w-full flex flex-col items-center gap-2 sm:flex-row">
+          <div key={cert.id} className='flex items-center mb-10 relative sm:mb-2'>
+            <div className='w-full flex flex-col items-center gap-2 sm:flex-row'>
               <input
-                type="text"
-                placeholder="YYYY.MM"
+                type='text'
+                placeholder='YYYY.MM'
                 value={cert.date}
                 onChange={(e) => {
                   const value = e.target.value.replace(/[^0-9]/g, '');
@@ -883,12 +883,12 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
                   updateField<Certificate>(index, 'date', formattedValue, setCertificates);
                 }}
-                className="w-full h-10 sm:w-[20%] p-2 border rounded"
+                className='w-full h-10 sm:w-[20%] p-2 border rounded'
               />
 
               <input
-                type="text"
-                placeholder="자격명"
+                type='text'
+                placeholder='자격명'
                 value={cert.certificateName}
                 onChange={(e) =>
                   updateField<Certificate>(
@@ -898,16 +898,16 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                     setCertificates,
                   )
                 }
-                className="w-full h-10 sm:w-[80%] p-2 border rounded"
+                className='w-full h-10 sm:w-[80%] p-2 border rounded'
               />
 
               {certificates.length > 1 && (
                 <Image
-                  src="/svg/close.svg"
-                  alt="close"
+                  src='/svg/close.svg'
+                  alt='close'
                   width={15}
                   height={15}
-                  className="w-auto h-4 cursor-pointer absolute right-0 top-[-20px] sm:static"
+                  className='w-auto h-4 cursor-pointer absolute right-0 top-[-20px] sm:static'
                   onClick={() => removeField(index, setCertificates)}
                 />
               )}
@@ -916,9 +916,9 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         ))}
       </div>
 
-      <div className="flex flex-col mb-20">
-        <div className="flex gap-3 items-center mb-2">
-          <p className="text-2xl font-bold">수상 경력 및 활동</p>
+      <div className='flex flex-col mb-20'>
+        <div className='flex gap-3 items-center mb-2'>
+          <p className='text-2xl font-bold'>수상 경력 및 활동</p>
 
           <button
             onClick={() =>
@@ -928,13 +928,13 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 awardName: '',
               })
             }
-            className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
+            className='bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit'
           >
             + 추가
           </button>
         </div>
 
-        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className='text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep'>
           <p>
             • 최신순으로 작성해 주세요.
             <br />• 최대 10개까지 등록할 수 있어요.
@@ -942,11 +942,11 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         </div>
 
         {awards.map((award, index) => (
-          <div key={award.id} className="flex items-center mb-10 relative sm:mb-2">
-            <div className="w-full flex flex-col items-center gap-2 sm:flex-row">
+          <div key={award.id} className='flex items-center mb-10 relative sm:mb-2'>
+            <div className='w-full flex flex-col items-center gap-2 sm:flex-row'>
               <input
-                type="text"
-                placeholder="YYYY.MM"
+                type='text'
+                placeholder='YYYY.MM'
                 value={award.date}
                 onChange={(e) => {
                   const value = e.target.value.replace(/[^0-9]/g, '');
@@ -962,24 +962,24 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
 
                   updateField<Award>(index, 'date', formattedValue, setAwards);
                 }}
-                className="w-full h-10 sm:w-[20%] p-2 border rounded"
+                className='w-full h-10 sm:w-[20%] p-2 border rounded'
               />
 
               <input
-                type="text"
-                placeholder="수상 경력 및 활동 내용"
+                type='text'
+                placeholder='수상 경력 및 활동 내용'
                 value={award.awardName}
                 onChange={(e) => updateField<Award>(index, 'awardName', e.target.value, setAwards)}
-                className="w-full h-10 sm:w-[80%] p-2 border rounded"
+                className='w-full h-10 sm:w-[80%] p-2 border rounded'
               />
 
               {awards.length > 1 && (
                 <Image
-                  src="/svg/close.svg"
-                  alt="close"
+                  src='/svg/close.svg'
+                  alt='close'
                   width={15}
                   height={15}
-                  className="w-auto h-4 cursor-pointer absolute right-0 top-[-20px] sm:static"
+                  className='w-auto h-4 cursor-pointer absolute right-0 top-[-20px] sm:static'
                   onClick={() => removeField(index, setAwards)}
                 />
               )}
@@ -988,9 +988,9 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         ))}
       </div>
 
-      <div className="flex flex-col">
-        <div className="flex gap-3 items-center mb-2">
-          <p className="text-2xl font-bold">링크</p>
+      <div className='flex flex-col'>
+        <div className='flex gap-3 items-center mb-2'>
+          <p className='text-2xl font-bold'>링크</p>
 
           <button
             onClick={() =>
@@ -1000,13 +1000,13 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
                 url: '',
               })
             }
-            className="bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit"
+            className='bg-[#4C71C0] text-white text-sm px-2 py-1 rounded w-fit'
           >
             + 링크 추가
           </button>
         </div>
 
-        <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
+        <div className='text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep'>
           <p>
             • 자신을 어필할 수 있는 포트폴리오가 있다면 링크도 첨부해 주세요. ex)인스타그램, 블로그,
             비포애프터 자료 등
@@ -1015,31 +1015,31 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
         </div>
 
         {links.map((link, index) => (
-          <div key={link.id} className="flex items-center mb-10 relative sm:mb-2">
-            <div className="w-full flex flex-col items-center gap-2 sm:flex-row">
+          <div key={link.id} className='flex items-center mb-10 relative sm:mb-2'>
+            <div className='w-full flex flex-col items-center gap-2 sm:flex-row'>
               <input
-                type="text"
-                placeholder="링크 제목"
+                type='text'
+                placeholder='링크 제목'
                 value={link.title}
                 onChange={(e) => updateField<LinkData>(index, 'title', e.target.value, setLinks)}
-                className="w-full h-10 sm:w-[20%] p-2 border rounded"
+                className='w-full h-10 sm:w-[20%] p-2 border rounded'
               />
 
               <input
-                type="text"
-                placeholder="URL"
+                type='text'
+                placeholder='URL'
                 value={link.url}
                 onChange={(e) => updateField<LinkData>(index, 'url', e.target.value, setLinks)}
-                className="w-full h-10 sm:w-[80%] p-2 border rounded"
+                className='w-full h-10 sm:w-[80%] p-2 border rounded'
               />
 
               {links.length > 1 && (
                 <Image
-                  src="/svg/close.svg"
-                  alt="close"
+                  src='/svg/close.svg'
+                  alt='close'
                   width={15}
                   height={15}
-                  className="w-auto h-4 cursor-pointer absolute right-0 top-[-20px] sm:static"
+                  className='w-auto h-4 cursor-pointer absolute right-0 top-[-20px] sm:static'
                   onClick={() => removeField(index, setLinks)}
                 />
               )}
@@ -1049,7 +1049,7 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
       </div>
 
       <button
-        className="bg-[#4C71C0] text-white text-base px-6 py-2 rounded w-fit mx-auto mt-16"
+        className='bg-[#4C71C0] text-white text-base px-6 py-2 rounded w-fit mx-auto mt-16'
         onClick={() => onSubmit()}
       >
         저장하기

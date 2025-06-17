@@ -2,11 +2,7 @@
 
 import { REGIONS } from '@/constant/regions';
 import Image from 'next/image';
-import {
-  City,
-  RegionFilter,
-  RegionsFilterProps,
-} from '@/types/hiring/filter-type';
+import { City, RegionFilter, RegionsFilterProps } from '@/types/hiring/filter-type';
 import {
   Dialog,
   DialogContent,
@@ -18,10 +14,7 @@ import {
 import { useEffect, useState } from 'react';
 import Spinner from '@/components/common/spinner';
 
-export default function RegionsFilter({
-  regionFilter,
-  setRegionFilter,
-}: RegionsFilterProps) {
+export default function RegionsFilter({ regionFilter, setRegionFilter }: RegionsFilterProps) {
   const [mounted, setMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tempFilter, setTempFilter] = useState<RegionFilter>({
@@ -57,18 +50,14 @@ export default function RegionsFilter({
           return {
             ...prev,
             selectedCounties: prev.selectedCounties.filter(
-              (item) => !item.startsWith(`${cityName}`)
+              (item) => !item.startsWith(`${cityName}`),
             ),
-            allSelectedCities: prev.allSelectedCities.filter(
-              (city) => city !== cityName
-            ),
+            allSelectedCities: prev.allSelectedCities.filter((city) => city !== cityName),
           };
         } else {
           // 전체 선택: 해당 도시의 모든 county 추가
           const newCounties = [
-            ...prev.selectedCounties.filter(
-              (item) => !item.startsWith(`${cityName}`)
-            ),
+            ...prev.selectedCounties.filter((item) => !item.startsWith(`${cityName}`)),
             ...prev.selectedCity.county
               .filter((c) => c !== `${cityName} 전체`)
               .map((c) => `${cityName} ${c}`),
@@ -108,8 +97,8 @@ export default function RegionsFilter({
 
   if (!mounted) {
     return (
-      <button className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded">
-        <Spinner width="10px" height="10px" />
+      <button className='flex items-center justify-center gap-0.5 py-2 px-2 border rounded'>
+        <Spinner width='10px' height='10px' />
       </button>
     );
   }
@@ -118,26 +107,26 @@ export default function RegionsFilter({
     <Dialog open={isModalOpen} onOpenChange={handleModalOpen}>
       <DialogTrigger asChild>
         <button
-          className="flex items-center justify-center gap-0.5 py-2 px-2 border rounded"
-          aria-haspopup="dialog"
+          className='flex items-center justify-center gap-0.5 py-2 px-2 border rounded'
+          aria-haspopup='dialog'
           aria-expanded={isModalOpen}
         >
-          <p className="text-sm">지역필터</p>
-          <p className="bg-[#4C71C0] rounded px-1 text-white text-xs">
+          <p className='text-sm'>지역필터</p>
+          <p className='bg-[#4C71C0] rounded px-1 text-white text-xs'>
             {regionFilter.selectedCounties.length}
           </p>
         </button>
       </DialogTrigger>
 
-      <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
+      <DialogContent className='w-[90vw] max-w-[500px] min-w-[300px]'>
         <DialogHeader>
           <DialogTitle>지역필터</DialogTitle>
-          <DialogDescription className="hidden"></DialogDescription>
+          <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-3 mt-3">
+        <div className='flex flex-col gap-3 mt-3'>
           <button
-            className="flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer"
+            className='flex gap-1 items-center justify-center rounded bg-white border px-2 py-1 cursor-pointer'
             onClick={() => {
               setTempFilter({
                 selectedCity: null,
@@ -146,11 +135,11 @@ export default function RegionsFilter({
               });
             }}
           >
-            <div className="relative w-4 h-4">
+            <div className='relative w-4 h-4'>
               <Image
-                src="/svg/reset.svg"
-                alt="reset"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                src='/svg/reset.svg'
+                alt='reset'
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                 fill
                 style={{ objectFit: 'cover' }}
               />
@@ -159,19 +148,19 @@ export default function RegionsFilter({
           </button>
 
           {/* City selection */}
-          <div className="flex gap-1">
-            <div className="border p-4 w-full max-h-72 overflow-y-auto rounded">
+          <div className='flex gap-1'>
+            <div className='border p-4 w-full max-h-72 overflow-y-auto rounded'>
               <ul>
                 {REGIONS.map((region) => (
-                  <li key={region.id} className="flex items-center">
+                  <li key={region.id} className='flex items-center'>
                     <input
                       id={`city ${region.id}`}
                       name={`city ${region.id}`}
-                      type="radio"
+                      type='radio'
                       checked={tempFilter.selectedCity?.id === region.id}
                       onChange={() => handleCitySelect(region)}
                     />
-                    <label htmlFor={`city ${region.id}`} className="ml-2">
+                    <label htmlFor={`city ${region.id}`} className='ml-2'>
                       {region.city}
                     </label>
                   </li>
@@ -181,14 +170,13 @@ export default function RegionsFilter({
 
             {/* County selection */}
             {tempFilter.selectedCity ? (
-              <div className="border p-4 w-full max-h-72 overflow-y-auto rounded">
+              <div className='border p-4 w-full max-h-72 overflow-y-auto rounded'>
                 <ul>
                   {tempFilter.selectedCity.county.map((county) => {
                     const uniqueId = `${tempFilter.selectedCity!.id}-${county.replace(/\s/g, '-')}`;
 
                     const countyLabel =
-                      county ===
-                      `${tempFilter.selectedCity && tempFilter.selectedCity.city} 전체`
+                      county === `${tempFilter.selectedCity && tempFilter.selectedCity.city} 전체`
                         ? county
                         : `${tempFilter.selectedCity && tempFilter.selectedCity.city} ${county}`;
 
@@ -199,33 +187,30 @@ export default function RegionsFilter({
                       tempFilter.selectedCity.county
                         .filter(
                           (c) =>
-                            c !==
-                            `${tempFilter.selectedCity && tempFilter.selectedCity.city} 전체`
+                            c !== `${tempFilter.selectedCity && tempFilter.selectedCity.city} 전체`,
                         )
                         .every((c) =>
                           tempFilter.selectedCounties.includes(
-                            `${tempFilter.selectedCity && tempFilter.selectedCity.city} ${c}`
-                          )
+                            `${tempFilter.selectedCity && tempFilter.selectedCity.city} ${c}`,
+                          ),
                         );
 
                     return (
-                      <li key={county} className="flex items-center">
+                      <li key={county} className='flex items-center'>
                         <input
                           id={uniqueId}
                           name={uniqueId}
-                          type="checkbox"
+                          type='checkbox'
                           checked={
                             county === `${tempFilter.selectedCity?.city} 전체`
                               ? (isAllSelected ?? false)
-                              : tempFilter.selectedCounties.includes(
-                                  countyLabel
-                                )
+                              : tempFilter.selectedCounties.includes(countyLabel)
                           }
                           onChange={() => {
                             tempFilter && toggleCounty(county);
                           }}
                         />
-                        <label htmlFor={uniqueId} className="ml-2">
+                        <label htmlFor={uniqueId} className='ml-2'>
                           {county}
                         </label>
                       </li>
@@ -234,17 +219,17 @@ export default function RegionsFilter({
                 </ul>
               </div>
             ) : (
-              <p className="flex items-center justify-center border p-4 w-full max-h-72 overflow-auto rounded break-keep">
+              <p className='flex items-center justify-center border p-4 w-full max-h-72 overflow-auto rounded break-keep'>
                 시/도를 선택해 주세요.
               </p>
             )}
           </div>
 
-          <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto">
+          <div className='flex flex-wrap gap-1 max-h-24 overflow-y-auto'>
             {tempFilter.allSelectedCities.map((city) => (
               <div
                 key={`${city} 전체`}
-                className="flex items-center w-fit px-2 py-1 bg-[#4C71C0] rounded text-white text-sm font-bold"
+                className='flex items-center w-fit px-2 py-1 bg-[#4C71C0] rounded text-white text-sm font-bold'
               >
                 {`${city} 전체`}
               </div>
@@ -258,7 +243,7 @@ export default function RegionsFilter({
               .map((county) => (
                 <div
                   key={county}
-                  className="flex items-center w-fit px-2 py-1 border rounded text-sm"
+                  className='flex items-center w-fit px-2 py-1 border rounded text-sm'
                 >
                   {county}
                 </div>
@@ -266,7 +251,7 @@ export default function RegionsFilter({
           </div>
 
           <button
-            className="w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white text-sm rounded"
+            className='w-fit mx-auto px-4 py-2 bg-[#4C71C0] text-white text-sm rounded'
             onClick={() => {
               setRegionFilter(tempFilter);
               setIsModalOpen(false);

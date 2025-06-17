@@ -56,7 +56,7 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
       <DialogTrigger asChild>
         <button
-          className="w-full text-sm bg-[#4C71C0] px-2 py-2 rounded text-white"
+          className='w-full text-sm bg-[#4C71C0] px-2 py-2 rounded text-white'
           onClick={() => setIsModalOpen(true)}
         >
           {`접수된 이력서 (${data.resume_received.length})`}
@@ -75,38 +75,38 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
       >
         <DialogHeader>
           <DialogTitle>{`[${data.title}] 채용공고의 접수된 이력서`}</DialogTitle>
-          <DialogDescription className="hidden"></DialogDescription>
+          <DialogDescription className='hidden'></DialogDescription>
         </DialogHeader>
 
-        <div className="flex flex-col gap-0 mb-4">
-          <p className="text-sm text-gray-500">- 채용공고 등록일 : {data.created_at}</p>
-          <p className="text-sm text-gray-500">- 채용공고 마감일 : {data.dead_line}</p>
-          <p className="text-sm text-gray-500">- 채용 포지션 : {data.position}</p>
+        <div className='flex flex-col gap-0 mb-4'>
+          <p className='text-sm text-gray-500'>- 채용공고 등록일 : {data.created_at}</p>
+          <p className='text-sm text-gray-500'>- 채용공고 마감일 : {data.dead_line}</p>
+          <p className='text-sm text-gray-500'>- 채용 포지션 : {data.position}</p>
         </div>
 
-        <div className="flex flex-col gap-3 whitespace-nowrap overflow-auto max-h-[400px]">
+        <div className='flex flex-col gap-3 whitespace-nowrap overflow-auto max-h-[400px]'>
           {!showPreview && !selectedResume && (
-            <table className="border-collapse">
+            <table className='border-collapse'>
               <thead>
-                <tr className="border-b border-t">
-                  <th className="p-3 text-center">이력서</th>
-                  <th className="p-3 text-center">지원자명</th>
-                  <th className="p-3 text-center">전화번호</th>
-                  <th className="p-3 text-center">이메일</th>
-                  <th className="p-3 text-center">제출일</th>
-                  <th className="p-3 text-center">읽음/안읽음</th>
-                  <th className="p-3 text-center">진행 상태</th>
+                <tr className='border-b border-t'>
+                  <th className='p-3 text-center'>이력서</th>
+                  <th className='p-3 text-center'>지원자명</th>
+                  <th className='p-3 text-center'>전화번호</th>
+                  <th className='p-3 text-center'>이메일</th>
+                  <th className='p-3 text-center'>제출일</th>
+                  <th className='p-3 text-center'>읽음/안읽음</th>
+                  <th className='p-3 text-center'>진행 상태</th>
                 </tr>
               </thead>
 
               <tbody>
                 {data?.resume_received?.length > 0 ? (
                   (data?.resume_received as ResumeReceived[])?.map((resume) => (
-                    <tr key={resume.id} className="border-b hover:bg-gray-50">
-                      <td className="p-3 text-center">
+                    <tr key={resume.id} className='border-b hover:bg-gray-50'>
+                      <td className='p-3 text-center'>
                         {resume.is_fitcareer_resume && (
                           <button
-                            className="text-sm text-blue-500"
+                            className='text-sm text-blue-500'
                             onClick={() => {
                               markResumeAsRead({
                                 hiringId: data.id,
@@ -122,7 +122,7 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
 
                         {!resume.is_fitcareer_resume && (
                           <button
-                            className="text-sm text-blue-500"
+                            className='text-sm text-blue-500'
                             onClick={async () => {
                               if (!resume.upload_resume) {
                                 toast({
@@ -167,22 +167,22 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
                         )}
                       </td>
 
-                      <td className="p-3 text-center">
+                      <td className='p-3 text-center'>
                         {resume.is_fitcareer_resume ? resume.name || '미작성' : '파일로 제출됨'}
                       </td>
-                      <td className="p-3 text-center">
+                      <td className='p-3 text-center'>
                         {resume.is_fitcareer_resume ? resume.phone || '미작성' : '파일로 제출됨'}
                       </td>
-                      <td className="p-3 text-center">
+                      <td className='p-3 text-center'>
                         {resume.is_fitcareer_resume ? resume.email || '미작성' : '파일로 제출됨'}
                       </td>
-                      <td className="p-3 text-center">{resume.submitted_at}</td>
-                      <td className="p-3 text-center">{resume.is_read ? '읽음' : '안읽음'}</td>
-                      <td className="p-3 text-center">
+                      <td className='p-3 text-center'>{resume.submitted_at}</td>
+                      <td className='p-3 text-center'>{resume.is_read ? '읽음' : '안읽음'}</td>
+                      <td className='p-3 text-center'>
                         <select
                           value={resume.status}
                           onChange={(e) => handleStatusChange(e, resume.id)}
-                          className="border rounded p-1"
+                          className='border rounded p-1'
                         >
                           {statusOptions.map((status) => (
                             <option key={status} value={status}>
@@ -195,7 +195,7 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={7} className="p-3 text-center text-gray-500">
+                    <td colSpan={7} className='p-3 text-center text-gray-500'>
                       접수된 이력서가 없습니다.
                     </td>
                   </tr>
@@ -206,13 +206,13 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
         </div>
 
         {!isMobile && showPreview && selectedResume && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-[50] flex items-center justify-center">
+          <div className='fixed inset-0 bg-black bg-opacity-50 z-[50] flex items-center justify-center'>
             <div
               className={`relative w-full max-w-[900px] min-w-[300px] p-12 bg-white ${
                 showPreview ? 'h-full' : 'h-fit'
               }`}
             >
-              <PDFViewer width="100%" height="100%">
+              <PDFViewer width='100%' height='100%'>
                 <ResumeDocument data={selectedResume} />
               </PDFViewer>
 
@@ -221,7 +221,7 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
                   setShowPreview(false);
                   setSelectedResume(null);
                 }}
-                className="absolute top-4 right-4 text-[#000]"
+                className='absolute top-4 right-4 text-[#000]'
               >
                 닫기
               </button>
@@ -230,21 +230,21 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
         )}
 
         {isMobile && showPreview && selectedResume && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-[50] flex items-center justify-center">
+          <div className='fixed inset-0 bg-black bg-opacity-50 z-[50] flex items-center justify-center'>
             <div
               className={`relative w-full max-w-[900px] min-w-[300px] h-full p-5 bg-white overflow-y-scroll`}
             >
               <ResumePreview data={selectedResume} />
 
               <PDFDownloadLink
-                className="absolute top-4 right-14"
+                className='absolute top-4 right-14'
                 document={<ResumeDocument data={selectedResume} />}
                 fileName={selectedResume.name}
               >
-                <div className="flex items-center">
-                  <p className="">다운로드</p>
-                  <div className="relative w-[15px] h-[15px]">
-                    <Image src="/svg/download.svg" alt="download" fill />
+                <div className='flex items-center'>
+                  <p className=''>다운로드</p>
+                  <div className='relative w-[15px] h-[15px]'>
+                    <Image src='/svg/download.svg' alt='download' fill />
                   </div>
                 </div>
               </PDFDownloadLink>
@@ -254,7 +254,7 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
                   setShowPreview(false);
                   setSelectedResume(null);
                 }}
-                className="absolute top-4 right-4 text-[#000]"
+                className='absolute top-4 right-4 text-[#000]'
               >
                 닫기
               </button>

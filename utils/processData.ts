@@ -19,8 +19,8 @@ function isInvalidValue(value: unknown): boolean {
   switch (true) {
     case value === undefined:
     case value === null:
-    case value === "":
-    case typeof value === "number" && Number.isNaN(value):
+    case value === '':
+    case typeof value === 'number' && Number.isNaN(value):
       return true;
 
     default:
@@ -53,7 +53,7 @@ export function processData<T>(
       invalidPaths: [],
     };
 
-    function validateAndProcess(value: unknown, path: string = ""): unknown {
+    function validateAndProcess(value: unknown, path: string = ''): unknown {
       // 1. 유효성 검사
       if (isInvalidValue(value)) {
         result.isValid = false;
@@ -70,12 +70,10 @@ export function processData<T>(
           );
 
         // 객체인 경우 재귀적으로 처리
-        case typeof value === "object": {
+        case typeof value === 'object': {
           const newObj: Record<string, unknown> = {};
 
-          for (const [key, val] of Object.entries(
-            value as Record<string, unknown>,
-          )) {
+          for (const [key, val] of Object.entries(value as Record<string, unknown>)) {
             // 제외 key는 건너뜀
             if (excludedKeys.includes(key)) continue;
 
@@ -105,9 +103,9 @@ export function processData<T>(
     if (!result.isValid) {
       const invalidPathsText =
         result.invalidPaths && result.invalidPaths.length > 0
-          ? `\n문제가 발생한 위치: ${result.invalidPaths.join(", ")}`
-          : "";
-      console.log("invalidPathsText", invalidPathsText);
+          ? `\n문제가 발생한 위치: ${result.invalidPaths.join(', ')}`
+          : '';
+      console.log('invalidPathsText', invalidPathsText);
 
       // result.errorMessage = `유효하지 않은 데이터가 포함되어 있습니다.${invalidPathsText}`;
       result.errorMessage = `유효하지 않은 데이터가 포함되어 있습니다.`;
@@ -117,9 +115,7 @@ export function processData<T>(
     return result;
   } catch (error) {
     const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "데이터 처리 중 오류가 발생했습니다";
+      error instanceof Error ? error.message : '데이터 처리 중 오류가 발생했습니다';
 
     return {
       isValid: false,

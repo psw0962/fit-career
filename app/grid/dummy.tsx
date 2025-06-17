@@ -57,7 +57,7 @@ export const columnDefs = [
     cellEditor: 'agTextCellEditor',
     cellRenderer: () => {
       return (
-        <button className="w-fit flex items-center justify-center bg-[#4C71BF] text-white text-xs font-bold py-1 px-2 rounded">
+        <button className='w-fit flex items-center justify-center bg-[#4C71BF] text-white text-xs font-bold py-1 px-2 rounded'>
           설정
         </button>
       );
@@ -77,9 +77,9 @@ export const columnDefs = [
     },
     cellRenderer: (params: ICellRendererParams) => {
       return (
-        <div className="flex items-center justify-between w-[90%]">
+        <div className='flex items-center justify-between w-[90%]'>
           <span>{params.value || ''}</span>
-          <span className="ag-icon ag-icon-small-down" role="presentation"></span>
+          <span className='ag-icon ag-icon-small-down' role='presentation'></span>
         </div>
       );
     },

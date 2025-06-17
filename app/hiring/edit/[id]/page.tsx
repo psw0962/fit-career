@@ -3,11 +3,7 @@ import { notFound } from 'next/navigation';
 import NoAuthority from '@/components/common/no-authority';
 import HiringEditDynamicImport from './hiring-edit-view-dynamic-import';
 
-export default async function HiringEditPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function HiringEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createServerSupabaseClient();
 
@@ -16,11 +12,7 @@ export default async function HiringEditPage({
       data: { user },
     } = await supabase.auth.getUser();
 
-    const { data: hiring } = await supabase
-      .from('hiring')
-      .select('*')
-      .eq('id', id)
-      .single();
+    const { data: hiring } = await supabase.from('hiring').select('*').eq('id', id).single();
 
     if (!user || hiring.user_id !== user.id) {
       return <NoAuthority />;

@@ -19,7 +19,7 @@ const CsvImporterDialog = lazy(() =>
 
 function GripCell() {
   return (
-    <div className="w-full flex items-center justify-center">
+    <div className='w-full flex items-center justify-center'>
       <Grip size={16} />
     </div>
   );
@@ -212,7 +212,7 @@ export default function GridPage() {
   return (
     <>
       <GridHeader
-        title="Grid"
+        title='Grid'
         add={handleAdd}
         delete={handleDelete}
         reset={handleReset}

@@ -3,11 +3,7 @@ import { createServerSupabaseClient } from '@/utils/supabase/server';
 import NoAuthority from '@/components/common/no-authority';
 import ResumeEditView from './resume-edit-view';
 
-export default async function ResumeEditPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function ResumeEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const supabase = await createServerSupabaseClient();
 

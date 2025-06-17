@@ -1,10 +1,5 @@
 import { createBrowserSupabaseClient } from '../utils/supabase/client';
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  UseMutationOptions,
-} from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, UseMutationOptions } from '@tanstack/react-query';
 import { ResumeData, ResumeDataResponse } from '@/types/resume/resume';
 import { v4 as uuidv4 } from 'uuid';
 import { formatKRTime } from '@/functions/formatKRTime';
@@ -22,10 +17,7 @@ const getResume = async (id?: string) => {
   try {
     // resume id로 가져오는 경우
     if (id) {
-      const { data: resumeData } = await supabase
-        .from('resume')
-        .select('*')
-        .eq('id', id);
+      const { data: resumeData } = await supabase.from('resume').select('*').eq('id', id);
 
       return resumeData as ResumeDataResponse[];
     }
@@ -63,10 +55,7 @@ export const useGetResume = (id?: string) => {
 // =========================================
 // ============== patch resume
 // =========================================
-const patchResume = async (data: {
-  resumeData: ResumeData;
-  resumeId: string;
-}) => {
+const patchResume = async (data: { resumeData: ResumeData; resumeId: string }) => {
   const supabase = createBrowserSupabaseClient();
 
   const { data: resumeData, error: resumeError } = await supabase
@@ -101,7 +90,7 @@ const patchResume = async (data: {
 
   if (imagesChanged) {
     const imagesToDelete = currentImages.filter(
-      (currentImage) => !newImages.includes(currentImage)
+      (currentImage) => !newImages.includes(currentImage),
     );
 
     for (const imageUrl of imagesToDelete) {
@@ -140,25 +129,14 @@ const patchResume = async (data: {
 };
 
 export const usePatchResume = (
-  options?: UseMutationOptions<
-    void,
-    Error,
-    { resumeData: ResumeData; resumeId: string },
-    void
-  >
+  options?: UseMutationOptions<void, Error, { resumeData: ResumeData; resumeId: string }, void>,
 ) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
 
-  return useMutation<
-    void,
-    Error,
-    { resumeData: ResumeData; resumeId: string },
-    void
-  >({
-    mutationFn: ({ resumeData, resumeId }) =>
-      patchResume({ resumeData, resumeId }),
+  return useMutation<void, Error, { resumeData: ResumeData; resumeId: string }, void>({
+    mutationFn: ({ resumeData, resumeId }) => patchResume({ resumeData, resumeId }),
     onSuccess: () => {
       router.push('/auth/my-page');
 
@@ -201,8 +179,7 @@ export const usePatchResume = (
 const postNewResume = async () => {
   const supabase = createBrowserSupabaseClient();
 
-  const { data: userData, error: userDataError } =
-    await supabase.auth.getUser();
+  const { data: userData, error: userDataError } = await supabase.auth.getUser();
 
   if (userDataError) {
     throw new Error('User data not found');
@@ -244,9 +221,7 @@ const postNewResume = async () => {
   }
 };
 
-export const usePostNewResume = (
-  options?: UseMutationOptions<void, Error, void, void>
-) => {
+export const usePostNewResume = (options?: UseMutationOptions<void, Error, void, void>) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -308,10 +283,7 @@ const deleteResume = async (resumeId: string) => {
 
   const currentImages: string[] = resumeData?.resume_image || [];
 
-  const { error: deleteError } = await supabase
-    .from('resume')
-    .delete()
-    .eq('id', resumeId);
+  const { error: deleteError } = await supabase.from('resume').delete().eq('id', resumeId);
 
   if (deleteError) {
     throw new Error(deleteError.message);
@@ -325,9 +297,7 @@ const deleteResume = async (resumeId: string) => {
       .remove([`resume/resume-file/${uploadPath}`]);
 
     if (storageDeleteError) {
-      console.error(
-        `Failed to delete uploaded file: ${storageDeleteError.message}`
-      );
+      console.error(`Failed to delete uploaded file: ${storageDeleteError.message}`);
     }
   }
 
@@ -343,9 +313,7 @@ const deleteResume = async (resumeId: string) => {
   }
 };
 
-export const useDeleteResume = (
-  options?: UseMutationOptions<void, Error, string, void>
-) => {
+export const useDeleteResume = (options?: UseMutationOptions<void, Error, string, void>) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -406,13 +374,11 @@ const uploadResume = async (file: File): Promise<string | null> => {
     throw new Error(uploadError.message);
   }
 
-  const url = supabase.storage
-    .from('resume')
-    .getPublicUrl(`resume/resume-file/${fileName}`).data.publicUrl;
+  const url = supabase.storage.from('resume').getPublicUrl(`resume/resume-file/${fileName}`)
+    .data.publicUrl;
 
   // resume 생성
-  const { data: userData, error: userDataError } =
-    await supabase.auth.getUser();
+  const { data: userData, error: userDataError } = await supabase.auth.getUser();
 
   if (userDataError) {
     throw new Error(userDataError.message);
@@ -457,9 +423,7 @@ const uploadResume = async (file: File): Promise<string | null> => {
   return url;
 };
 
-export const useUploadResume = (
-  options?: UseMutationOptions<string | null, Error, File, void>
-) => {
+export const useUploadResume = (options?: UseMutationOptions<string | null, Error, File, void>) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -524,10 +488,7 @@ export const useUploadResume = (
 // =========================================
 // ============== post resume to hiring
 // =========================================
-const postResumeToHiring = async (data: {
-  hiringId: string;
-  resumeId: string;
-}) => {
+const postResumeToHiring = async (data: { hiringId: string; resumeId: string }) => {
   const supabase = createBrowserSupabaseClient();
 
   const { data: resumeData, error: resumeError } = await supabase
@@ -572,63 +533,52 @@ const postResumeToHiring = async (data: {
 };
 
 export const usePostResumeToHiring = (
-  options?: UseMutationOptions<
-    void,
-    Error,
-    { hiringId: string; resumeId: string },
-    void
-  >
+  options?: UseMutationOptions<void, Error, { hiringId: string; resumeId: string }, void>,
 ) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  return useMutation<void, Error, { hiringId: string; resumeId: string }, void>(
-    {
-      mutationFn: postResumeToHiring,
-      onSuccess: () => {
-        toast({
-          title: '이력서가 성공적으로 제출되었습니다.',
-          variant: 'default',
-        });
+  return useMutation<void, Error, { hiringId: string; resumeId: string }, void>({
+    mutationFn: postResumeToHiring,
+    onSuccess: () => {
+      toast({
+        title: '이력서가 성공적으로 제출되었습니다.',
+        variant: 'default',
+      });
 
-        queryClient.invalidateQueries({
-          queryKey: ['hiringList'],
-          refetchType: 'active',
-          exact: false,
-        });
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
 
-        queryClient.invalidateQueries({
-          queryKey: ['hiringListByUserSubmission'],
-        });
+      queryClient.invalidateQueries({
+        queryKey: ['hiringListByUserSubmission'],
+      });
 
-        queryClient.invalidateQueries({
-          queryKey: ['resume'],
-          refetchType: 'all',
-          exact: false,
-        });
-      },
-      onError: (error: Error) => {
-        console.error(error.message);
+      queryClient.invalidateQueries({
+        queryKey: ['resume'],
+        refetchType: 'all',
+        exact: false,
+      });
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
 
-        toast({
-          title: '이력서 제출에 실패했습니다.',
-          description:
-            '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-          variant: 'warning',
-        });
-      },
-      ...options,
-    }
-  );
+      toast({
+        title: '이력서 제출에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
+    },
+    ...options,
+  });
 };
 
 // =========================================
 // ============== delete resume from hiring
 // =========================================
-const deleteResumeFromHiring = async (data: {
-  hiringId: string;
-  userId: string;
-}) => {
+const deleteResumeFromHiring = async (data: { hiringId: string; userId: string }) => {
   const supabase = createBrowserSupabaseClient();
 
   const { data: hiringData, error: hiringError } = await supabase
@@ -642,7 +592,7 @@ const deleteResumeFromHiring = async (data: {
   }
 
   const updatedResumes = hiringData.resume_received.filter(
-    (resume: ResumeReceived) => resume.user_id !== data.userId
+    (resume: ResumeReceived) => resume.user_id !== data.userId,
   );
 
   const { error: updateError } = await supabase
@@ -658,12 +608,7 @@ const deleteResumeFromHiring = async (data: {
 };
 
 export const useDeleteResumeFromHiring = (
-  options?: UseMutationOptions<
-    void,
-    Error,
-    { hiringId: string; userId: string },
-    void
-  >
+  options?: UseMutationOptions<void, Error, { hiringId: string; userId: string }, void>,
 ) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -708,10 +653,7 @@ export const useDeleteResumeFromHiring = (
 // =========================================
 // ============== mark resume as read
 // =========================================
-const markResumeAsRead = async (data: {
-  hiringId: string;
-  resumeId: string;
-}) => {
+const markResumeAsRead = async (data: { hiringId: string; resumeId: string }) => {
   const supabase = createBrowserSupabaseClient();
 
   const { data: hiringData, error: hiringError } = await supabase
@@ -750,51 +692,39 @@ const markResumeAsRead = async (data: {
 };
 
 export const useMarkResumeAsRead = (
-  options?: UseMutationOptions<
-    void,
-    Error,
-    { hiringId: string; resumeId: string },
-    void
-  >
+  options?: UseMutationOptions<void, Error, { hiringId: string; resumeId: string }, void>,
 ) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  return useMutation<void, Error, { hiringId: string; resumeId: string }, void>(
-    {
-      mutationFn: markResumeAsRead,
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: ['hiringList'],
-          refetchType: 'active',
-          exact: false,
-        });
-        queryClient.invalidateQueries({
-          queryKey: ['hiringListByUserSubmission'],
-        });
-      },
-      onError: (error: Error) => {
-        console.error(error.message);
-        toast({
-          title: '이력서 읽음 처리에 실패했습니다.',
-          description:
-            '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
-          variant: 'warning',
-        });
-      },
-      ...options,
-    }
-  );
+  return useMutation<void, Error, { hiringId: string; resumeId: string }, void>({
+    mutationFn: markResumeAsRead,
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['hiringList'],
+        refetchType: 'active',
+        exact: false,
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['hiringListByUserSubmission'],
+      });
+    },
+    onError: (error: Error) => {
+      console.error(error.message);
+      toast({
+        title: '이력서 읽음 처리에 실패했습니다.',
+        description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+        variant: 'warning',
+      });
+    },
+    ...options,
+  });
 };
 
 // =========================================
 // ============== update resume status
 // =========================================
-const updateResumeStatus = async (data: {
-  hiringId: string;
-  resumeId: string;
-  status: string;
-}) => {
+const updateResumeStatus = async (data: { hiringId: string; resumeId: string; status: string }) => {
   const supabase = createBrowserSupabaseClient();
 
   const { data: hiringData, error: hiringError } = await supabase
@@ -838,17 +768,12 @@ export const useUpdateResumeStatus = (
     Error,
     { hiringId: string; resumeId: string; status: string },
     void
-  >
+  >,
 ) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  return useMutation<
-    void,
-    Error,
-    { hiringId: string; resumeId: string; status: string },
-    void
-  >({
+  return useMutation<void, Error, { hiringId: string; resumeId: string; status: string }, void>({
     mutationFn: updateResumeStatus,
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -930,9 +855,7 @@ const cloneResume = async (resumeId: string) => {
   }
 };
 
-export const useCloneResume = (
-  options?: UseMutationOptions<void, Error, string, void>
-) => {
+export const useCloneResume = (options?: UseMutationOptions<void, Error, string, void>) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 

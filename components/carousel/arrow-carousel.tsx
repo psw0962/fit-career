@@ -31,14 +31,14 @@ export default function ArrowCarousel() {
   }, [api]);
 
   return (
-    <div className="py-10 px-11">
+    <div className='py-10 px-11'>
       <Carousel setApi={setApi}>
         <CarouselContent>
           {Array.from({ length: 5 }).map((_, index) => (
             <CarouselItem key={index}>
-              <Card className="rounded-xl">
-                <CardContent className="flex items-center justify-center h-96 w-full">
-                  <span className="text-4xl">{index + 1}</span>
+              <Card className='rounded-xl'>
+                <CardContent className='flex items-center justify-center h-96 w-full'>
+                  <span className='text-4xl'>{index + 1}</span>
                 </CardContent>
               </Card>
             </CarouselItem>
@@ -49,7 +49,7 @@ export default function ArrowCarousel() {
         <CarouselNext />
       </Carousel>
 
-      <div className="py-2 text-center text-sm text-muted-foreground">
+      <div className='py-2 text-center text-sm text-muted-foreground'>
         Slide {current} of {count}
       </div>
     </div>

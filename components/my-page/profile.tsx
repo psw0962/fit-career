@@ -56,26 +56,27 @@ export default function Profile() {
   }
 
   return (
-    <div className="mt-5 flex flex-col">
-      <div className="flex flex-col gap-2 items-start sm:flex-row sm:items-center">
-        <div className="relative w-20 h-20">
+    <div className='mt-5 flex flex-col'>
+      <div className='flex flex-col gap-2 items-start sm:flex-row sm:items-center'>
+        <div className='relative w-20 h-20'>
           <Image
-            className="rounded-full"
+            className='rounded-full'
             src={
               userData.user_metadata?.avatar_url
                 ? userData.user_metadata?.avatar_url
                 : '/svg/logo.svg'
             }
-            alt="user-avatar"
+            alt='user-avatar'
             fill
+            priority
             style={{ objectFit: 'cover' }}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+            blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
           />
         </div>
 
-        <div className="flex-col">
-          <p className="text-xl">{userData.user_metadata?.name}</p>
+        <div className='flex-col'>
+          <p className='text-xl'>{userData.user_metadata?.name}</p>
           <p>{userData.user_metadata?.email}</p>
 
           {userData.app_metadata?.provider !== 'kakao' && (
@@ -96,14 +97,14 @@ export default function Profile() {
       >
         <DialogTrigger asChild>
           <button
-            className="self-end text-sm ml-2 font-bold text-[#C3C4C5] underline underline-offset-4 decoration-[#C3C4C5]"
+            className='self-end text-sm ml-2 font-bold text-[#C3C4C5] underline underline-offset-4 decoration-[#C3C4C5]'
             onClick={() => setIsModalOpen(true)}
           >
             회원탈퇴
           </button>
         </DialogTrigger>
 
-        <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
+        <DialogContent className='w-[90vw] max-w-[500px] min-w-[300px]'>
           <DialogHeader>
             <DialogTitle>회원 탈퇴</DialogTitle>
             <DialogDescription>
@@ -114,14 +115,14 @@ export default function Profile() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="flex items-center gap-2 mt-5">
+          <div className='flex items-center gap-2 mt-5'>
             <input
-              type="checkbox"
-              id="agree"
+              type='checkbox'
+              id='agree'
               checked={isAgree}
               onChange={() => setIsAgree(!isAgree)}
             />
-            <label htmlFor="agree">동의합니다.</label>
+            <label htmlFor='agree'>동의합니다.</label>
           </div>
 
           <DialogFooter>

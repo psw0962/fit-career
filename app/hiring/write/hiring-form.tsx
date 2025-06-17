@@ -324,60 +324,61 @@ export default function HiringForm() {
   }
 
   return (
-    <div className="flex flex-col">
-      <p className="text-2xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]">
+    <div className='flex flex-col'>
+      <p className='text-2xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]'>
         채용공고 등록
       </p>
 
-      <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
-        <p className="font-bold text-sm">
+      <div className='text-xs p-2 bg-[#EAEAEC] rounded break-keep'>
+        <p className='font-bold text-sm'>
           • 무분별한 도배 게시글 방지를 위해 채용공고 등록은 24시간마다 한 번만 할 수 있어요.
         </p>
-        <p className="text-sm">
+        <p className='text-sm'>
           • 지원자가 한눈에 직무와 관련된 정보를 파악할 수 있도록 명확하고 간결한 제목을 작성하면
           좋아요.
         </p>
-        <p className="text-sm">
+        <p className='text-sm'>
           • 회사의 비전, 미션, 문화 등을 간단히 소개하여 지원자가 회사에 대한 이해를 높일 수 있도록
           하면 좋아요.
         </p>
-        <p className="text-sm">
+        <p className='text-sm'>
           • 필수 자격 요건과 우대 사항을 명확히 구분하여 작성하고, 근무 지역과 회사가 제공하는
           혜택과 복지를 명시하여 지원률을 높일 수 있어요.
         </p>
-        <p className="text-sm">
+        <p className='text-sm'>
           • 지원 절차와 채용 프로세스를 명확히 안내하여 지원자가 쉽게 지원할 수 있도록 하면 좋아요.
         </p>
       </div>
 
       {/* enterprise profile */}
-      <div className="flex flex-col mt-10">
-        <div className="flex flex-col md:flex-row gap-2 text-2xl font-bold mb-2 md:items-end">
-          <p className="text-2xl font-bold leading-none">기업 프로필</p>
+      <div className='flex flex-col mt-10'>
+        <div className='flex flex-col md:flex-row gap-2 text-2xl font-bold mb-2 md:items-end'>
+          <p className='text-2xl font-bold leading-none'>기업 프로필</p>
 
-          <p className="text-xs font-bold leading-none">
+          <p className='text-xs font-bold leading-none'>
             * 기업 프로필은 마이페이지에서 변경 가능합니다.
           </p>
         </div>
 
         {enterpriseProfile && enterpriseProfile[0] && (
           <div>
-            <div className="flex flex-col">
-              <div className="mt-2 flex gap-2 items-center">
-                <div className="flex gap-1 items-center">
-                  <div className="relative w-6 h-6">
+            <div className='flex flex-col'>
+              <div className='mt-2 flex gap-2 items-center'>
+                <div className='flex gap-1 items-center'>
+                  <div className='relative w-6 h-6'>
                     <Image
                       src={
                         enterpriseProfile[0]?.logo?.length !== 0
                           ? enterpriseProfile[0]?.logo[0]
                           : '/svg/logo.svg'
                       }
-                      alt="enterprise logo"
-                      className="rounded"
+                      alt='enterprise logo'
+                      className='rounded'
                       style={{ objectFit: 'contain' }}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                      priority
+                      sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                      blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
                     />
                   </div>
 
@@ -385,13 +386,13 @@ export default function HiringForm() {
                 </div>
               </div>
 
-              <p className="mt-2 text-sm">
+              <p className='mt-2 text-sm'>
                 {enterpriseProfile[0]?.industry} /{' '}
                 {calculateYearsInBusiness(enterpriseProfile[0]?.establishment)}
                 년차 ({parseInt(enterpriseProfile[0]?.establishment.split('-')[0], 10)})
               </p>
 
-              <div className="mt-2 text-[#707173] text-sm">
+              <div className='mt-2 text-[#707173] text-sm'>
                 <div
                   dangerouslySetInnerHTML={{
                     __html: enterpriseProfile[0]?.description,
@@ -403,16 +404,16 @@ export default function HiringForm() {
         )}
       </div>
 
-      <div className="border-t border-gray-300 my-7"></div>
+      <div className='border-t border-gray-300 my-7'></div>
 
       {/* address */}
-      <div className="flex flex-col mb-20" ref={addressRef}>
-        <p className="text-2xl font-bold mb-2">
-          근무 지역 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={addressRef}>
+        <p className='text-2xl font-bold mb-2'>
+          근무 지역 <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
         <button
-          className="py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2"
+          className='py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2'
           onClick={() => open({ onComplete: daumPostCodeHandler })}
         >
           주소 찾기
@@ -421,8 +422,8 @@ export default function HiringForm() {
         {address.zoneCode && address.zoneAddress && (
           <>
             <input
-              type="text"
-              id="address"
+              type='text'
+              id='address'
               value={
                 address.zoneCode && address.zoneAddress
                   ? `[${address.zoneCode}] ${address.zoneAddress}`
@@ -430,30 +431,30 @@ export default function HiringForm() {
               }
               readOnly
               disabled
-              className="border p-2 mb-2"
+              className='border p-2 mb-2'
             />
 
             <input
-              type="text"
-              id="address"
+              type='text'
+              id='address'
               onChange={(e) => setAddress({ ...address, detailAddress: e.target.value })}
               value={address.detailAddress}
-              placeholder="상세 주소 입력"
-              className="border p-2"
+              placeholder='상세 주소 입력'
+              className='border p-2'
             />
           </>
         )}
       </div>
 
       {/* job position */}
-      <div className="flex flex-col mb-20" ref={positionRef}>
-        <p className="text-2xl font-bold mb-2">
-          채용 직무<span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={positionRef}>
+        <p className='text-2xl font-bold mb-2'>
+          채용 직무<span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
         <select
-          name="job-position"
-          id="job-position"
+          name='job-position'
+          id='job-position'
           className={`appearance-none border p-2 mb-4 rounded ${
             position.job === '' ? 'text-gray-400' : 'text-black'
           }`}
@@ -462,7 +463,7 @@ export default function HiringForm() {
             setPosition({ ...position, job: e.target.value });
           }}
         >
-          <option value="" className="text-gray-400">
+          <option value='' className='text-gray-400'>
             직무를 선택해 주세요
           </option>
 
@@ -475,9 +476,9 @@ export default function HiringForm() {
 
         {position.job === '기타' && (
           <input
-            type="text"
-            className="appearance-none border py-3 px-2 mb-4 rounded"
-            placeholder="직무를 입력해 주세요"
+            type='text'
+            className='appearance-none border py-3 px-2 mb-4 rounded'
+            placeholder='직무를 입력해 주세요'
             onChange={(e) => {
               setPosition({
                 ...position,
@@ -489,48 +490,48 @@ export default function HiringForm() {
       </div>
 
       {/* employment period */}
-      <div className="flex flex-col mb-20" ref={periodRef}>
-        <p className="text-2xl font-bold mb-2">
-          필요 경력 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={periodRef}>
+        <p className='text-2xl font-bold mb-2'>
+          필요 경력 <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
         {formatPeriod(periodValue)}
 
         <Slider.Root
-          id="employment-period"
-          className="relative flex h-5 w-[300px] mt-2 touch-none select-none items-center"
+          id='employment-period'
+          className='relative flex h-5 w-[300px] mt-2 touch-none select-none items-center'
           value={periodValue}
           onValueChange={periodValueHandleChange}
           max={10}
           step={1}
         >
-          <Slider.Track className="relative h-[3px] grow rounded-full bg-blackA7">
-            <Slider.Range className="absolute h-full rounded-full bg-slate-200" />
+          <Slider.Track className='relative h-[3px] grow rounded-full bg-blackA7'>
+            <Slider.Range className='absolute h-full rounded-full bg-slate-200' />
           </Slider.Track>
 
           <Slider.Thumb
-            className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
-            aria-label="Volume"
+            className='block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none'
+            aria-label='Volume'
           />
 
           <Slider.Thumb
-            className="block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none"
-            aria-label="Volume"
+            className='block size-5 rounded-[10px] bg-[#4C71C0] hover:bg-violet3 focus:shadow-blackA5 focus:outline-none'
+            aria-label='Volume'
           />
         </Slider.Root>
       </div>
 
       {/* title */}
-      <div className="flex flex-col mb-20" ref={titleRef}>
-        <p className="text-2xl font-bold mb-2">
+      <div className='flex flex-col mb-20' ref={titleRef}>
+        <p className='text-2xl font-bold mb-2'>
           채용공고 제목
-          <span className="text-sm text-red-500 align-top">*</span>
+          <span className='text-sm text-red-500 align-top'>*</span>
         </p>
         <input
-          id="title"
-          className="border p-2 mb-4 rounded"
-          type="text"
-          placeholder="채용 글 제목을 입력해 주세요"
+          id='title'
+          className='border p-2 mb-4 rounded'
+          type='text'
+          placeholder='채용 글 제목을 입력해 주세요'
           value={title}
           onChange={(e) => {
             setTitle(e.target.value);
@@ -539,34 +540,34 @@ export default function HiringForm() {
       </div>
 
       {/* content */}
-      <div className="flex flex-col mb-20" ref={contentRef}>
-        <p className="text-2xl font-bold mb-2">
+      <div className='flex flex-col mb-20' ref={contentRef}>
+        <p className='text-2xl font-bold mb-2'>
           채용공고 내용
-          <span className="text-sm text-red-500 align-top">*</span>
+          <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
         <EditorContent editor={editor} />
       </div>
 
       {/* deadline */}
-      <div className="flex flex-col mb-20" ref={deadLineRef}>
-        <p className="text-2xl font-bold mb-2">
-          마감일 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={deadLineRef}>
+        <p className='text-2xl font-bold mb-2'>
+          마감일 <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
-        <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
-          <p className="text-sm">
+        <div className='text-xs p-2 bg-[#EAEAEC] rounded break-keep'>
+          <p className='text-sm'>
             • 마감일 설정은 공고를 등록하는 날짜를 기준으로
-            <span className="font-bold"> 3달 이내</span>로 설정할 수 있어요.
+            <span className='font-bold'> 3달 이내</span>로 설정할 수 있어요.
           </p>
-          <p className="text-sm">
+          <p className='text-sm'>
             • 마감일이 지난 공고에는 지원자가 지원할 수 없어요.
-            <span className="font-bold"> 마감일 확인이 수시로 필요해요.</span>
+            <span className='font-bold'> 마감일 확인이 수시로 필요해요.</span>
           </p>
         </div>
 
         <DatePicker
-          className="px-2 py-2 mt-2 border rounded"
+          className='px-2 py-2 mt-2 border rounded'
           selected={parse(deadLine, 'yyyy-MM-dd', new Date())}
           onChange={(date: Date | null) => {
             if (date) {
@@ -574,67 +575,67 @@ export default function HiringForm() {
             }
           }}
           locale={ko}
-          dateFormat="yyyy년 MM월 dd일"
-          placeholderText="마감일을 선택하세요"
+          dateFormat='yyyy년 MM월 dd일'
+          placeholderText='마감일을 선택하세요'
           minDate={new Date()}
           maxDate={new Date(new Date().setMonth(new Date().getMonth() + 2))}
         />
       </div>
 
       {/* images */}
-      <div className="flex flex-col">
-        <p className="text-2xl font-bold mb-2">회사 이미지</p>
+      <div className='flex flex-col'>
+        <p className='text-2xl font-bold mb-2'>회사 이미지</p>
 
-        <div className="text-xs p-2 bg-[#EAEAEC] rounded break-keep">
-          <p className="font-bold text-sm">• 이미지는 최대 5개까지 업로드 가능해요</p>
-          <p className="text-sm">
-            • <span className="font-bold">가로 방향</span>의 사진이 회사의 전체적인 모습을 더 잘
+        <div className='text-xs p-2 bg-[#EAEAEC] rounded break-keep'>
+          <p className='font-bold text-sm'>• 이미지는 최대 5개까지 업로드 가능해요</p>
+          <p className='text-sm'>
+            • <span className='font-bold'>가로 방향</span>의 사진이 회사의 전체적인 모습을 더 잘
             보여줄 수 있습니다.
           </p>
-          <p className="text-sm">• 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.</p>
-          <p className="text-sm">• 첫 번째 이미지가 채용공고 대표 이미지로 사용돼요.</p>
-          <p className="text-sm">• 이미지를 드래그하면 업로드될 이미지 순서를 변경할 수 있어요.</p>
+          <p className='text-sm'>• 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.</p>
+          <p className='text-sm'>• 첫 번째 이미지가 채용공고 대표 이미지로 사용돼요.</p>
+          <p className='text-sm'>• 이미지를 드래그하면 업로드될 이미지 순서를 변경할 수 있어요.</p>
         </div>
 
-        <label className="relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer">
-          <div className="flex gap-2 items-center justify-center">
+        <label className='relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer'>
+          <div className='flex gap-2 items-center justify-center'>
             <Image
-              src="/svg/upload.svg"
-              alt="upload"
+              src='/svg/upload.svg'
+              alt='upload'
               width={32}
               height={32}
-              className="invert brightness-0"
+              className='invert brightness-0'
             />
-            <p className="text-sm text-white">이미지 업로드</p>
+            <p className='text-sm text-white'>이미지 업로드</p>
           </div>
 
           <input
-            type="file"
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            type='file'
+            className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
             multiple
-            accept="image/jpeg, image/jpg, image/png, image/webp"
+            accept='image/jpeg, image/jpg, image/png, image/webp'
             onChange={handleImageUpload}
           />
         </label>
       </div>
 
-      {images.length > 0 && <div className="border border-gray-300 my-4"></div>}
+      {images.length > 0 && <div className='border border-gray-300 my-4'></div>}
 
       <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
         <SortableContext
           items={images.map((img) => img.id)}
           strategy={horizontalListSortingStrategy}
         >
-          <div className="flex flex-wrap gap-3">
+          <div className='flex flex-wrap gap-3'>
             {images.map((img, index) => (
-              <div key={img.id} className="flex flex-col items-center gap-2">
+              <div key={img.id} className='flex flex-col items-center gap-2'>
                 <SortableImageDnd
                   id={img.id}
                   index={index}
                   image={img.file}
                   onRemove={() => removeImage(img.id)}
                 />
-                {index === 0 && <p className="text-xs sm:text-sm font-bold">대표 이미지</p>}
+                {index === 0 && <p className='text-xs sm:text-sm font-bold'>대표 이미지</p>}
               </div>
             ))}
           </div>
@@ -642,7 +643,7 @@ export default function HiringForm() {
       </DndContext>
 
       <button
-        className="mx-auto mt-20 px-8 py-3 bg-[#4C71C0] text-white rounded w-fit"
+        className='mx-auto mt-20 px-8 py-3 bg-[#4C71C0] text-white rounded w-fit'
         onClick={() => onSubmit()}
       >
         등록하기

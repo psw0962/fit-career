@@ -75,31 +75,32 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
     <>
       {/* fit career resume */}
       {data && data.is_fitcareer_resume && (
-        <div className="relative flex flex-col justify-center items-center gap-3 w-full h-full border rounded p-5">
-          <div className="relative w-10 h-10">
+        <div className='relative flex flex-col justify-center items-center gap-3 w-full h-full border rounded p-5'>
+          <div className='relative w-10 h-10'>
             <Image
-              src="/svg/logo.svg"
-              alt="logo"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              src='/svg/logo.svg'
+              alt='logo'
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
               fill
+              priority
               style={{ objectFit: 'contain' }}
-              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+              blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
             />
           </div>
 
-          <p className="break-all line-clamp-1">{data.title}</p>
+          <p className='break-all line-clamp-1'>{data.title}</p>
 
-          <p className="text-center text-xs text-[#c3c4c5] break-keep">
+          <p className='text-center text-xs text-[#c3c4c5] break-keep'>
             FIT Career 이력서로
             <br />
             서류 합격률 UP!
           </p>
 
-          <p className="mt-4 text-[10px] text-gray-500">최근 수정일 {data.updated_at}</p>
+          <p className='mt-4 text-[10px] text-gray-500'>최근 수정일 {data.updated_at}</p>
 
           <div
             id={`more-button-${data.id}`}
-            className="absolute top-[5px] right-[10px] w-[25px] h-[25px] cursor-pointer"
+            className='absolute top-[5px] right-[10px] w-[25px] h-[25px] cursor-pointer'
             onClick={() => {
               setOpenDropdownId((prev) => {
                 const newId = data.id ?? null;
@@ -107,39 +108,39 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
               });
             }}
           >
-            <Image src="/svg/more.svg" alt="more" fill />
+            <Image src='/svg/more.svg' alt='more' fill />
           </div>
 
           {openDropdownId === data.id && (
             <div
               id={`dropdown-${data.id}`}
-              className="absolute top-[35px] right-[10px] w-[100px] h-fit px-2 bg-[#fff] border rounded"
+              className='absolute top-[35px] right-[10px] w-[100px] h-fit px-2 bg-[#fff] border rounded'
             >
               <ResumeExport data={data} isPreview={true} />
               <ResumeExport data={data} isExport={true} />
 
               <div
-                className="flex items-center justify-center gap-2 py-2 border-b cursor-pointer"
+                className='flex items-center justify-center gap-2 py-2 border-b cursor-pointer'
                 onClick={() => cloneResume(data.id)}
               >
-                <p className="text-sm">복제하기</p>
-                <Image src="/svg/duplicate.svg" alt="duplicate" width={15} height={15} />
+                <p className='text-sm'>복제하기</p>
+                <Image src='/svg/duplicate.svg' alt='duplicate' width={15} height={15} />
               </div>
 
               <div
-                className="flex items-center justify-center gap-2 py-2 border-b cursor-pointer"
+                className='flex items-center justify-center gap-2 py-2 border-b cursor-pointer'
                 onClick={handleEdit}
               >
-                <p className="text-sm">수정하기</p>
-                <Image src="/svg/edit.svg" alt="edit" width={15} height={15} />
+                <p className='text-sm'>수정하기</p>
+                <Image src='/svg/edit.svg' alt='edit' width={15} height={15} />
               </div>
 
               <div
-                className="flex items-center justify-center gap-2 py-2 cursor-pointer"
+                className='flex items-center justify-center gap-2 py-2 cursor-pointer'
                 onClick={() => setIsDeleteModalOpen(true)}
               >
-                <p className="text-sm">삭제하기</p>
-                <Image src="/svg/delete.svg" alt="delete" width={15} height={15} />
+                <p className='text-sm'>삭제하기</p>
+                <Image src='/svg/delete.svg' alt='delete' width={15} height={15} />
               </div>
             </div>
           )}
@@ -150,25 +151,25 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
 
       {/* upload resume */}
       {data && !data.is_fitcareer_resume && (
-        <div className="relative flex flex-col justify-center items-center gap-3 w-full h-full border rounded p-10">
-          <div className="relative w-10 h-10">
+        <div className='relative flex flex-col justify-center items-center gap-3 w-full h-full border rounded p-10'>
+          <div className='relative w-10 h-10'>
             <Image
-              src="/svg/document.svg"
-              alt="document"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              src='/svg/document.svg'
+              alt='document'
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
               fill
               style={{ objectFit: 'contain' }}
-              blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+              blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
             />
           </div>
 
-          <p className="break-all line-clamp-1">
+          <p className='break-all line-clamp-1'>
             {`${convertBase64Unicode(data.title, 'decode').split('.')[0]}.${convertBase64Unicode(data.title, 'decode').split('.')[1]}`}
           </p>
 
           <div
             id={`more-button-${data.id}`}
-            className="absolute top-[5px] right-[10px] w-[25px] h-[25px] cursor-pointer"
+            className='absolute top-[5px] right-[10px] w-[25px] h-[25px] cursor-pointer'
             onClick={(e) => {
               setOpenDropdownId((prev) => {
                 const newId = data.id ?? null;
@@ -177,32 +178,32 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
               e.stopPropagation();
             }}
           >
-            <Image src="/svg/more.svg" alt="more" fill />
+            <Image src='/svg/more.svg' alt='more' fill />
           </div>
 
           {openDropdownId === data.id && (
             <div
               id={`dropdown-${data.id}`}
-              className="absolute top-[35px] right-[10px] w-[100px] h-fit px-2 bg-[#fff] border rounded"
+              className='absolute top-[35px] right-[10px] w-[100px] h-fit px-2 bg-[#fff] border rounded'
             >
               <div
-                className="flex items-center justify-center gap-2 py-2 border-b cursor-pointer"
+                className='flex items-center justify-center gap-2 py-2 border-b cursor-pointer'
                 onClick={() =>
                   data.upload_resume &&
                   convertBase64Unicode(data.title, 'decode') &&
                   downloadFile(data.upload_resume, convertBase64Unicode(data.title, 'decode'))
                 }
               >
-                <p className="text-sm">다운로드</p>
-                <Image src="/svg/download.svg" alt="download" width={15} height={15} />
+                <p className='text-sm'>다운로드</p>
+                <Image src='/svg/download.svg' alt='download' width={15} height={15} />
               </div>
 
               <div
-                className="flex items-center justify-center gap-2 py-2 cursor-pointer"
+                className='flex items-center justify-center gap-2 py-2 cursor-pointer'
                 onClick={() => setIsDeleteModalOpen(true)}
               >
-                <p className="text-sm">삭제하기</p>
-                <Image src="/svg/delete.svg" alt="delete" width={15} height={15} />
+                <p className='text-sm'>삭제하기</p>
+                <Image src='/svg/delete.svg' alt='delete' width={15} height={15} />
               </div>
             </div>
           )}
@@ -219,7 +220,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
         }}
       >
         <DialogContent
-          className="w-[90vw] max-w-[500px] min-w-[300px]"
+          className='w-[90vw] max-w-[500px] min-w-[300px]'
           onClick={(e) => e.stopPropagation()}
         >
           <DialogHeader>
@@ -231,9 +232,9 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <div className="flex gap-2 justify-center mt-4 sm:mt-0">
+            <div className='flex gap-2 justify-center mt-4 sm:mt-0'>
               <button
-                className="border rounded px-4 py-2 text-sm"
+                className='border rounded px-4 py-2 text-sm'
                 onClick={() => {
                   setIsDeleteModalOpen(false);
                   setOpenDropdownId(null);
@@ -243,7 +244,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
               </button>
 
               <button
-                className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm"
+                className='bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm'
                 onClick={() => {
                   handleDelete();
                 }}

@@ -31,25 +31,25 @@ export default function BasicCarousel(props: ThumbnailCarouselProps) {
   }, [emblaMainApi, onSelect]);
 
   return (
-    <div className="w-full max-w-[720px] mx-auto">
-      <div className="relative rounded overflow-hidden">
-        <div className="overflow-hidden" ref={emblaMainRef}>
-          <div className="flex">
+    <div className='w-full max-w-[720px] mx-auto'>
+      <div className='relative rounded overflow-hidden'>
+        <div className='overflow-hidden' ref={emblaMainRef}>
+          <div className='flex'>
             {slides &&
               slides.map((imageUrl, index) => (
-                <div key={index} className="flex-shrink-0 w-full">
-                  <div className="relative w-full aspect-[16/9] overflow-hidden border rounded">
+                <div key={index} className='flex-shrink-0 w-full'>
+                  <div className='relative w-full aspect-[16/9] overflow-hidden border rounded'>
                     <Image
                       src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
                       alt={`${index}번째 이미지`}
                       style={{ objectFit: 'cover' }}
-                      className="rounded"
+                      className='rounded'
                       fill
                       priority={selectedIndex === index}
                       loading={selectedIndex === index ? 'eager' : 'lazy'}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      placeholder="blur"
-                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                      sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                      placeholder='blur'
+                      blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
                     />
                   </div>
                 </div>
@@ -57,7 +57,7 @@ export default function BasicCarousel(props: ThumbnailCarouselProps) {
           </div>
         </div>
 
-        <div className="absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-full text-sm">
+        <div className='absolute bottom-4 right-4 bg-black/60 text-white px-3 py-1.5 rounded-full text-sm'>
           {selectedIndex + 1} / {slides?.length}
         </div>
       </div>
