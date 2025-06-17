@@ -5,19 +5,22 @@ import Image from 'next/image';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import GlobalSpinner from '@/components/common/global-spinner';
 import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
 import { ko } from 'date-fns/locale';
 import { format, parse } from 'date-fns';
 import { POSITIONS } from '@/constant/position';
 import { useToast } from '@/hooks/use-toast';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
 import {
   useGetEnterpriseProfile,
   useGetUserData,
   usePatchEnterpriseProfile,
   usePostEnterpriseProfile,
 } from '@/api/auth';
+import dynamic from 'next/dynamic';
+
+const TextEditor = dynamic(() => import('@/components/common/text-editor'), {
+  loading: () => <GlobalSpinner />,
+  ssr: false,
+});
 
 export default function EnterpriseProfileEditForm(): React.ReactElement {
   const open = useDaumPostcodePopup();
@@ -44,20 +47,6 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
   const [description, setDescription] = useState<string>('');
   const [settingLogo, setSettingLogo] = useState<File[]>([]);
   const [currentLogo, setCurrentLogo] = useState<string>('');
-
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: description,
-    onUpdate: ({ editor }) => {
-      setDescription(editor.getHTML());
-    },
-    editorProps: {
-      attributes: {
-        class: 'min-h-[200px] border p-2 rounded focus:outline-none',
-      },
-    },
-    immediatelyRender: false,
-  });
 
   const daumPostCodeHandler = (data: Address) => {
     setAddress({
@@ -192,12 +181,6 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
       if (logoUrl) URL.revokeObjectURL(logoUrl);
     };
   }, [logoUrl]);
-
-  useEffect(() => {
-    if (editor) {
-      editor.commands.setContent(description);
-    }
-  }, [description, editor]);
 
   useEffect(() => {
     if (
@@ -454,7 +437,12 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
           회사 소개 <span className='text-sm text-red-500 align-top'>*</span>
         </label>
 
-        <EditorContent editor={editor} />
+        <TextEditor
+          initialContent={description}
+          onChange={(content) => setDescription(content)}
+          className='border p-2 rounded focus:outline-none'
+          placeholder='내용을 입력하세요...'
+        />
       </div>
 
       <div className='flex justify-center mt-10'>

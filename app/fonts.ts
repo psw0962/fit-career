@@ -19,7 +19,7 @@ export const pretendard = localFont({
     },
   ],
   display: 'swap',
-  preload: true,
+  preload: false,
   variable: '--font-pretendard',
   fallback: ['system-ui', 'sans-serif'],
 });
