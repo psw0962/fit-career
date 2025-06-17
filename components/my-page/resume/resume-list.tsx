@@ -26,10 +26,10 @@ export default function Resume() {
   }
 
   return (
-    <div className="mt-5">
-      <div className="flex gap-2 mb-4">
+    <div className='mt-5'>
+      <div className='flex gap-2 mb-4'>
         <button
-          className="flex gap-2 items-center justify-center w-fit rounded px-4 py-2 border-none bg-[#4C71C0] text-white cursor-pointer"
+          className='flex gap-2 items-center justify-center w-fit rounded px-4 py-2 border-none bg-[#4C71C0] text-white cursor-pointer'
           onClick={() => {
             if (postNewResumeStatus === 'pending') return;
             postNewResumeMutate();
@@ -37,42 +37,42 @@ export default function Resume() {
           disabled={postNewResumeStatus === 'pending'}
         >
           <Image
-            src="/svg/add.svg"
-            alt="add"
-            className="brightness-0 invert"
+            src='/svg/add.svg'
+            alt='add'
+            className='brightness-0 invert'
             width={20}
             height={20}
           />
-          <span className="text-sm whitespace-nowrap">
+          <span className='text-sm whitespace-nowrap'>
             {postNewResumeStatus === 'pending' ? <Spinner /> : '새 이력서'}
           </span>
         </button>
 
         <label
-          htmlFor="file-upload"
+          htmlFor='file-upload'
           className={`flex gap-2 items-center justify-center w-fit border rounded px-4 py-2 
             ${uploadResumeStatus === 'pending' ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         >
-          <Image src="/svg/upload.svg" alt="upload" width={20} height={20} />
+          <Image src='/svg/upload.svg' alt='upload' width={20} height={20} />
 
-          <span className="text-sm whitespace-nowrap">
+          <span className='text-sm whitespace-nowrap'>
             {uploadResumeStatus === 'pending' ? <Spinner /> : '이력서 업로드'}
           </span>
 
           <input
-            type="file"
-            name="file-upload"
-            accept=".pdf,.hwp,.xlsx,.xls,.docx,.pptx"
+            type='file'
+            name='file-upload'
+            accept='.pdf,.hwp,.xlsx,.xls,.docx,.pptx'
             onChange={handleFileChange}
-            className="hidden"
-            id="file-upload"
+            className='hidden'
+            id='file-upload'
             disabled={uploadResumeStatus === 'pending'}
           />
         </label>
       </div>
 
-      <div className="flex flex-col gap-2 text-xs mb-4 p-2 bg-[#EAEAEC] rounded break-keep">
-        <p className="font-bold text-sm">{`[이력서 업로드 가이드]`}</p>
+      <div className='flex flex-col gap-2 text-xs mb-4 p-2 bg-[#EAEAEC] rounded break-keep'>
+        <p className='font-bold text-sm'>{`[이력서 업로드 가이드]`}</p>
 
         <p>• 이력서는 최대 4개까지 업로드 가능해요.</p>
 
@@ -98,7 +98,7 @@ export default function Resume() {
         </div>
       </div>
 
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className='grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
         {resumeListData
           ?.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
           .map((data) => {
@@ -107,8 +107,8 @@ export default function Resume() {
       </div>
 
       {resumeListData?.length === 0 && (
-        <div className="flex items-center justify-center border rounded p-10 h-48">
-          <p className="text-sm text-gray-500">저장된 이력서가 없어요.</p>
+        <div className='flex items-center justify-center border rounded p-10 h-48'>
+          <p className='text-sm text-gray-500'>저장된 이력서가 없어요.</p>
         </div>
       )}
     </div>

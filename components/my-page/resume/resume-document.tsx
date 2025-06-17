@@ -69,9 +69,7 @@ export default function ResumeDocument({ data }: { data: ResumeDataResponse }) {
           return domNode.children?.map((child, index) => {
             if (child.type === 'tag') {
               return (
-                <React.Fragment key={index}>
-                  {renderHtmlToPdf(child.toString())}
-                </React.Fragment>
+                <React.Fragment key={index}>{renderHtmlToPdf(child.toString())}</React.Fragment>
               );
             }
             return null;
@@ -84,9 +82,7 @@ export default function ResumeDocument({ data }: { data: ResumeDataResponse }) {
             .join(' ')
             .trim();
 
-          return textContent ? (
-            <Text style={pdfStyles.text}>{textContent}</Text>
-          ) : null;
+          return textContent ? <Text style={pdfStyles.text}>{textContent}</Text> : null;
         }
 
         return null;
@@ -166,7 +162,7 @@ export default function ResumeDocument({ data }: { data: ResumeDataResponse }) {
 
   return (
     <Document>
-      <Page size="A4" style={pdfStyles.page}>
+      <Page size='A4' style={pdfStyles.page}>
         <View style={pdfStyles.section}>
           {data.resume_image[0] && (
             <PDFImage
@@ -203,8 +199,7 @@ export default function ResumeDocument({ data }: { data: ResumeDataResponse }) {
           {data.education.map((edu, index) => (
             <React.Fragment key={`edu-${index}`}>
               <Text style={pdfStyles.text}>
-                {edu.schoolName} - {edu.majorAndDegree} ({edu.startDate} -{' '}
-                {edu.endDate}
+                {edu.schoolName} - {edu.majorAndDegree} ({edu.startDate} - {edu.endDate}
                 {edu.isCurrentlyEnrolled === 'enrolled'
                   ? ' / 현재 재학중'
                   : edu.isCurrentlyEnrolled === 'graduated'
@@ -226,8 +221,7 @@ export default function ResumeDocument({ data }: { data: ResumeDataResponse }) {
           {data.experience.map((exp, index) => (
             <React.Fragment key={`exp-${index}`}>
               <Text style={pdfStyles.text}>
-                {exp.companyName} - {exp.jobTitle} ({exp.startDate} -{' '}
-                {exp.endDate}
+                {exp.companyName} - {exp.jobTitle} ({exp.startDate} - {exp.endDate}
                 {exp.isCurrentlyEmployed === true ? ' / 현재 재직중' : ''})
               </Text>
 

@@ -13,9 +13,7 @@ export interface RegionFilter {
 
 export interface RegionsFilterProps {
   regionFilter: RegionFilter;
-  setRegionFilter: (
-    value: RegionFilter | ((prev: RegionFilter) => RegionFilter)
-  ) => void;
+  setRegionFilter: (value: RegionFilter | ((prev: RegionFilter) => RegionFilter)) => void;
 }
 
 export interface PositionFilterProps {
@@ -25,9 +23,7 @@ export interface PositionFilterProps {
 
 export interface PeriodFilterProps {
   periodValueFilter: number[];
-  setPeriodValueFilter: (
-    value: number[] | ((prev: number[]) => number[])
-  ) => void;
+  setPeriodValueFilter: (value: number[] | ((prev: number[]) => number[])) => void;
 }
 
 export interface HiringFilterProps {

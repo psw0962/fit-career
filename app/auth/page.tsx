@@ -56,37 +56,37 @@ export default function Auth() {
   if (isPending || isLoading) return <GlobalSpinner />;
 
   return (
-    <div className="w-full mx-auto min-h-[50vh] flex flex-col justify-center">
-      <div className="flex flex-col gap-2 justify-center items-center">
-        <p className="text-center text-2xl font-bold break-keep">
+    <div className='w-full mx-auto min-h-[50vh] flex flex-col justify-center'>
+      <div className='flex flex-col gap-2 justify-center items-center'>
+        <p className='text-center text-2xl font-bold break-keep'>
           피트니스의 모든 정보, FIT Career
         </p>
 
-        <p className="flex items-center text-base text-center text-[#8F9091] font-bold break-keep">
+        <p className='flex items-center text-base text-center text-[#8F9091] font-bold break-keep'>
           취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보까지
           <br />
           피트니스 정보의 모든 것
         </p>
       </div>
 
-      <div className="w-full flex justify-center ">
+      <div className='w-full flex justify-center '>
         <div
-          className="w-[250px] flex items-center justify-center bg-[#FEE500] text-black font-bold py-2 px-4 mt-5 rounded cursor-pointer"
+          className='w-[250px] flex items-center justify-center bg-[#FEE500] text-black font-bold py-2 px-4 mt-5 rounded cursor-pointer'
           onClick={() => {
             mutate(redirectTo);
           }}
         >
-          <div className="relative w-8 h-8 mr-1">
+          <div className='relative w-8 h-8 mr-1'>
             <Image
-              src="/svg/kakao-logo.svg"
-              alt="kakao-logo"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              src='/svg/kakao-logo.svg'
+              alt='kakao-logo'
+              sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
               fill
               style={{ objectFit: 'contain' }}
             />
           </div>
 
-          <p className="text-sm sm:text-base">카카오 로그인</p>
+          <p className='text-sm sm:text-base'>카카오 로그인</p>
         </div>
       </div>
     </div>

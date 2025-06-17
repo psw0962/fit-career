@@ -105,19 +105,19 @@ export default function ResumeSelectIdModal({
       </DialogTrigger>
 
       {userData && (
-        <DialogContent className="w-[90vw] max-w-[500px] min-w-[300px]">
-          <div className="flex flex-col gap-3">
+        <DialogContent className='w-[90vw] max-w-[500px] min-w-[300px]'>
+          <div className='flex flex-col gap-3'>
             <DialogHeader>
-              <DialogTitle className="font-bold">이력서 선택</DialogTitle>
-              <DialogDescription className="hidden"></DialogDescription>
+              <DialogTitle className='font-bold'>이력서 선택</DialogTitle>
+              <DialogDescription className='hidden'></DialogDescription>
             </DialogHeader>
 
             {resumeData && resumeData.length === 0 && (
-              <div className="flex flex-col gap-2 justify-center items-center border rounded p-6 mt-4">
-                <p className="text-[#000]">등록된 이력서가 없습니다.</p>
+              <div className='flex flex-col gap-2 justify-center items-center border rounded p-6 mt-4'>
+                <p className='text-[#000]'>등록된 이력서가 없습니다.</p>
 
                 <button
-                  className="w-fit h-fit text-xs rounded px-4 py-2 border cursor-pointer"
+                  className='w-fit h-fit text-xs rounded px-4 py-2 border cursor-pointer'
                   onClick={() => {
                     router.push('/auth/my-page');
                     setActiveTab('resume');
@@ -128,59 +128,60 @@ export default function ResumeSelectIdModal({
               </div>
             )}
 
-            <div className="flex flex-col gap-2">
+            <div className='flex flex-col gap-2'>
               {resumeData?.map((resume) => (
                 <label
                   key={resume.id}
-                  className="flex items-center space-x-3 cursor-pointer p-3 border rounded hover:bg-gray-50"
+                  className='flex items-center space-x-3 cursor-pointer p-3 border rounded hover:bg-gray-50'
                 >
                   <input
-                    type="radio"
-                    name="resume"
+                    type='radio'
+                    name='resume'
                     value={resume.id}
                     checked={selectedResumeId === resume.id}
                     onChange={(e) => setSelectedResumeId(e.target.value)}
                   />
 
                   {resume.is_fitcareer_resume && (
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-1">
-                        <div className="relative w-5 h-5">
+                    <div className='flex flex-col gap-1'>
+                      <div className='flex items-center gap-1'>
+                        <div className='relative w-5 h-5'>
                           <Image
-                            src="/svg/logo.svg"
-                            alt="logo"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            src='/svg/logo.svg'
+                            alt='logo'
+                            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                             fill
+                            priority
                             style={{ objectFit: 'contain' }}
                           />
                         </div>
 
-                        <p className="max-w-[200px] break-all line-clamp-1">{resume.title}</p>
+                        <p className='max-w-[200px] break-all line-clamp-1'>{resume.title}</p>
                       </div>
 
-                      <p className="text-xs text-gray-500">최근 수정일 : {resume.updated_at}</p>
+                      <p className='text-xs text-gray-500'>최근 수정일 : {resume.updated_at}</p>
                     </div>
                   )}
 
                   {!resume.is_fitcareer_resume && (
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-1">
-                        <div className="relative w-5 h-5">
+                    <div className='flex flex-col gap-1'>
+                      <div className='flex items-center gap-1'>
+                        <div className='relative w-5 h-5'>
                           <Image
-                            src="/svg/document.svg"
-                            alt="document"
-                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            src='/svg/document.svg'
+                            alt='document'
+                            sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                             fill
                             style={{ objectFit: 'contain' }}
                           />
                         </div>
 
-                        <p className="max-w-[200px] break-all line-clamp-1">
+                        <p className='max-w-[200px] break-all line-clamp-1'>
                           {`${convertBase64Unicode(resume.title, 'decode').split('.')[0]}.${convertBase64Unicode(resume.title, 'decode').split('.')[1]}`}
                         </p>
                       </div>
 
-                      <p className="text-xs text-gray-500">최근 수정일 : {resume.updated_at}</p>
+                      <p className='text-xs text-gray-500'>최근 수정일 : {resume.updated_at}</p>
                     </div>
                   )}
                 </label>
@@ -210,7 +211,7 @@ export default function ResumeSelectIdModal({
             )}
 
             {confirmSubmitted() && (
-              <p className="text-xs text-[red] mt-2">*지원 취소는 마이페이지에서 할 수 있어요.</p>
+              <p className='text-xs text-[red] mt-2'>*지원 취소는 마이페이지에서 할 수 있어요.</p>
             )}
           </div>
         </DialogContent>

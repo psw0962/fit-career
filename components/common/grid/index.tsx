@@ -194,9 +194,7 @@ export const AgGrid = (props: AgGridProps) => {
           headerHeight={32}
           rowHeight={32}
           tooltipShowDelay={props.tooltipShowDelay}
-          autoSizeStrategy={
-            props.autoSizeStrategy ? { type: 'fitCellContents' } : undefined
-          }
+          autoSizeStrategy={props.autoSizeStrategy ? { type: 'fitCellContents' } : undefined}
         />
       </div>
     </>

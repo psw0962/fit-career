@@ -38,9 +38,9 @@ export default function SectionComp(): React.ReactElement {
   }, [currentSection, isThrottled]);
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden">
+    <div className='relative w-screen h-screen overflow-hidden'>
       <div
-        className="relative w-screen h-[400vh]"
+        className='relative w-screen h-[400vh]'
         style={{
           transform: `translateY(-${currentSection * 100}vh)`,
           transition: 'transform 0.5s ease-in-out',

@@ -79,25 +79,25 @@ export default function RootLayout({
 }>) {
   return (
     <ReactQueryClientProvider>
-      <html lang="ko" className={pretendard.variable}>
+      <html lang='ko' className={pretendard.variable}>
         <head>
           <Script
-            id="json-ld"
-            type="application/ld+json"
+            id='json-ld'
+            type='application/ld+json'
             dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            strategy="afterInteractive"
+            strategy='afterInteractive'
           />
 
           <Script
-            id="gtm"
+            id='gtm'
             async
-            src="https://www.googletagmanager.com/gtag/js?id=G-NT2EDNBP8N"
-            strategy="afterInteractive"
+            src='https://www.googletagmanager.com/gtag/js?id=G-NT2EDNBP8N'
+            strategy='afterInteractive'
           />
 
           <Script
-            id="google-analytics"
-            strategy="afterInteractive"
+            id='google-analytics'
+            strategy='afterInteractive'
             dangerouslySetInnerHTML={{
               __html: `
       window.dataLayer = window.dataLayer || [];
@@ -114,12 +114,12 @@ export default function RootLayout({
           />
         </head>
 
-        <body className="overflow-x-auto font-sans antialiased" suppressHydrationWarning={true}>
-          <div className="flex flex-col min-w-[350px] min-h-screen">
+        <body className='overflow-x-auto font-sans antialiased' suppressHydrationWarning={true}>
+          <div className='flex flex-col min-w-[350px] min-h-screen'>
             <Nav />
 
             <main
-              className="flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16 min-h-[calc(100vh-10rem)]"
+              className='flex-grow w-full max-w-7xl mx-auto px-3 sm:px-10 pt-16 sm:pt-20 pb-16 min-h-[calc(100vh-10rem)]'
               style={{
                 containIntrinsicSize: '0 500px',
                 contentVisibility: 'auto',

@@ -231,63 +231,63 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
   return (
     <div>
       {/* logo */}
-      <div className="flex flex-col mb-20">
-        <label className="text-2xl font-bold mb-2">회사 로고</label>
+      <div className='flex flex-col mb-20'>
+        <label className='text-2xl font-bold mb-2'>회사 로고</label>
 
         <div>
           {/*  이미지가 업로드 되기 전 */}
           {!currentLogo && settingLogo.length === 0 && (
-            <div className="relative flex items-center justify-center w-36 h-36 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all">
+            <div className='relative flex items-center justify-center w-36 h-36 border-2 border-dashed border-gray-300 rounded-full cursor-pointer hover:border-blue-500 transition-all'>
               <input
-                type="file"
-                id="file-upload"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                accept="image/*"
+                type='file'
+                id='file-upload'
+                className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+                accept='image/*'
                 onChange={handleImageUpload}
               />
-              <div className="flex flex-col items-center">
+              <div className='flex flex-col items-center'>
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-12 w-12 text-gray-400 mb-2"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  xmlns='http://www.w3.org/2000/svg'
+                  className='h-12 w-12 text-gray-400 mb-2'
+                  fill='none'
+                  viewBox='0 0 24 24'
+                  stroke='currentColor'
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                    strokeLinecap='round'
+                    strokeLinejoin='round'
                     strokeWidth={2}
-                    d="M7 16V12M7 8h.01M16 12V8m0 8h.01M16 12h.01m0 0L12 16l-4-4"
+                    d='M7 16V12M7 8h.01M16 12V8m0 8h.01M16 12h.01m0 0L12 16l-4-4'
                   />
                 </svg>
-                <span className="text-gray-600">이미지 업로드</span>
+                <span className='text-gray-600'>이미지 업로드</span>
               </div>
             </div>
           )}
 
           {/* 현재 상태 로고가 업로드 된 경우 */}
           {settingLogo.length > 0 && (
-            <div className="relative w-20 h-20 border-gray-300">
+            <div className='relative w-20 h-20 border-gray-300'>
               <Image
                 src={logoUrl ?? ''}
-                alt="enterprise logo"
-                className="rounded-full"
+                alt='enterprise logo'
+                className='rounded-full'
                 style={{ objectFit: 'cover' }}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               />
 
               <button
                 onClick={() => removeImage(0)}
-                className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
+                className='absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]'
               >
                 <Image
-                  src="/svg/close.svg"
-                  alt="close"
+                  src='/svg/close.svg'
+                  alt='close'
                   width={12}
                   height={12}
-                  className="invert brightness-0"
+                  className='invert brightness-0'
                   draggable={false}
                 />
               </button>
@@ -296,27 +296,27 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
 
           {/* 이미 업로드된 로고를 가져오는 경우 */}
           {enterpriseProfile && enterpriseProfile[0]?.logo[0]?.length > 0 && currentLogo !== '' && (
-            <div className="relative w-20 h-20 border-gray-300">
+            <div className='relative w-20 h-20 border-gray-300'>
               <Image
                 src={currentLogo}
-                alt="enterprise logo"
-                className="rounded-full"
+                alt='enterprise logo'
+                className='rounded-full'
                 style={{ objectFit: 'cover' }}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               />
 
               <button
                 onClick={() => setCurrentLogo('')}
-                className="absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]"
+                className='absolute top-0 right-0 bg-[#000] text-white rounded p-[2px]'
               >
                 <Image
-                  src="/svg/close.svg"
-                  alt="close"
+                  src='/svg/close.svg'
+                  alt='close'
                   width={12}
                   height={12}
-                  className="invert brightness-0"
+                  className='invert brightness-0'
                   draggable={false}
                 />
               </button>
@@ -326,14 +326,14 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
       </div>
 
       {/* name */}
-      <div className="flex flex-col mb-20" ref={nameRef}>
-        <label className="text-2xl font-bold mb-2">
-          회사 이름 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={nameRef}>
+        <label className='text-2xl font-bold mb-2'>
+          회사 이름 <span className='text-sm text-red-500 align-top'>*</span>
         </label>
         <input
-          className="border p-2 rounded"
-          type="text"
-          placeholder="회사 이름을 입력해 주세요"
+          className='border p-2 rounded'
+          type='text'
+          placeholder='회사 이름을 입력해 주세요'
           value={name}
           onChange={(e) => {
             setName(e.target.value);
@@ -342,14 +342,14 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
       </div>
 
       {/* insudtry */}
-      <div className="flex flex-col mb-20" ref={industryRef}>
-        <p className="text-2xl font-bold mb-2">
-          업종 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={industryRef}>
+        <p className='text-2xl font-bold mb-2'>
+          업종 <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
         <select
-          id="industry"
-          name="industry"
+          id='industry'
+          name='industry'
           className={`appearance-none border p-2 mb-4 rounded ${
             industry.job === '' ? 'text-gray-400' : 'text-black'
           }`}
@@ -358,7 +358,7 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
             setIndustry({ ...industry, job: e.target.value });
           }}
         >
-          <option value="" className="text-gray-400">
+          <option value='' className='text-gray-400'>
             업종을 선택해 주세요
           </option>
 
@@ -371,9 +371,9 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
 
         {industry.job === '기타' && (
           <input
-            type="text"
-            className="appearance-none border p-2 mb-4 rounded"
-            placeholder="업종을 입력해 주세요"
+            type='text'
+            className='appearance-none border p-2 mb-4 rounded'
+            placeholder='업종을 입력해 주세요'
             value={industry.etc}
             onChange={(e) => {
               setIndustry({
@@ -386,13 +386,13 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
       </div>
 
       {/* address */}
-      <div className="flex flex-col mb-20" ref={addressRef}>
-        <label className="text-2xl font-bold mb-2">
-          주소 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={addressRef}>
+        <label className='text-2xl font-bold mb-2'>
+          주소 <span className='text-sm text-red-500 align-top'>*</span>
         </label>
 
         <button
-          className="py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2"
+          className='py-2 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mb-2'
           onClick={() => open({ onComplete: daumPostCodeHandler })}
         >
           주소 찾기
@@ -401,7 +401,7 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
         {address.zoneCode && address.zoneAddress && (
           <>
             <input
-              type="text"
+              type='text'
               value={
                 address.zoneCode && address.zoneAddress
                   ? `[${address.zoneCode}] ${address.zoneAddress}`
@@ -409,28 +409,28 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
               }
               readOnly
               disabled
-              className="border p-2 mb-2 rounded"
+              className='border p-2 mb-2 rounded'
             />
 
             <input
-              type="text"
+              type='text'
               onChange={(e) => setAddress({ ...address, detailAddress: e.target.value })}
               value={address.detailAddress}
-              placeholder="상세 주소 입력"
-              className="border p-2 rounded"
+              placeholder='상세 주소 입력'
+              className='border p-2 rounded'
             />
           </>
         )}
       </div>
 
       {/* establishment */}
-      <div className="flex flex-col mb-20" ref={establishmentRef}>
-        <label className="text-2xl font-bold mb-2">
-          설립일 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-20' ref={establishmentRef}>
+        <label className='text-2xl font-bold mb-2'>
+          설립일 <span className='text-sm text-red-500 align-top'>*</span>
         </label>
 
         <DatePicker
-          className="px-2 py-2 border rounded"
+          className='px-2 py-2 border rounded'
           selected={
             establishment && /^\d{4}-\d{2}-\d{2}$/.test(establishment)
               ? parse(establishment, 'yyyy-MM-dd', new Date())
@@ -442,24 +442,24 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
             }
           }}
           locale={ko}
-          dateFormat="yyyy년"
+          dateFormat='yyyy년'
           showYearPicker
-          placeholderText="설립일을 선택하세요"
+          placeholderText='설립일을 선택하세요'
         />
       </div>
 
       {/* description */}
-      <div className="flex flex-col mb-4" ref={descriptionRef}>
-        <label className="text-2xl font-bold mb-2">
-          회사 소개 <span className="text-sm text-red-500 align-top">*</span>
+      <div className='flex flex-col mb-4' ref={descriptionRef}>
+        <label className='text-2xl font-bold mb-2'>
+          회사 소개 <span className='text-sm text-red-500 align-top'>*</span>
         </label>
 
         <EditorContent editor={editor} />
       </div>
 
-      <div className="flex justify-center mt-10">
+      <div className='flex justify-center mt-10'>
         <button
-          className="px-4 py-2 bg-[#4C71C0] text-white rounded w-fit"
+          className='px-4 py-2 bg-[#4C71C0] text-white rounded w-fit'
           onClick={() => onSubmit()}
         >
           저장하기

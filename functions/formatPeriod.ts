@@ -13,9 +13,7 @@ export function formatPeriod(value: number[]) {
     if (start === end) {
       return `${start}년 이상`;
     }
-    return `${start === 0 ? '신입' : `${start}년`} ~ ${
-      end === 10 ? '10년 이상' : `${end}년`
-    }`;
+    return `${start === 0 ? '신입' : `${start}년`} ~ ${end === 10 ? '10년 이상' : `${end}년`}`;
   } else {
     return `${value[0]}년 이상`;
   }

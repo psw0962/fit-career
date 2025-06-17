@@ -22,7 +22,7 @@ export default function ThumbnailCarousel(props: ThumbnailCarouselProps) {
       if (!emblaMainApi || !emblaThumbsApi) return;
       emblaMainApi.scrollTo(index);
     },
-    [emblaMainApi, emblaThumbsApi]
+    [emblaMainApi, emblaThumbsApi],
   );
 
   const onSelect = useCallback(() => {
@@ -39,21 +39,22 @@ export default function ThumbnailCarousel(props: ThumbnailCarouselProps) {
   }, [emblaMainApi, onSelect]);
 
   return (
-    <div className="max-w-[1000px] mx-auto">
-      <div className="overflow-hidden" ref={emblaMainRef}>
-        <div className="flex -ml-4">
+    <div className='max-w-[1000px] mx-auto'>
+      <div className='overflow-hidden' ref={emblaMainRef}>
+        <div className='flex -ml-4'>
           {slides &&
             slides.map((imageUrl, index) => (
-              <div key={index} className="flex-shrink-0 w-full min-w-0 pl-4">
-                <div className="relative w-full aspect-[16/9] mb-6">
+              <div key={index} className='flex-shrink-0 w-full min-w-0 pl-4'>
+                <div className='relative w-full aspect-[16/9] mb-6'>
                   <Image
                     src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
-                    className="rounded"
+                    className='rounded'
                     alt={`image ${index}`}
                     fill
+                    priority
                     style={{ objectFit: 'contain' }}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                    sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                    blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
                   />
                 </div>
               </div>
@@ -61,8 +62,8 @@ export default function ThumbnailCarousel(props: ThumbnailCarouselProps) {
         </div>
       </div>
 
-      <div className="overflow-hidden" ref={emblaThumbsRef}>
-        <div className="flex gap-2">
+      <div className='overflow-hidden' ref={emblaThumbsRef}>
+        <div className='flex gap-2'>
           {slides &&
             slides.map((imageUrl, index) => (
               <div
@@ -74,12 +75,13 @@ export default function ThumbnailCarousel(props: ThumbnailCarouselProps) {
               >
                 <Image
                   src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
-                  className="rounded-xl p-2"
+                  className='rounded-xl p-2'
                   alt={`image ${index}`}
                   fill
+                  priority
                   style={{ objectFit: 'contain' }}
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                  sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+                  blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
                 />
               </div>
             ))}

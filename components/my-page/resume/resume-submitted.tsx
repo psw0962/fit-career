@@ -38,7 +38,7 @@ export default function ResumeSubmitted() {
         return (
           <>
             <button
-              className="px-3 py-1 border rounded text-sm hover:bg-gray-100"
+              className='px-3 py-1 border rounded text-sm hover:bg-gray-100'
               onClick={(e) => {
                 e.stopPropagation();
                 setOpenDeleteDialog(row.original.id);
@@ -54,7 +54,7 @@ export default function ResumeSubmitted() {
               }}
             >
               <DialogContent
-                className="w-[90vw] max-w-[500px] min-w-[300px]"
+                className='w-[90vw] max-w-[500px] min-w-[300px]'
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
@@ -66,9 +66,9 @@ export default function ResumeSubmitted() {
                 </DialogHeader>
 
                 <DialogFooter>
-                  <div className="flex gap-2 justify-center mt-4 sm:mt-0">
+                  <div className='flex gap-2 justify-center mt-4 sm:mt-0'>
                     <button
-                      className="border rounded px-4 py-2 text-sm"
+                      className='border rounded px-4 py-2 text-sm'
                       onClick={() => {
                         setOpenDeleteDialog(null);
                       }}
@@ -76,7 +76,7 @@ export default function ResumeSubmitted() {
                       취소
                     </button>
                     <button
-                      className="bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm"
+                      className='bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm'
                       onClick={() => {
                         deleteResumeFromHiring({
                           hiringId: row.original.id,
@@ -141,7 +141,7 @@ export default function ResumeSubmitted() {
         return (
           <>
             <span
-              className="mx-auto text-gray-500 text-[12px] max-w-[200px] break-words line-clamp-1 underline"
+              className='mx-auto text-gray-500 text-[12px] max-w-[200px] break-words line-clamp-1 underline'
               onClick={(e) => {
                 e.stopPropagation();
 
@@ -170,7 +170,7 @@ export default function ResumeSubmitted() {
               }}
             >
               <DialogContent
-                className="w-[90vw] max-w-[500px] min-w-[300px]"
+                className='w-[90vw] max-w-[500px] min-w-[300px]'
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
@@ -184,7 +184,7 @@ export default function ResumeSubmitted() {
 
                 <DialogFooter>
                   <button
-                    className="bg-[#4C71C0] text-white rounded px-4 py-2 text-sm"
+                    className='bg-[#4C71C0] text-white rounded px-4 py-2 text-sm'
                     onClick={() => setOpenResumeDialog(null)}
                   >
                     확인
@@ -203,7 +203,7 @@ export default function ResumeSubmitted() {
         const submissions = row.original.filtered_resume_received || [];
         const submission = Array.isArray(submissions) ? submissions[0] : null;
 
-        return <span className="text-gray-500 text-xs">{submission?.submitted_at || '-'}</span>;
+        return <span className='text-gray-500 text-xs'>{submission?.submitted_at || '-'}</span>;
       },
     },
   ];
@@ -254,21 +254,21 @@ export default function ResumeSubmitted() {
   }, [page]);
 
   return (
-    <div className="mt-5">
-      <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
+    <div className='mt-5'>
+      <div className='text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep'>
         <p>• 내가 지원했던 채용공고가 수정되면 수정된 내용으로 보여요.</p>
         <p>• 내가 지원한 채용공고가 삭제되면 지원했던 정보도 함께 삭제돼요.</p>
       </div>
 
-      <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-[450px] border-collapse bg-white rounded-lg shadow-sm">
+      <div className='w-full overflow-x-auto'>
+        <table className='w-full min-w-[450px] border-collapse bg-white rounded-lg shadow-sm'>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b whitespace-nowrap"
+                    className='px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b whitespace-nowrap'
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
@@ -277,12 +277,12 @@ export default function ResumeSubmitted() {
             ))}
           </thead>
 
-          <tbody className="divide-y divide-gray-200">
+          <tbody className='divide-y divide-gray-200'>
             {table.getRowModel().rows.map((row) => {
               return (
                 <tr
                   key={row.id}
-                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  className='hover:bg-gray-50 transition-colors cursor-pointer'
                   onClick={() => {
                     if (!openDeleteDialog) {
                       router.push(`/hiring/${row.original.id}`);
@@ -293,7 +293,7 @@ export default function ResumeSubmitted() {
                     return (
                       <td
                         key={cell.id}
-                        className="px-6 py-4 text-sm text-center text-gray-600 whitespace-nowrap"
+                        className='px-6 py-4 text-sm text-center text-gray-600 whitespace-nowrap'
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
@@ -306,10 +306,10 @@ export default function ResumeSubmitted() {
         </table>
       </div>
 
-      <div className="flex items-center justify-center gap-1.5 py-4">
+      <div className='flex items-center justify-center gap-1.5 py-4'>
         {table.getPageCount() > 12 && (
           <button
-            className="min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            className='min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
             onClick={() => {
               const currentPage = table.getState().pagination.pageIndex;
               const targetPage = Math.floor(currentPage / 12) * 12 - 1;
@@ -344,7 +344,7 @@ export default function ResumeSubmitted() {
 
         {table.getPageCount() > 12 && (
           <button
-            className="min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            className='min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
             onClick={() => {
               const currentPage = table.getState().pagination.pageIndex;
               const nextGroupFirstPage = Math.floor(currentPage / 12) * 12 + 12;
@@ -365,8 +365,8 @@ export default function ResumeSubmitted() {
       {hiringDataIsLoading && <Spinner />}
 
       {hiringData?.data.length === 0 && (
-        <div className="flex items-center justify-center h-48">
-          <p className="text-sm text-gray-500">지원한 채용공고가 없어요.</p>
+        <div className='flex items-center justify-center h-48'>
+          <p className='text-sm text-gray-500'>지원한 채용공고가 없어요.</p>
         </div>
       )}
     </div>

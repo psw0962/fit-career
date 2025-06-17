@@ -11,16 +11,16 @@ import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import { useCheckIsBookmarked, useToggleBookmark } from '@/api/hiring';
 
 const HiringCardSkeleton = () => (
-  <div className="relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded animate-pulse">
-    <div className="relative w-full aspect-[4/3] mx-auto mb-4 bg-gray-200 rounded"></div>
-    <div className="w-full flex flex-col gap-2">
-      <div className="h-5 bg-gray-200 rounded w-3/4"></div>
-      <div className="flex items-center gap-1 mt-2">
-        <div className="w-5 h-5 bg-gray-200 rounded-full"></div>
-        <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+  <div className='relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded animate-pulse'>
+    <div className='relative w-full aspect-[4/3] mx-auto mb-4 bg-gray-200 rounded'></div>
+    <div className='w-full flex flex-col gap-2'>
+      <div className='h-5 bg-gray-200 rounded w-3/4'></div>
+      <div className='flex items-center gap-1 mt-2'>
+        <div className='w-5 h-5 bg-gray-200 rounded-full'></div>
+        <div className='h-4 bg-gray-200 rounded w-1/2'></div>
       </div>
-      <div className="h-3 bg-gray-200 rounded w-1/3 mt-2"></div>
-      <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+      <div className='h-3 bg-gray-200 rounded w-1/3 mt-2'></div>
+      <div className='h-3 bg-gray-200 rounded w-1/4'></div>
     </div>
   </div>
 );
@@ -79,7 +79,7 @@ export default function HiringFilter({
 
   if (hiringDataIsLoading) {
     return (
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className='grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
         {Array.from({ length: itemsPerPage }).map((_, index) => (
           <HiringCardSkeleton key={index} />
         ))}
@@ -89,7 +89,7 @@ export default function HiringFilter({
 
   return (
     <>
-      <div className="grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className='grid gap-3 grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
         {hiringData !== undefined &&
           hiringData.data.map((x: HiringDataResponse) => {
             const isBookmarked = bookmarkedStatus?.[x.id];
@@ -105,24 +105,24 @@ export default function HiringFilter({
                   }
                 }}
               >
-                <div className="relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer">
-                  <div className="relative w-full aspect-[4/3] mx-auto mb-4 border rounded">
+                <div className='relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer'>
+                  <div className='relative w-full aspect-[4/3] mx-auto mb-4 border rounded'>
                     {!imagesLoaded[x.id] && (
-                      <div className="absolute inset-0 bg-gray-100 rounded" />
+                      <div className='absolute inset-0 bg-gray-100 rounded' />
                     )}
 
                     <Image
                       src={x.images.length !== 0 ? x.images[0] : '/svg/logo.svg'}
                       alt={`${x.title} 이미지`}
                       style={{ objectFit: 'cover' }}
-                      className="rounded"
+                      className='rounded'
                       fill
-                      priority={currentPage === 1}
-                      loading={currentPage === 1 ? 'eager' : 'lazy'}
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      placeholder="blur"
-                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                      priority={currentPage === 1 && hiringData.data.indexOf(x) < 2}
                       onLoad={() => handleImageLoad(x.id)}
+                      quality={70}
+                      sizes='(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
+                      placeholder='blur'
+                      blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII='
                     />
                   </div>
 
@@ -138,40 +138,40 @@ export default function HiringFilter({
                   >
                     <Image
                       src={isBookmarked ? '/svg/bookmarked.svg' : '/svg/bookmark.svg'}
-                      alt="bookmark"
-                      className="p-2"
+                      alt='bookmark'
+                      className='p-2'
                       style={{ objectFit: 'contain' }}
                       fill
-                      sizes="32px"
-                      loading="lazy"
-                      blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                      sizes='32px'
+                      loading='lazy'
+                      blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
                     />
                   </div>
 
-                  <div className="w-full flex flex-col gap-0">
-                    <p className="text-base font-bold break-keep line-clamp-2">{x.title}</p>
+                  <div className='w-full flex flex-col gap-0'>
+                    <p className='text-base font-bold break-keep line-clamp-2'>{x.title}</p>
 
-                    <div className="flex items-center gap-1 mt-2">
-                      <div className="relative w-5 h-5 flex-shrink-0">
+                    <div className='flex items-center gap-1 mt-2'>
+                      <div className='relative w-5 h-5 flex-shrink-0'>
                         <Image
                           src={x.enterprise_profile?.logo[0] ?? '/svg/logo.svg'}
                           alt={`${x.enterprise_profile?.name} 로고`}
-                          className="rounded"
+                          className='rounded'
                           fill
-                          sizes="20px"
-                          loading="lazy"
+                          priority={currentPage === 1 && hiringData.data.indexOf(x) < 2}
+                          sizes='20px'
                           style={{ objectFit: 'contain' }}
                         />
                       </div>
 
-                      <p className="text-sm break-words line-clamp-1 flex-1">
+                      <p className='text-sm break-words line-clamp-1 flex-1'>
                         {x.enterprise_profile?.name}
                       </p>
                     </div>
 
-                    <p className="text-xs text-gray-500 mt-2">{x.short_address}</p>
+                    <p className='text-xs text-gray-500 mt-2'>{x.short_address}</p>
 
-                    <p className="text-xs text-gray-500">경력 {formatPeriod(x.period)}</p>
+                    <p className='text-xs text-gray-500'>경력 {formatPeriod(x.period)}</p>
                   </div>
                 </div>
               </Link>
@@ -180,15 +180,15 @@ export default function HiringFilter({
       </div>
 
       {hiringData?.count === 0 && (
-        <div className="flex justify-center items-center mt-32">
-          <p className="text-lg">검색 결과가 없습니다.</p>
+        <div className='flex justify-center items-center mt-32'>
+          <p className='text-lg'>검색 결과가 없습니다.</p>
         </div>
       )}
 
       {totalPages > 1 && (
-        <div className="flex justify-center items-center gap-2 mt-4">
+        <div className='flex justify-center items-center gap-2 mt-4'>
           <button
-            className="min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            className='min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
             onClick={() => handlePageChange(startPage - 1)}
             disabled={startPage === 1}
           >
@@ -209,7 +209,7 @@ export default function HiringFilter({
           ))}
 
           <button
-            className="min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            className='min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
             onClick={() => handlePageChange(endPage + 1)}
             disabled={endPage === totalPages}
           >

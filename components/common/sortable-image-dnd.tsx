@@ -10,20 +10,8 @@ interface SortableImageDndProps {
   onRemove: (index: number) => void;
 }
 
-export default function SortableImageDnd({
-  id,
-  index,
-  image,
-  onRemove,
-}: SortableImageDndProps) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({
+export default function SortableImageDnd({ id, index, image, onRemove }: SortableImageDndProps) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id,
     animateLayoutChanges: () => false,
   });
@@ -36,7 +24,7 @@ export default function SortableImageDnd({
       cursor: 'grab',
       touchAction: 'none',
     }),
-    [transform, transition, isDragging]
+    [transform, transition, isDragging],
   );
 
   const imageUrl = useMemo(() => {
@@ -60,7 +48,7 @@ export default function SortableImageDnd({
   return (
     <div
       ref={setNodeRef}
-      className="relative w-16 h-16 sm:w-24 sm:h-24 border rounded select-none touch-none"
+      className='relative w-16 h-16 sm:w-24 sm:h-24 border rounded select-none touch-none'
       style={{
         ...style,
         WebkitTouchCallout: 'none',
@@ -72,15 +60,15 @@ export default function SortableImageDnd({
       <Image
         src={imageUrl}
         alt={`uploaded ${id}`}
-        className="w-full h-full rounded cursor-grab select-none"
+        className='w-full h-full rounded cursor-grab select-none'
         draggable={false}
         style={{
           objectFit: 'cover',
           WebkitTouchCallout: 'none',
         }}
         fill
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+        sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+        blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
       />
 
       <button
@@ -88,14 +76,14 @@ export default function SortableImageDnd({
           e.stopPropagation();
           onRemove(index);
         }}
-        className="absolute top-1 right-1 bg-[#000] text-white rounded p-[2px]"
+        className='absolute top-1 right-1 bg-[#000] text-white rounded p-[2px]'
       >
         <Image
-          src="/svg/close.svg"
-          alt="close"
+          src='/svg/close.svg'
+          alt='close'
           width={16}
           height={16}
-          className="w-4 h-4 invert brightness-0"
+          className='w-4 h-4 invert brightness-0'
           draggable={false}
         />
       </button>

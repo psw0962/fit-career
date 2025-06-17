@@ -32,7 +32,7 @@ export default function BookmarksHiring() {
         return (
           <>
             <button
-              className="px-3 py-1 border rounded text-sm hover:bg-gray-100"
+              className='px-3 py-1 border rounded text-sm hover:bg-gray-100'
               onClick={(e) => {
                 e.stopPropagation();
                 setOpenDeleteDialog(row.original.id);
@@ -46,7 +46,7 @@ export default function BookmarksHiring() {
               onOpenChange={() => setOpenDeleteDialog(null)}
             >
               <DialogContent
-                className="w-[90vw] max-w-[500px] min-w-[300px]"
+                className='w-[90vw] max-w-[500px] min-w-[300px]'
                 onClick={(e) => {
                   e.stopPropagation();
                 }}
@@ -56,16 +56,16 @@ export default function BookmarksHiring() {
                   <DialogDescription>북마크를 삭제하시겠습니까?</DialogDescription>
                 </DialogHeader>
                 <DialogFooter>
-                  <div className="flex gap-2 justify-center mt-4 sm:mt-0">
+                  <div className='flex gap-2 justify-center mt-4 sm:mt-0'>
                     <button
-                      className="text-sm border rounded px-4 py-2"
+                      className='text-sm border rounded px-4 py-2'
                       onClick={() => setOpenDeleteDialog(null)}
                     >
                       취소
                     </button>
 
                     <button
-                      className="bg-[#4C71C0] text-[#fff] text-sm rounded px-4 py-2"
+                      className='bg-[#4C71C0] text-[#fff] text-sm rounded px-4 py-2'
                       onClick={() => {
                         deleteBookmark(row.original.id);
                         setOpenDeleteDialog(null);
@@ -139,20 +139,20 @@ export default function BookmarksHiring() {
   }, [page]);
 
   return (
-    <div className="mt-5">
-      <div className="text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep">
+    <div className='mt-5'>
+      <div className='text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep'>
         <p>• 기업에서 채용공고를 삭제하면 내가 북마크한 채용공고도 함께 삭제돼요.</p>
       </div>
 
-      <div className="w-full overflow-x-auto">
-        <table className="w-full min-w-[450px] border-collapse bg-white rounded-lg shadow-sm">
+      <div className='w-full overflow-x-auto'>
+        <table className='w-full min-w-[450px] border-collapse bg-white rounded-lg shadow-sm'>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th
                     key={header.id}
-                    className="px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b whitespace-nowrap"
+                    className='px-6 py-4 text-center font-bold text-sm bg-gray-50 text-[#000] uppercase tracking-wider border-b whitespace-nowrap'
                   >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </th>
@@ -161,12 +161,12 @@ export default function BookmarksHiring() {
             ))}
           </thead>
 
-          <tbody className="divide-y divide-gray-200">
+          <tbody className='divide-y divide-gray-200'>
             {table.getRowModel().rows.map((row) => {
               return (
                 <tr
                   key={row.id}
-                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  className='hover:bg-gray-50 transition-colors cursor-pointer'
                   onClick={() => {
                     if (!openDeleteDialog) {
                       router.push(`/hiring/${row.original.id}`);
@@ -177,7 +177,7 @@ export default function BookmarksHiring() {
                     return (
                       <td
                         key={cell.id}
-                        className="px-6 py-4 text-sm text-center text-gray-600 whitespace-nowrap"
+                        className='px-6 py-4 text-sm text-center text-gray-600 whitespace-nowrap'
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
@@ -190,10 +190,10 @@ export default function BookmarksHiring() {
         </table>
       </div>
 
-      <div className="flex items-center justify-center gap-1.5 py-4">
+      <div className='flex items-center justify-center gap-1.5 py-4'>
         {table.getPageCount() > 12 && (
           <button
-            className="min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            className='min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
             onClick={() => {
               const currentPage = table.getState().pagination.pageIndex;
               const targetPage = Math.floor(currentPage / 12) * 12 - 1;
@@ -228,7 +228,7 @@ export default function BookmarksHiring() {
 
         {table.getPageCount() > 12 && (
           <button
-            className="min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50"
+            className='min-w-[32px] h-8 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
             onClick={() => {
               const currentPage = table.getState().pagination.pageIndex;
               const nextGroupFirstPage = Math.floor(currentPage / 12) * 12 + 12;
@@ -249,8 +249,8 @@ export default function BookmarksHiring() {
       {hiringDataIsLoading && <GlobalSpinner />}
 
       {hiringData?.data.length === 0 && (
-        <div className="flex items-center justify-center h-48">
-          <p className="text-sm text-gray-500">북마크한 채용공고가 없어요.</p>
+        <div className='flex items-center justify-center h-48'>
+          <p className='text-sm text-gray-500'>북마크한 채용공고가 없어요.</p>
         </div>
       )}
     </div>

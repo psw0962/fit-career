@@ -12,12 +12,11 @@ export async function deleteUser(userId: string) {
         autoRefreshToken: false,
         persistSession: false,
       },
-    }
+    },
   );
 
   try {
-    const { error: deleteUserError } =
-      await supabaseAdmin.auth.admin.deleteUser(userId);
+    const { error: deleteUserError } = await supabaseAdmin.auth.admin.deleteUser(userId);
 
     if (deleteUserError) throw new Error(deleteUserError.message);
 

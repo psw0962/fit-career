@@ -1,10 +1,5 @@
 import { createBrowserSupabaseClient } from '../utils/supabase/client';
-import {
-  useQuery,
-  useMutation,
-  useQueryClient,
-  UseMutationOptions,
-} from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, UseMutationOptions } from '@tanstack/react-query';
 import { AuthResponse, User } from '@supabase/supabase-js';
 import { EnterpriseProfile, SignInResponse } from '@/types/auth/auth';
 import { useRouter } from 'next/navigation';
@@ -13,10 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 // =========================================
 // ============== post email sign in
 // =========================================
-const signInWithEmail = async (
-  email: string,
-  password: string
-): Promise<AuthResponse> => {
+const signInWithEmail = async (email: string, password: string): Promise<AuthResponse> => {
   const supabase = createBrowserSupabaseClient();
 
   const { data, error } = await supabase.auth.signInWithPassword({
@@ -32,23 +24,13 @@ const signInWithEmail = async (
 };
 
 export const useSignInWithEmail = (
-  options?: UseMutationOptions<
-    AuthResponse,
-    Error,
-    { email: string; password: string },
-    void
-  >
+  options?: UseMutationOptions<AuthResponse, Error, { email: string; password: string }, void>,
 ) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
 
-  return useMutation<
-    AuthResponse,
-    Error,
-    { email: string; password: string },
-    void
-  >({
+  return useMutation<AuthResponse, Error, { email: string; password: string }, void>({
     mutationFn: ({ email, password }) => signInWithEmail(email, password),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['userData'] });
@@ -70,8 +52,7 @@ export const useSignInWithEmail = (
       } else {
         toast({
           title: '로그인에 실패했습니다.',
-          description:
-            '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
+          description: '네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요.',
           variant: 'warning',
         });
       }
@@ -83,9 +64,7 @@ export const useSignInWithEmail = (
 // =========================================
 // ============== post kakao sign in
 // =========================================
-const signInWithKakao = async (
-  redirectOverride?: string
-): Promise<SignInResponse> => {
+const signInWithKakao = async (redirectOverride?: string): Promise<SignInResponse> => {
   const supabase = createBrowserSupabaseClient();
 
   const baseCallbackUrl =
@@ -112,7 +91,7 @@ const signInWithKakao = async (
 };
 
 export const useSignInWithKakao = (
-  options?: UseMutationOptions<SignInResponse, Error, string, void>
+  options?: UseMutationOptions<SignInResponse, Error, string, void>,
 ) => {
   return useMutation<SignInResponse, Error, string, void>({
     mutationFn: (redirectOverride: string) => signInWithKakao(redirectOverride),
@@ -137,9 +116,7 @@ const signOut = async (): Promise<void> => {
   }
 };
 
-export const useSignOut = (
-  options?: UseMutationOptions<void, Error, void, void>
-) => {
+export const useSignOut = (options?: UseMutationOptions<void, Error, void, void>) => {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { toast } = useToast();
@@ -183,10 +160,7 @@ export const getUserData = async (): Promise<User | null> => {
       const refreshResponse = await supabase.auth.refreshSession();
 
       if (refreshResponse.error) {
-        console.error(
-          'Error refreshing session:',
-          refreshResponse.error.message
-        );
+        console.error('Error refreshing session:', refreshResponse.error.message);
         return null;
       }
 
@@ -241,8 +215,7 @@ const postEnterpriseProfile = async (data: EnterpriseProfile) => {
   const { error } = await supabase.from('enterprise_profile').insert([
     {
       name: data.name,
-      industry:
-        data.industry.job === '기타' ? data.industry.etc : data.industry.job,
+      industry: data.industry.job === '기타' ? data.industry.etc : data.industry.job,
       industry_etc: data.industry.job === '기타' ? true : false,
       establishment: data.establishment,
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
@@ -258,7 +231,7 @@ const postEnterpriseProfile = async (data: EnterpriseProfile) => {
 };
 
 export const usePostEnterpriseProfile = (
-  options?: UseMutationOptions<void, Error, EnterpriseProfile, void>
+  options?: UseMutationOptions<void, Error, EnterpriseProfile, void>,
 ) => {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -298,8 +271,7 @@ export const usePostEnterpriseProfile = (
 const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
   const supabase = createBrowserSupabaseClient();
 
-  const { data: userData, error: userDataError } =
-    await supabase.auth.getUser();
+  const { data: userData, error: userDataError } = await supabase.auth.getUser();
 
   if (userDataError) {
     throw new Error('User data not found');
@@ -331,13 +303,10 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
     newLogos.push(url.data.publicUrl);
   }
 
-  const logosChanged =
-    (newLogos.length > 0 && !data.currentLogo) || !data.currentLogo;
+  const logosChanged = (newLogos.length > 0 && !data.currentLogo) || !data.currentLogo;
 
   if (logosChanged) {
-    const logosToDelete = currentLogos.filter(
-      (currentLogo) => !newLogos.includes(currentLogo)
-    );
+    const logosToDelete = currentLogos.filter((currentLogo) => !newLogos.includes(currentLogo));
 
     for (const logoUrl of logosToDelete) {
       const path = logoUrl.split('/').slice(-1)[0];
@@ -355,8 +324,7 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
     .from('enterprise_profile')
     .update({
       name: data.name,
-      industry:
-        data.industry.job === '기타' ? data.industry.etc : data.industry.job,
+      industry: data.industry.job === '기타' ? data.industry.etc : data.industry.job,
       industry_etc: data.industry.job === '기타' ? true : false,
       establishment: data.establishment,
       address: `${data.address.zoneCode} ${data.address.zoneAddress} ${data.address.detailAddress}`,
@@ -372,7 +340,7 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
 };
 
 export const usePatchEnterpriseProfile = (
-  options?: UseMutationOptions<void, Error, EnterpriseProfile, void>
+  options?: UseMutationOptions<void, Error, EnterpriseProfile, void>,
 ) => {
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -471,10 +439,7 @@ const deleteAllUserData = async (): Promise<void> => {
 
   const bookmarkTables = ['bookmarks_hiring', 'bookmarks_resume'];
   for (const table of bookmarkTables) {
-    const { error: bookmarkError } = await supabase
-      .from(table)
-      .delete()
-      .eq('user_id', user?.id);
+    const { error: bookmarkError } = await supabase.from(table).delete().eq('user_id', user?.id);
 
     if (bookmarkError) {
       console.error(`${table} 북마크 삭제 중 에러 발생:`, bookmarkError);
@@ -506,27 +471,20 @@ const deleteAllUserData = async (): Promise<void> => {
       if (dbError) {
         console.error(`Error fetching file paths from ${table}:`, dbError);
       } else {
-        const allFilePaths = fileRecords
-          .flatMap((record) => record[column] || [])
-          .filter(Boolean);
+        const allFilePaths = fileRecords.flatMap((record) => record[column] || []).filter(Boolean);
 
         // 스토리지 파일 삭제
         for (const path of config.paths) {
           if (allFilePaths.length > 0) {
-            const { error: deleteFilesError } = await supabase.storage
-              .from(config.bucket)
-              .remove(
-                allFilePaths.map((filePath) => {
-                  const convertFilePath = filePath.split('/').slice(-1)[0];
-                  return `${path}/${convertFilePath}`;
-                })
-              );
+            const { error: deleteFilesError } = await supabase.storage.from(config.bucket).remove(
+              allFilePaths.map((filePath) => {
+                const convertFilePath = filePath.split('/').slice(-1)[0];
+                return `${path}/${convertFilePath}`;
+              }),
+            );
 
             if (deleteFilesError) {
-              console.error(
-                `Error deleting files from ${config.bucket}:`,
-                deleteFilesError
-              );
+              console.error(`Error deleting files from ${config.bucket}:`, deleteFilesError);
             }
           }
         }
@@ -534,10 +492,7 @@ const deleteAllUserData = async (): Promise<void> => {
     }
 
     // 테이블 데이터 삭제
-    const { error: deleteError } = await supabase
-      .from(table)
-      .delete()
-      .eq('user_id', user?.id);
+    const { error: deleteError } = await supabase.from(table).delete().eq('user_id', user?.id);
 
     if (deleteError) {
       console.error(`Error deleting from ${table}:`, deleteError);
@@ -545,9 +500,7 @@ const deleteAllUserData = async (): Promise<void> => {
   }
 };
 
-export const useDeleteAllUserData = (
-  options?: UseMutationOptions<void, Error, void, void>
-) => {
+export const useDeleteAllUserData = (options?: UseMutationOptions<void, Error, void, void>) => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
 

@@ -49,15 +49,13 @@ export default function Nav() {
     <nav
       className={`overflow-x-auto fixed top-0 w-full shadow bg-white transition-all duration-300 z-30`}
     >
-      <div
-        className={`min-w-[350px] flex justify-between max-w-7xl mx-auto px-3 sm:px-10 py-3`}
-      >
+      <div className={`min-w-[350px] flex justify-between max-w-7xl mx-auto px-3 sm:px-10 py-3`}>
         {/* desktop */}
-        <div className="flex gap-24">
+        <div className='flex gap-24'>
           <Link
-            href="/"
+            href='/'
             passHref
-            className="flex items-center"
+            className='flex items-center'
             onClick={(e: React.MouseEvent) => {
               if (e.ctrlKey || e.metaKey || e.button === 1) return;
 
@@ -66,23 +64,24 @@ export default function Nav() {
               window.location.href = '/';
             }}
           >
-            <div className="relative w-28 h-6 cursor-pointer">
+            <div className='relative w-28 h-6 cursor-pointer'>
               <Image
-                src="/svg/full-logo.svg"
-                alt="full-logo"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                src='/svg/full-logo.svg'
+                alt='full-logo'
+                sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                 fill
+                priority
                 style={{ objectFit: 'contain' }}
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=="
+                blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               />
             </div>
           </Link>
 
-          <ul className="hidden md:flex gap-10 items-center">
+          <ul className='hidden md:flex gap-10 items-center'>
             {MENU_LIST.map((menu) => (
-              <li key={menu.id} className="text-lg font-bold">
+              <li key={menu.id} className='text-lg font-bold'>
                 <Link href={menu.path} title={menu.title} passHref>
-                  <span className="text-base cursor-pointer">{menu.name}</span>
+                  <span className='text-base cursor-pointer'>{menu.name}</span>
                 </Link>
               </li>
             ))}
@@ -90,16 +89,16 @@ export default function Nav() {
         </div>
 
         {/* mobile */}
-        <div className="flex md:hidden items-center">
+        <div className='flex md:hidden items-center'>
           {!isMobileMenuOpen && (
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-              <Image src="/svg/menu.svg" alt="menu" width={20} height={20} />
+              <Image src='/svg/menu.svg' alt='menu' width={20} height={20} />
             </button>
           )}
 
           {isMobileMenuOpen && (
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-              <Image src="/svg/close.svg" alt="close" width={20} height={20} />
+              <Image src='/svg/close.svg' alt='close' width={20} height={20} />
             </button>
           )}
         </div>
@@ -109,17 +108,12 @@ export default function Nav() {
             isMobileMenuOpen ? 'visible opacity-100' : 'invisible opacity-0'
           }`}
         >
-          <div className="min-w-[350px] pt-4">
-            <ul
-              className={`flex flex-col md:flex-row ${isMobileMenuOpen ? 'gap-5' : 'gap-10'}`}
-            >
+          <div className='min-w-[350px] pt-4'>
+            <ul className={`flex flex-col md:flex-row ${isMobileMenuOpen ? 'gap-5' : 'gap-10'}`}>
               {MENU_LIST.map((menu) => (
-                <li key={menu.id} className="text-base font-bold">
+                <li key={menu.id} className='text-base font-bold'>
                   <Link href={menu.path} title={menu.title} passHref>
-                    <span
-                      className="cursor-pointer"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
+                    <span className='cursor-pointer' onClick={() => setIsMobileMenuOpen(false)}>
                       {menu.name}
                     </span>
                   </Link>
@@ -127,13 +121,10 @@ export default function Nav() {
               ))}
             </ul>
 
-            <div className="border-t-2 my-4"></div>
+            <div className='border-t-2 my-4'></div>
 
-            <div className="flex justify-end">
-              <NavAuth
-                isMobile={true}
-                setIsMobileMenuOpen={setIsMobileMenuOpen}
-              />
+            <div className='flex justify-end'>
+              <NavAuth isMobile={true} setIsMobileMenuOpen={setIsMobileMenuOpen} />
             </div>
           </div>
         </div>

@@ -12,10 +12,10 @@ export default function Spinner({
   dotColor = '#114784',
 }: DotSpinnerProps) {
   return (
-    <div className="flex items-center justify-center z-50">
-      <div className="flex space-x-2">
+    <div className='flex items-center justify-center z-50'>
+      <div className='flex space-x-2'>
         <div
-          className="rounded-full animate-bounce"
+          className='rounded-full animate-bounce'
           style={{
             width,
             height,
@@ -24,7 +24,7 @@ export default function Spinner({
           }}
         ></div>
         <div
-          className="rounded-full animate-bounce"
+          className='rounded-full animate-bounce'
           style={{
             width,
             height,
@@ -33,7 +33,7 @@ export default function Spinner({
           }}
         ></div>
         <div
-          className="rounded-full animate-bounce"
+          className='rounded-full animate-bounce'
           style={{
             width,
             height,

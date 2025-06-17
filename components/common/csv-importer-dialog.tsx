@@ -224,16 +224,16 @@ export function CsvImporterDialog<T extends Record<string, unknown>>({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className='sm:max-w-md'>
         <DialogHeader>
           <DialogTitle>파일 업로드</DialogTitle>
         </DialogHeader>
 
         <DialogDescription />
         {isLoading ? (
-          <div className="flex justify-center items-center p-4">loading...</div>
+          <div className='flex justify-center items-center p-4'>loading...</div>
         ) : (
-          <div className="flex flex-col items-center gap-5 p-4">
+          <div className='flex flex-col items-center gap-5 p-4'>
             <div
               {...getRootProps()}
               className={`w-full text-center py-5 border-2 border-dashed rounded cursor-pointer transition-colors ${

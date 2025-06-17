@@ -1,9 +1,6 @@
 type ConversionType = 'encode' | 'decode';
 
-export function convertBase64Unicode(
-  str: string,
-  type: ConversionType
-): string {
+export function convertBase64Unicode(str: string, type: ConversionType): string {
   if (!str) return '';
 
   switch (type) {
