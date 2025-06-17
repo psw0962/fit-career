@@ -9,7 +9,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
-import 'react-datepicker/dist/react-datepicker.css';
 import GlobalSpinner from '@/components/common/global-spinner';
 import { useGetEnterpriseProfile, useGetUserData } from '@/api/auth';
 import { POSITIONS } from '@/constant/position';

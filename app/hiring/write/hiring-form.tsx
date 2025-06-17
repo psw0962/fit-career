@@ -15,12 +15,9 @@ import { formatPeriod } from '@/functions/formatPeriod';
 import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import { useSessionStorage } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
 import { format, parse } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import imageCompression from 'browser-image-compression';
-import 'react-datepicker/dist/react-datepicker.css';
 import type { DatePickerProps } from 'react-datepicker';
 import {
   DndContext,
@@ -31,6 +28,11 @@ import {
   MouseSensor,
 } from '@dnd-kit/core';
 import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+
+const TextEditor = dynamic(() => import('@/components/common/text-editor'), {
+  loading: () => <p className='p-2 border rounded'>에디터 로딩 중...</p>,
+  ssr: false,
+});
 
 const DatePicker = dynamic<DatePickerProps>(
   () =>
@@ -89,20 +91,6 @@ export default function HiringForm() {
   `);
   const [deadLine, setDeadLine] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const [images, setImages] = useState<UploadedImage[]>([]);
-
-  const editor = useEditor({
-    extensions: [StarterKit],
-    content: content,
-    onUpdate: ({ editor }) => {
-      setContent(editor.getHTML());
-    },
-    editorProps: {
-      attributes: {
-        class: 'border p-2 rounded focus:outline-none',
-      },
-    },
-    immediatelyRender: false,
-  });
 
   const { mutate: postHring, status: postHringStatus } = usePostHiring();
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
@@ -546,7 +534,12 @@ export default function HiringForm() {
           <span className='text-sm text-red-500 align-top'>*</span>
         </p>
 
-        <EditorContent editor={editor} />
+        <TextEditor
+          initialContent={content}
+          onChange={(content) => setContent(content)}
+          className='border p-2 rounded focus:outline-none'
+          placeholder='내용을 입력하세요...'
+        />
       </div>
 
       {/* deadline */}

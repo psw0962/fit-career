@@ -122,8 +122,7 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
                     style={{ objectFit: 'cover' }}
                     className='rounded'
                     fill
-                    priority={page === 1}
-                    loading={page === 1 ? 'eager' : 'lazy'}
+                    priority
                     sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
                     placeholder='blur'
                     blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='

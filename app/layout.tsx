@@ -10,6 +10,7 @@ import { AlertDialog, ConfirmDialog } from '@/components/common/message';
 import { Analytics } from '@vercel/analytics/react';
 import { pretendard } from './fonts';
 import '../public/styles/global.css';
+import 'react-datepicker/dist/react-datepicker.css';
 
 export const viewport = {
   width: 'device-width',
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
       '핏커리어(FIT Career)에서 피트니스 취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보를 확인하세요.',
     images: [
       {
-        url: '/svg/logo.svg',
+        url: '/web-app-manifest-512x512.png',
         width: 1200,
         height: 630,
         alt: 'FIT Career',
@@ -92,12 +93,12 @@ export default function RootLayout({
             id='gtm'
             async
             src='https://www.googletagmanager.com/gtag/js?id=G-NT2EDNBP8N'
-            strategy='afterInteractive'
+            strategy='lazyOnload'
           />
 
           <Script
             id='google-analytics'
-            strategy='afterInteractive'
+            strategy='lazyOnload'
             dangerouslySetInnerHTML={{
               __html: `
       window.dataLayer = window.dataLayer || [];

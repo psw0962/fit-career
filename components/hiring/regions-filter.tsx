@@ -207,7 +207,7 @@ export default function RegionsFilter({ regionFilter, setRegionFilter }: Regions
                               : tempFilter.selectedCounties.includes(countyLabel)
                           }
                           onChange={() => {
-                            tempFilter && toggleCounty(county);
+                            if (tempFilter) toggleCounty(county);
                           }}
                         />
                         <label htmlFor={uniqueId} className='ml-2'>

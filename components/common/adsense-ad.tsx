@@ -4,7 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 
 declare global {
   interface Window {
-    adsbygoogle: any;
+    adsbygoogle: {
+      push: (args: {
+        render: (element: HTMLElement) => void;
+        reset: () => void;
+        defineSlot: (slot: string) => void;
+      }) => void;
+    };
   }
 }
 
@@ -16,7 +22,7 @@ export default function AdsenseAd() {
   useEffect(() => {
     const renderTimer = setTimeout(() => {
       setShouldRender(true);
-    }, 2000);
+    }, 3500);
 
     return () => clearTimeout(renderTimer);
   }, []);
@@ -24,31 +30,51 @@ export default function AdsenseAd() {
   useEffect(() => {
     if (!shouldRender || adInitialized) return;
 
-    const waitForAdsense = setInterval(() => {
-      if (window.adsbygoogle) {
-        clearInterval(waitForAdsense);
+    const initAd = () => {
+      try {
+        if (adRef.current && !adRef.current.id && window.adsbygoogle) {
+          const uniqueId = `ad-${Math.random().toString(36).substring(2, 9)}`;
+          adRef.current.id = uniqueId;
 
-        try {
-          if (adRef.current && !adRef.current.id) {
-            const uniqueId = `ad-${Math.random().toString(36).substring(2, 9)}`;
-            adRef.current.id = uniqueId;
-
-            window.adsbygoogle.push({});
-            setAdInitialized(true);
-          }
-        } catch (err) {
-          console.error('AdSense error:', err);
+          window.adsbygoogle.push({
+            render: (element: HTMLElement) => {
+              element.id = uniqueId;
+            },
+            reset: () => {},
+            defineSlot: (slot: string) => {},
+          });
+          setAdInitialized(true);
         }
+      } catch (err) {
+        console.error('AdSense error:', err);
       }
-    }, 100);
+    };
 
-    const timeout = setTimeout(() => {
-      clearInterval(waitForAdsense);
+    const checkInterval = 500;
+    const maxChecks = 10;
+    let checkCount = 0;
+
+    const checkAdsbygoogle = () => {
+      if (window.adsbygoogle) {
+        initAd();
+        return;
+      }
+
+      checkCount++;
+      if (checkCount < maxChecks) {
+        setTimeout(checkAdsbygoogle, checkInterval);
+      }
+    };
+
+    const initialCheck = setTimeout(checkAdsbygoogle, checkInterval);
+
+    const maxWaitTimeout = setTimeout(() => {
+      checkCount = maxChecks;
     }, 5000);
 
     return () => {
-      clearInterval(waitForAdsense);
-      clearTimeout(timeout);
+      clearTimeout(initialCheck);
+      clearTimeout(maxWaitTimeout);
     };
   }, [adInitialized, shouldRender]);
 

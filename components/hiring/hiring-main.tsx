@@ -9,6 +9,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import useDebounce from '@/hooks/use-debounce';
 import { useSessionStorage } from 'usehooks-ts';
+import dynamic from 'next/dynamic';
 
 export default function HiringMain() {
   const [regionFilter, setRegionFilter] = useSessionStorage<RegionFilter>('regionFilter', {

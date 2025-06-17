@@ -46,7 +46,6 @@ export default function BasicCarousel(props: ThumbnailCarouselProps) {
                       className='rounded'
                       fill
                       priority={selectedIndex === index}
-                      loading={selectedIndex === index ? 'eager' : 'lazy'}
                       sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
                       placeholder='blur'
                       blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='

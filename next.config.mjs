@@ -4,12 +4,17 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 const nextConfig = {
   poweredByHeader: false,
   compress: true,
-  swcMinify: true,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  experimental: {
+    optimizeCss: true,
+  },
   images: {
     minimumCacheTTL: 86400,
-    formats: ['image/avif', 'image/webp'],
     deviceSizes: [640, 768, 1024, 1280, 1536, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384, 512],
+    formats: ['image/webp', 'image/avif'],
     remotePatterns: [
       {
         protocol: 'http',
