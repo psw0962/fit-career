@@ -20,7 +20,15 @@ export default function Footer(): React.ReactElement {
           />
         </div>
 
-        <p className='text-sm text-[#000] font-bold mt-2'>문의 | psw0962@naver.com</p>
+        <div className='flex flex-col gap-0.5 mt-2'>
+          <p className='text-sm text-[#000] font-bold'>상호명 | 핏커리어</p>
+          <p className='text-sm text-[#000] font-bold'>사업자등록번호 | 831-18-02595</p>
+          <p className='text-sm text-[#000] font-bold'>
+            주소 | 경기도 김포시 김포한강9로 79, 4층 401-J543호(구래동)
+          </p>
+          <p className='text-sm text-[#000] font-bold'>대표자 | 박상우</p>
+          <p className='text-sm text-[#000] font-bold'>이메일 | psw0962@naver.com</p>
+        </div>
 
         <div className='flex gap-1 items-center mt-4'>
           <p
@@ -38,7 +46,7 @@ export default function Footer(): React.ReactElement {
           </p>
         </div>
 
-        <p className='text-sm text-[#000]'>© 2024-2025 FIT Career. All rights reserved.</p>
+        <p className='text-sm text-[#000]'>© 2024-2026 FIT Career. All rights reserved.</p>
       </div>
     </div>
   );
