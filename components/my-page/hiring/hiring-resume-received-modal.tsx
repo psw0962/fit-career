@@ -70,7 +70,7 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
         e.preventDefault();
       }}
     >
-      <div className='p-6'>
+      <div className='mt-4'>
         <div className='flex flex-col gap-0 mb-4'>
           <p className='text-sm text-gray-500'>- 채용공고 등록일 : {data.created_at}</p>
           <p className='text-sm text-gray-500'>- 채용공고 마감일 : {data.dead_line}</p>
