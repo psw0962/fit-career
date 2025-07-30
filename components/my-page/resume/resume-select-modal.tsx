@@ -135,7 +135,7 @@ export default function ResumeSelectIdModal({
       className='p-0'
     >
       {userData && (
-        <div className='p-6'>
+        <div className='my-4'>
           {resumeData && resumeData.length === 0 && (
             <div className='flex flex-col gap-2 justify-center items-center border rounded p-6 mt-4'>
               <p className='text-[#000]'>등록된 이력서가 없습니다.</p>
