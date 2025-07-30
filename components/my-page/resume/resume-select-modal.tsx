@@ -97,17 +97,16 @@ export default function ResumeSelectIdModal({
 
   const footer =
     resumeData && resumeData.length > 0 ? (
-      <>
+      <div className='flex flex-col items-center'>
         <button
-          className={`w-fit mx-auto px-8 py-2 text-white text-sm cursor-pointer rounded ${
+          className={`w-fit px-8 py-2 text-white text-sm cursor-pointer rounded ${
             confirmSubmitted() ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#4C71C0]'
           }`}
           onClick={() => handlePostResumeToHiring()}
           disabled={confirmSubmitted()}
         >
-          {confirmSubmitted() && hiringData?.[0].is_visible && '이미 지원한 채용공고입니다.'}
-
           {confirmSubmitted() === false && hiringData?.[0].is_visible && '제출하기'}
+          {confirmSubmitted() && hiringData?.[0].is_visible && '이미 지원한 채용공고입니다.'}
 
           {hiringData?.[0].is_visible === false && (
             <>
@@ -121,7 +120,7 @@ export default function ResumeSelectIdModal({
         {confirmSubmitted() && (
           <p className='text-xs text-[red] mt-2'>*지원 취소는 마이페이지에서 할 수 있어요.</p>
         )}
-      </>
+      </div>
     ) : null;
 
   return (
@@ -131,6 +130,7 @@ export default function ResumeSelectIdModal({
       title='이력서 선택'
       trigger={triggerButton}
       footer={footer}
+      footerJustify='center'
       contentClassName='w-[90vw] max-w-[500px] min-w-[300px]'
       className='p-0'
     >
