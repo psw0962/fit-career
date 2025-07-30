@@ -59,9 +59,24 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 );
 DialogHeader.displayName = 'DialogHeader';
 
-const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+interface DialogFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+  justify?: 'start' | 'end' | 'center' | 'between' | 'around' | 'evenly';
+}
+
+const DialogFooter = ({ className, justify = 'end', ...props }: DialogFooterProps) => (
   <div
-    className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+    className={cn(
+      'flex flex-col-reverse sm:flex-row sm:space-x-2',
+      {
+        'sm:justify-start': justify === 'start',
+        'sm:justify-end': justify === 'end',
+        'sm:justify-center': justify === 'center',
+        'sm:justify-between': justify === 'between',
+        'sm:justify-around': justify === 'around',
+        'sm:justify-evenly': justify === 'evenly',
+      },
+      className,
+    )}
     {...props}
   />
 );
@@ -103,6 +118,7 @@ interface CommonDialogProps {
   contentClassName?: string;
   headerClassName?: string;
   footerClassName?: string;
+  footerJustify?: DialogFooterProps['justify'];
   showCloseButton?: boolean;
   size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
@@ -123,6 +139,7 @@ const CommonDialog: React.FC<CommonDialogProps> = ({
   contentClassName,
   headerClassName,
   footerClassName,
+  footerJustify = 'end',
   showCloseButton = true,
   size = 'md',
   onClick,
@@ -169,7 +186,11 @@ const CommonDialog: React.FC<CommonDialogProps> = ({
 
         <div className={cn('py-4', className)}>{children}</div>
 
-        {footer && <DialogFooter className={footerClassName}>{footer}</DialogFooter>}
+        {footer && (
+          <DialogFooter className={footerClassName} justify={footerJustify}>
+            {footer}
+          </DialogFooter>
+        )}
       </DialogContent>
     </Dialog>
   );
