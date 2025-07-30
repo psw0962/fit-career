@@ -2,7 +2,7 @@
 
 <div align="center">
   <img src="public/svg/logo.svg" alt="logo" width="200"/>
-  <p>피트니스의 모든 정보, FIT Career</p>
+  <p>피트니스의 모든 정보, FIT-career</p>
   <p>취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보까지<br/>피트니스 정보의 모든 것</p>
 </div>
 

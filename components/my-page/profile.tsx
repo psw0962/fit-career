@@ -5,15 +5,7 @@ import Image from 'next/image';
 import { useDeleteAllUserData, useGetUserData } from '@/api/auth';
 import { deleteUser } from '@/api/server-action';
 import GlobalSpinner from '@/components/common/global-spinner';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { CommonDialog } from '@/components/common/common-dialog';
 import { useToast } from '@/hooks/use-toast';
 
 export default function Profile() {
@@ -55,6 +47,27 @@ export default function Profile() {
     return <GlobalSpinner />;
   }
 
+  const triggerButton = (
+    <button
+      className='self-end text-sm ml-2 font-bold text-[#C3C4C5] underline underline-offset-4 decoration-[#C3C4C5]'
+      onClick={() => setIsModalOpen(true)}
+    >
+      회원탈퇴
+    </button>
+  );
+
+  const footer = (
+    <button
+      className={`w-full sm:w-fit ${
+        isAgree ? 'bg-[#4C71BF] text-white' : 'bg-[#C3C4C5] text-gray-500'
+      } mt-4 px-4 py-2 rounded self-end`}
+      disabled={!isAgree}
+      onClick={onDeleteUser}
+    >
+      탈퇴하기
+    </button>
+  );
+
   return (
     <div className='mt-5 flex flex-col'>
       <div className='flex flex-col gap-2 items-start sm:flex-row sm:items-center'>
@@ -88,56 +101,30 @@ export default function Profile() {
         </div>
       </div>
 
-      <Dialog
+      <CommonDialog
         open={isModalOpen}
         onOpenChange={(open) => {
           setIsModalOpen(open);
           if (!open) setIsAgree(false);
         }}
+        title='회원 탈퇴'
+        description='회원 탈퇴 시 해당 아이디로 활동했던 모든 기록과 개인정보가 삭제되고 복구할 수 없습니다.(게시글, 댓글, 이미지, 이력서 등)
+정말로 탈퇴하시겠습니까?'
+        trigger={triggerButton}
+        footer={footer}
+        contentClassName='w-[90vw] max-w-[500px] min-w-[300px]'
+        className='p-0'
       >
-        <DialogTrigger asChild>
-          <button
-            className='self-end text-sm ml-2 font-bold text-[#C3C4C5] underline underline-offset-4 decoration-[#C3C4C5]'
-            onClick={() => setIsModalOpen(true)}
-          >
-            회원탈퇴
-          </button>
-        </DialogTrigger>
-
-        <DialogContent className='w-[90vw] max-w-[500px] min-w-[300px]'>
-          <DialogHeader>
-            <DialogTitle>회원 탈퇴</DialogTitle>
-            <DialogDescription>
-              회원 탈퇴 시 해당 아이디로 활동했던 모든 기록과 개인정보가 삭제되고 복구할 수
-              없습니다.(게시글, 댓글, 이미지, 이력서 등)
-              <br />
-              정말로 탈퇴하시겠습니까?
-            </DialogDescription>
-          </DialogHeader>
-
-          <div className='flex items-center gap-2 mt-5'>
-            <input
-              type='checkbox'
-              id='agree'
-              checked={isAgree}
-              onChange={() => setIsAgree(!isAgree)}
-            />
-            <label htmlFor='agree'>동의합니다.</label>
-          </div>
-
-          <DialogFooter>
-            <button
-              className={`w-full sm:w-fit ${
-                isAgree ? 'bg-[#4C71BF] text-white' : 'bg-[#C3C4C5] text-gray-500'
-              } mt-4 px-4 py-2 rounded self-end`}
-              disabled={!isAgree}
-              onClick={onDeleteUser}
-            >
-              탈퇴하기
-            </button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        <div className='flex items-center gap-2 mt-5'>
+          <input
+            type='checkbox'
+            id='agree'
+            checked={isAgree}
+            onChange={() => setIsAgree(!isAgree)}
+          />
+          <label htmlFor='agree'>동의합니다.</label>
+        </div>
+      </CommonDialog>
     </div>
   );
 }

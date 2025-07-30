@@ -1,15 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
+import { CommonDialog } from '@/components/common/common-dialog';
+import { Button } from '@/components/common/button';
 import { MessageIconType, IconComponents } from '.';
 
 export interface ConfirmOptions {
@@ -49,31 +42,32 @@ export const ConfirmDialog = () => {
     }
   };
 
+  const footer = (
+    <div className='flex justify-end w-full mt-2'>
+      <Button variant='outline' size='sm' onClick={() => handleClose(false)}>
+        {options.cancelText || '취소'}
+      </Button>
+      <Button variant='default' size='sm' onClick={() => handleClose(true)}>
+        {options.confirmText || '확인'}
+      </Button>
+    </div>
+  );
+
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose(false)}>
-      <DialogContent className='max-w-[400px] w-[90%] flex flex-col items-center'>
-        <DialogHeader className='flex flex-row items-center gap-3'>
-          <div className='flex items-center flex-col gap-2'>
-            {options.icon && IconComponents[options.icon]}
-            {options.title && <DialogTitle>{options.title}</DialogTitle>}
-          </div>
-        </DialogHeader>
-
-        <DialogDescription className='text-base py-2 whitespace-pre-line text-center'>
-          {options.message}
-        </DialogDescription>
-
-        <DialogFooter className='flex justify-end w-full mt-2'>
-          <Button variant='outline' size='sm' onClick={() => handleClose(false)}>
-            {options.cancelText || '취소'}
-          </Button>
-
-          <Button variant='default' size='sm' onClick={() => handleClose(true)}>
-            {options.confirmText || '확인'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+    <CommonDialog
+      open={isOpen}
+      onOpenChange={(open) => !open && handleClose(false)}
+      title={options.title}
+      description={options.message}
+      footer={footer}
+      contentClassName='max-w-[400px] w-[90%]'
+      className='flex flex-col items-center text-center'
+      headerClassName='flex flex-row items-center gap-3'
+    >
+      <div className='flex items-center flex-col gap-2'>
+        {options.icon && IconComponents[options.icon]}
+      </div>
+    </CommonDialog>
   );
 };
 

@@ -11,14 +11,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as Switch from '@radix-ui/react-switch';
 import Spinner from '@/components/common/spinner';
 import HiringResumeReceivedModal from '@/components/my-page/hiring/hiring-resume-received-modal';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import { CommonDialog } from '@/components/common/common-dialog';
 import { useSessionStorage } from 'usehooks-ts';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import { useRouter } from 'next/navigation';
@@ -56,6 +49,25 @@ export default function HiringPosts() {
   if (hiringDataIsLoading || deleteHiringStatus === 'pending') {
     return <GlobalSpinner />;
   }
+
+  const deleteDialogFooter = (
+    <div className='flex items-center justify-center gap-2 mt-4 sm:mt-0'>
+      <button className='px-4 py-2 text-sm border rounded' onClick={() => setDeleteHiringId(null)}>
+        취소
+      </button>
+      <button
+        className='px-4 py-2 text-sm text-white bg-[#4C71C0] rounded'
+        onClick={() => {
+          if (deleteHiringId) {
+            deleteHiring(deleteHiringId);
+            setDeleteHiringId(null);
+          }
+        }}
+      >
+        삭제
+      </button>
+    </div>
+  );
 
   return (
     <div className='mt-5'>
@@ -207,44 +219,15 @@ export default function HiringPosts() {
             );
           })}
 
-        <Dialog
+        <CommonDialog
           open={deleteHiringId !== null}
           onOpenChange={(isOpen) => !isOpen && setDeleteHiringId(null)}
-        >
-          <DialogContent className='w-[90vw] max-w-[500px] min-w-[300px]'>
-            <DialogHeader>
-              <DialogTitle>채용공고 삭제</DialogTitle>
-              <DialogDescription>
-                채용공고 삭제 시 접수된 지원자의 모든 정보와 함께 삭제됩니다.
-                <br />
-                채용공고를 삭제하시겠습니까?
-              </DialogDescription>
-            </DialogHeader>
-
-            <DialogFooter>
-              <div className='flex items-center justify-center gap-2 mt-4 sm:mt-0'>
-                <button
-                  className='px-4 py-2 text-sm border rounded'
-                  onClick={() => setDeleteHiringId(null)}
-                >
-                  취소
-                </button>
-
-                <button
-                  className='px-4 py-2 text-sm text-white bg-[#4C71C0] rounded'
-                  onClick={() => {
-                    if (deleteHiringId) {
-                      deleteHiring(deleteHiringId);
-                      setDeleteHiringId(null);
-                    }
-                  }}
-                >
-                  삭제
-                </button>
-              </div>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+          title='채용공고 삭제'
+          description='채용공고 삭제 시 접수된 지원자의 모든 정보와 함께 삭제됩니다.
+채용공고를 삭제하시겠습니까?'
+          footer={deleteDialogFooter}
+          contentClassName='w-[90vw] max-w-[500px] min-w-[300px]'
+        />
       </div>
 
       {(hiringData?.count ?? 0) > 12 && (

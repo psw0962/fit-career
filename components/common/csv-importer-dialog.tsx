@@ -3,13 +3,7 @@ import { useDropzone } from 'react-dropzone';
 import * as XLSX from 'xlsx';
 import { ColDef, ColGroupDef } from 'ag-grid-community';
 import message from '@/components/common/message';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { CommonDialog } from '@/components/common/common-dialog';
 
 // header 검증 함수
 function validateHeaders(
@@ -223,45 +217,44 @@ export function CsvImporterDialog<T extends Record<string, unknown>>({
   });
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className='sm:max-w-md'>
-        <DialogHeader>
-          <DialogTitle>파일 업로드</DialogTitle>
-        </DialogHeader>
+    <CommonDialog
+      open={isOpen}
+      onOpenChange={setIsOpen}
+      title='파일 업로드'
+      size='md'
+      className='p-0'
+    >
+      {isLoading ? (
+        <div className='flex justify-center items-center p-4'>loading...</div>
+      ) : (
+        <div className='flex flex-col items-center gap-5'>
+          <div
+            {...getRootProps()}
+            className={`w-full text-center py-5 border-2 border-dashed rounded cursor-pointer transition-colors ${
+              isDragActive ? 'border-[#1677ff]' : 'border-gray-300 hover:border-[#1677ff]'
+            }`}
+          >
+            <input {...getInputProps()} />
 
-        <DialogDescription />
-        {isLoading ? (
-          <div className='flex justify-center items-center p-4'>loading...</div>
-        ) : (
-          <div className='flex flex-col items-center gap-5 p-4'>
-            <div
-              {...getRootProps()}
-              className={`w-full text-center py-5 border-2 border-dashed rounded cursor-pointer transition-colors ${
-                isDragActive ? 'border-[#1677ff]' : 'border-gray-300 hover:border-[#1677ff]'
-              }`}
-            >
-              <input {...getInputProps()} />
+            {isDragActive && <p>파일을 여기에 놓으세요...</p>}
 
-              {isDragActive && <p>파일을 여기에 놓으세요...</p>}
+            {fileName && (
+              <div>
+                <p>{fileName}</p>
+                <p>{uploadStatusMessage}</p>
+              </div>
+            )}
 
-              {fileName && (
-                <div>
-                  <p>{fileName}</p>
-                  <p>{uploadStatusMessage}</p>
-                </div>
-              )}
-
-              {!isDragActive && !fileName && (
-                <p>
-                  Excel 또는 CSV 파일을 드래그앤드롭 하거나
-                  <br />
-                  클릭하여 선택하세요
-                </p>
-              )}
-            </div>
+            {!isDragActive && !fileName && (
+              <p>
+                Excel 또는 CSV 파일을 드래그앤드롭 하거나
+                <br />
+                클릭하여 선택하세요
+              </p>
+            )}
           </div>
-        )}
-      </DialogContent>
-    </Dialog>
+        </div>
+      )}
+    </CommonDialog>
   );
 }

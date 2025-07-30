@@ -3,7 +3,7 @@
 import * as React from 'react';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/shadcn/utils';
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -91,6 +91,86 @@ const DialogDescription = React.forwardRef<
 ));
 DialogDescription.displayName = DialogPrimitive.Description.displayName;
 
+interface CommonDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  title?: string;
+  description?: string;
+  children?: React.ReactNode;
+  footer?: React.ReactNode;
+  trigger?: React.ReactNode;
+  className?: string;
+  contentClassName?: string;
+  headerClassName?: string;
+  footerClassName?: string;
+  showCloseButton?: boolean;
+  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
+  onInteractOutside?: (event: Event) => void;
+  onEscapeKeyDown?: (event: KeyboardEvent) => void;
+}
+
+const CommonDialog: React.FC<CommonDialogProps> = ({
+  open,
+  onOpenChange,
+  title,
+  description,
+  children,
+  footer,
+  trigger,
+  className,
+  contentClassName,
+  headerClassName,
+  footerClassName,
+  showCloseButton = true,
+  size = 'md',
+  onClick,
+  onInteractOutside,
+  onEscapeKeyDown,
+}) => {
+  const getSizeClassName = (size: string) => {
+    switch (size) {
+      case 'sm':
+        return 'max-w-sm';
+      case 'md':
+        return 'max-w-md';
+      case 'lg':
+        return 'max-w-lg';
+      case 'xl':
+        return 'max-w-xl';
+      case 'full':
+        return 'max-w-[95vw]';
+      default:
+        return 'max-w-md';
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
+
+      <DialogContent
+        className={cn(getSizeClassName(size), contentClassName)}
+        aria-describedby={description ? undefined : undefined}
+        onClick={onClick}
+        onInteractOutside={onInteractOutside}
+        onEscapeKeyDown={onEscapeKeyDown}
+      >
+        {(title || description) && (
+          <DialogHeader className={headerClassName}>
+            {title && <DialogTitle>{title}</DialogTitle>}
+            {description && <DialogDescription>{description}</DialogDescription>}
+          </DialogHeader>
+        )}
+
+        <div className={cn('py-4', className)}>{children}</div>
+
+        {footer && <DialogFooter className={footerClassName}>{footer}</DialogFooter>}
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 export {
   Dialog,
   DialogPortal,
@@ -102,4 +182,5 @@ export {
   DialogFooter,
   DialogTitle,
   DialogDescription,
+  CommonDialog,
 };

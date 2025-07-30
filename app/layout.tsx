@@ -5,7 +5,7 @@ import Footer from '@/components/common/footer';
 import ReactQueryClientProvider from '@/config/react-query-client-provider';
 import AdsenseAd from '@/components/common/adsense-ad';
 import AdsenseInit from '@/components/common/adsense-init';
-import { Toaster } from '@/components/ui/toaster';
+import { Toaster } from '@/components/common/toaster';
 import { AlertDialog, ConfirmDialog } from '@/components/common/message';
 import { Analytics } from '@vercel/analytics/react';
 import { pretendard } from './fonts';

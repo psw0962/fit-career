@@ -1,6 +1,6 @@
 'use client';
 
-import BasicCarousel from '@/components/carousel/basic-carousel';
+import BasicCarousel from '@/components/common/carousel/basic-carousel';
 import { useCheckIsBookmarked, useGetHiring, useToggleBookmark } from '@/api/hiring';
 import Image from 'next/image';
 import { Map } from 'react-kakao-maps-sdk';

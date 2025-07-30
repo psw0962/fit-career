@@ -6,14 +6,7 @@ import { useCloneResume, useDeleteResume } from '@/api/resume';
 import { ResumeDataResponse } from '@/types/resume/resume';
 import ResumeExport from '@/components/my-page/resume/resume-export';
 import { convertBase64Unicode } from '@/functions/convertBase64Unicode';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { CommonDialog } from '@/components/common/common-dialog';
 import { useRouter } from 'next/navigation';
 import GlobalSpinner from '@/components/common/global-spinner';
 
@@ -70,6 +63,28 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
       document.body.removeEventListener('click', handleClickOutside);
     };
   }, [data.id]);
+
+  const deleteDialogFooter = (
+    <div className='flex gap-2 justify-center mt-4 sm:mt-0'>
+      <button
+        className='border rounded px-4 py-2 text-sm'
+        onClick={() => {
+          setIsDeleteModalOpen(false);
+          setOpenDropdownId(null);
+        }}
+      >
+        취소
+      </button>
+      <button
+        className='bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm'
+        onClick={() => {
+          handleDelete();
+        }}
+      >
+        삭제
+      </button>
+    </div>
+  );
 
   return (
     <>
@@ -210,7 +225,7 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
         </div>
       )}
 
-      <Dialog
+      <CommonDialog
         open={isDeleteModalOpen}
         onOpenChange={(open) => {
           setIsDeleteModalOpen(open);
@@ -218,43 +233,16 @@ export default function ResumeCard({ data }: { data: ResumeDataResponse }) {
             setOpenDropdownId(null);
           }
         }}
-      >
-        <DialogContent
-          className='w-[90vw] max-w-[500px] min-w-[300px]'
-          onClick={(e) => e.stopPropagation()}
-        >
-          <DialogHeader>
-            <DialogTitle>이력서 삭제</DialogTitle>
-            <DialogDescription>
-              {data.is_fitcareer_resume
-                ? '이력서를 삭제하시겠습니까?'
-                : '업로드한 이력서는 삭제 시 지원했던 기업에서 열람이 불가능합니다. 정말 삭제하시겠습니까?'}
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <div className='flex gap-2 justify-center mt-4 sm:mt-0'>
-              <button
-                className='border rounded px-4 py-2 text-sm'
-                onClick={() => {
-                  setIsDeleteModalOpen(false);
-                  setOpenDropdownId(null);
-                }}
-              >
-                취소
-              </button>
-
-              <button
-                className='bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm'
-                onClick={() => {
-                  handleDelete();
-                }}
-              >
-                삭제
-              </button>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        title='이력서 삭제'
+        description={
+          data.is_fitcareer_resume
+            ? '이력서를 삭제하시겠습니까?'
+            : '업로드한 이력서는 삭제 시 지원했던 기업에서 열람이 불가능합니다. 정말 삭제하시겠습니까?'
+        }
+        footer={deleteDialogFooter}
+        contentClassName='w-[90vw] max-w-[500px] min-w-[300px]'
+        onClick={(e: React.MouseEvent) => e.stopPropagation()}
+      />
     </>
   );
 }

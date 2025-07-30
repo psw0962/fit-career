@@ -45,6 +45,7 @@ export default function NoticePage() {
           <ul className='list-disc list-inside text-gray-700 break-keep'>
             <li>🎯 채용 공고 등록 및 관리</li>
             <li>👥 이력서 등록 및 관리</li>
+            <li>👨‍🏫 강사 프로필 등록 및 관리 (개발중)</li>
             <li>💼 커뮤니티 형성을 통한 양질의 피트니스 콘텐츠 제공 (예정)</li>
             <li>👫 중고 거래 정보 등록 및 관리 (예정)</li>
             <li>🥇 대회 일정 및 정보 제공 (예정)</li>

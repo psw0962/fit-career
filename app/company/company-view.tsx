@@ -10,7 +10,7 @@ import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
-import BasicCarousel from '@/components/carousel/basic-carousel';
+import BasicCarousel from '@/components/common/carousel/basic-carousel';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 
 export default function CompanyView({ hiringId }: { hiringId: string }) {

@@ -4,14 +4,7 @@ import { ResumeDataResponse } from '@/types/resume/resume';
 import ResumeDocument from '@/components/my-page/resume/resume-document';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
 import ResumePreview from '@/components/my-page/resume/resume-preview';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from '@/components/ui/dialog';
+import { CommonDialog } from '@/components/common/common-dialog';
 
 export default function ResumeExport({
   data,
@@ -56,39 +49,31 @@ export default function ResumeExport({
           </div>
 
           {!isMobile && showPreview && (
-            <Dialog open={showPreview} onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}>
-              <DialogContent className='w-[60vw] min-w-[300px] h-full'>
-                <DialogHeader>
-                  <DialogTitle></DialogTitle>
-                  <DialogDescription></DialogDescription>
-                </DialogHeader>
-
-                <div className='mt-5 w-full h-full'>
-                  <PDFViewer width='100%' height='100%'>
-                    <ResumeDocument data={data} />
-                  </PDFViewer>
-                </div>
-
-                <DialogFooter></DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <CommonDialog
+              open={showPreview}
+              onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}
+              contentClassName='w-[60vw] min-w-[300px] h-full'
+              className='p-0'
+            >
+              <div className='mt-5 w-full h-full'>
+                <PDFViewer width='100%' height='100%'>
+                  <ResumeDocument data={data} />
+                </PDFViewer>
+              </div>
+            </CommonDialog>
           )}
 
           {isMobile && showPreview && (
-            <Dialog open={showPreview} onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}>
-              <DialogContent className='w-[90vw] min-w-[300px] h-[80vh]'>
-                <DialogHeader>
-                  <DialogTitle></DialogTitle>
-                  <DialogDescription></DialogDescription>
-                </DialogHeader>
-
-                <div className='mt-5 w-full h-full'>
-                  <ResumePreview data={data} />
-                </div>
-
-                <DialogFooter></DialogFooter>
-              </DialogContent>
-            </Dialog>
+            <CommonDialog
+              open={showPreview}
+              onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}
+              contentClassName='w-[90vw] min-w-[300px] h-[80vh]'
+              className='p-0'
+            >
+              <div className='mt-5 w-full h-full'>
+                <ResumePreview data={data} />
+              </div>
+            </CommonDialog>
           )}
         </>
       )}
