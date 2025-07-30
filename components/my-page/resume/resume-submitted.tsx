@@ -18,14 +18,7 @@ import {
   ColumnDef,
   flexRender,
 } from '@tanstack/react-table';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { CommonDialog } from '@/components/common/common-dialog';
 
 export default function ResumeSubmitted() {
   const [openResumeDialog, setOpenResumeDialog] = useState<ResumeReceived | null>(null);
@@ -35,6 +28,31 @@ export default function ResumeSubmitted() {
       accessorKey: 'cancel',
       header: '지원취소',
       cell: ({ row }) => {
+        const cancelDialogFooter = (
+          <div className='flex gap-2 justify-center mt-4 sm:mt-0'>
+            <button
+              className='border rounded px-4 py-2 text-sm'
+              onClick={() => {
+                setOpenDeleteDialog(null);
+              }}
+            >
+              취소
+            </button>
+            <button
+              className='bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm'
+              onClick={() => {
+                deleteResumeFromHiring({
+                  hiringId: row.original.id,
+                  userId: userData?.id ?? '',
+                });
+                setOpenDeleteDialog(null);
+              }}
+            >
+              확인
+            </button>
+          </div>
+        );
+
         return (
           <>
             <button
@@ -47,50 +65,19 @@ export default function ResumeSubmitted() {
               지원취소
             </button>
 
-            <Dialog
+            <CommonDialog
               open={openDeleteDialog === row.original.id}
               onOpenChange={(open) => {
                 setOpenDeleteDialog(open ? row.original.id : null);
               }}
-            >
-              <DialogContent
-                className='w-[90vw] max-w-[500px] min-w-[300px]'
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <DialogHeader>
-                  <DialogTitle>지원 취소</DialogTitle>
-
-                  <DialogDescription>지원을 취소하시겠습니까?</DialogDescription>
-                </DialogHeader>
-
-                <DialogFooter>
-                  <div className='flex gap-2 justify-center mt-4 sm:mt-0'>
-                    <button
-                      className='border rounded px-4 py-2 text-sm'
-                      onClick={() => {
-                        setOpenDeleteDialog(null);
-                      }}
-                    >
-                      취소
-                    </button>
-                    <button
-                      className='bg-[#4C71C0] text-[#fff] rounded px-4 py-2 text-sm'
-                      onClick={() => {
-                        deleteResumeFromHiring({
-                          hiringId: row.original.id,
-                          userId: userData?.id ?? '',
-                        });
-                        setOpenDeleteDialog(null);
-                      }}
-                    >
-                      확인
-                    </button>
-                  </div>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+              title='지원 취소'
+              description='지원을 취소하시겠습니까?'
+              footer={cancelDialogFooter}
+              contentClassName='w-[90vw] max-w-[500px] min-w-[300px]'
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+              }}
+            />
           </>
         );
       },
@@ -138,6 +125,15 @@ export default function ResumeSubmitted() {
         const submissions = row.original.filtered_resume_received || [];
         const submission = Array.isArray(submissions) ? submissions[0] : null;
 
+        const resumeDialogFooter = (
+          <button
+            className='bg-[#4C71C0] text-white rounded px-4 py-2 text-sm'
+            onClick={() => setOpenResumeDialog(null)}
+          >
+            확인
+          </button>
+        );
+
         return (
           <>
             <span
@@ -163,35 +159,25 @@ export default function ResumeSubmitted() {
                 : '-'}
             </span>
 
-            <Dialog
+            <CommonDialog
               open={openResumeDialog === submission}
               onOpenChange={(open) => {
                 setOpenResumeDialog(open ? submission : null);
               }}
+              title='제출한 이력서 정보'
+              footer={resumeDialogFooter}
+              contentClassName='w-[90vw] max-w-[500px] min-w-[300px]'
+              className='p-0'
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+              }}
             >
-              <DialogContent
-                className='w-[90vw] max-w-[500px] min-w-[300px]'
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <DialogHeader>
-                  <DialogTitle>제출한 이력서 정보</DialogTitle>
-                  <DialogDescription></DialogDescription>
-                </DialogHeader>
-
-                {submission && <ResumePreview data={submission} />}
-
-                <DialogFooter>
-                  <button
-                    className='bg-[#4C71C0] text-white rounded px-4 py-2 text-sm'
-                    onClick={() => setOpenResumeDialog(null)}
-                  >
-                    확인
-                  </button>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+              {submission && (
+                <div className='p-6'>
+                  <ResumePreview data={submission} />
+                </div>
+              )}
+            </CommonDialog>
           </>
         );
       },

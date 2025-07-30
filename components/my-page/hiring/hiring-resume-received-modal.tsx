@@ -9,14 +9,7 @@ import ResumeDocument from '@/components/my-page/resume/resume-document';
 import { useToast } from '@/hooks/use-toast';
 import ResumePreview from '@/components/my-page/resume/resume-preview';
 import { useMarkResumeAsRead, useUpdateResumeStatus } from '@/api/resume';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { CommonDialog } from '@/components/common/common-dialog';
 
 export default function HiringResumeReceivedModal({ data }: { data: HiringDataResponse }) {
   const statusOptions = ['서류접수', '서류합격', '면접합격', '최종합격', '불합격'];
@@ -52,32 +45,32 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
     setIsMobile(/Mobi/i.test(userAgent));
   }, []);
 
+  const triggerButton = (
+    <button
+      className='w-full text-sm bg-[#4C71C0] px-2 py-2 rounded text-white'
+      onClick={() => setIsModalOpen(true)}
+    >
+      {`접수된 이력서 (${data.resume_received.length})`}
+    </button>
+  );
+
   return (
-    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <DialogTrigger asChild>
-        <button
-          className='w-full text-sm bg-[#4C71C0] px-2 py-2 rounded text-white'
-          onClick={() => setIsModalOpen(true)}
-        >
-          {`접수된 이력서 (${data.resume_received.length})`}
-        </button>
-      </DialogTrigger>
-
-      <DialogContent
-        className={`w-[90vw] max-w-[900px] min-w-[300px] ${showPreview ? 'h-full' : 'h-fit'}`}
-        onInteractOutside={() => {
-          setShowPreview(false);
-          setSelectedResume(null);
-        }}
-        onEscapeKeyDown={(e) => {
-          e.preventDefault();
-        }}
-      >
-        <DialogHeader>
-          <DialogTitle>{`[${data.title}] 채용공고의 접수된 이력서`}</DialogTitle>
-          <DialogDescription className='hidden'></DialogDescription>
-        </DialogHeader>
-
+    <CommonDialog
+      open={isModalOpen}
+      onOpenChange={setIsModalOpen}
+      title={`[${data.title}] 채용공고의 접수된 이력서`}
+      trigger={triggerButton}
+      contentClassName={`w-[90vw] max-w-[900px] min-w-[300px] ${showPreview ? 'h-full' : 'h-fit'}`}
+      className='p-0'
+      onInteractOutside={() => {
+        setShowPreview(false);
+        setSelectedResume(null);
+      }}
+      onEscapeKeyDown={(e: KeyboardEvent) => {
+        e.preventDefault();
+      }}
+    >
+      <div className='p-6'>
         <div className='flex flex-col gap-0 mb-4'>
           <p className='text-sm text-gray-500'>- 채용공고 등록일 : {data.created_at}</p>
           <p className='text-sm text-gray-500'>- 채용공고 마감일 : {data.dead_line}</p>
@@ -261,7 +254,7 @@ export default function HiringResumeReceivedModal({ data }: { data: HiringDataRe
             </div>
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+      </div>
+    </CommonDialog>
   );
 }

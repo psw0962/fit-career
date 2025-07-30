@@ -22,7 +22,7 @@ export default function NotFound() {
 
       <div className='flex flex-col gap-2 justify-center items-center mt-5'>
         <p className='text-center text-lg sm:text-2xl font-bold'>
-          피트니스의 모든 정보, FIT Career
+          피트니스의 모든 정보, FIT-career
         </p>
 
         <p className='flex items-center text-center text-[#8F9091] font-bold'>

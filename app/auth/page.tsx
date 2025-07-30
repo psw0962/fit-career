@@ -59,7 +59,7 @@ export default function Auth() {
     <div className='w-full mx-auto min-h-[50vh] flex flex-col justify-center'>
       <div className='flex flex-col gap-2 justify-center items-center'>
         <p className='text-center text-2xl font-bold break-keep'>
-          피트니스의 모든 정보, FIT Career
+          피트니스의 모든 정보, FIT-career
         </p>
 
         <p className='flex items-center text-base text-center text-[#8F9091] font-bold break-keep'>

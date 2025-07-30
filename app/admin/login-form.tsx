@@ -39,7 +39,7 @@ export default function LoginForm() {
         <p className='text-center text-2xl font-bold break-keep'>{`[관리자 로그인]`}</p>
 
         <p className='text-center text-2xl font-bold break-keep'>
-          피트니스의 모든 정보, FIT Career
+          피트니스의 모든 정보, FIT-career
         </p>
 
         <p className='flex items-center text-base text-center text-[#8F9091] font-bold break-keep'>

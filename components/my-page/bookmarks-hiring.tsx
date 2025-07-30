@@ -11,14 +11,7 @@ import {
 } from '@tanstack/react-table';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
+import { CommonDialog } from '@/components/common/common-dialog';
 import { useSessionStorage } from 'usehooks-ts';
 import { useScrollRestoration } from '@/hooks/use-scroll-restoration';
 import GlobalSpinner from '../common/global-spinner';
@@ -29,6 +22,26 @@ export default function BookmarksHiring() {
       accessorKey: 'delete',
       header: '삭제',
       cell: ({ row }) => {
+        const footer = (
+          <div className='flex gap-2 justify-center mt-4 sm:mt-0'>
+            <button
+              className='text-sm border rounded px-4 py-2'
+              onClick={() => setOpenDeleteDialog(null)}
+            >
+              취소
+            </button>
+            <button
+              className='bg-[#4C71C0] text-[#fff] text-sm rounded px-4 py-2'
+              onClick={() => {
+                deleteBookmark(row.original.id);
+                setOpenDeleteDialog(null);
+              }}
+            >
+              확인
+            </button>
+          </div>
+        );
+
         return (
           <>
             <button
@@ -41,42 +54,17 @@ export default function BookmarksHiring() {
               삭제
             </button>
 
-            <Dialog
+            <CommonDialog
               open={openDeleteDialog === row.original.id}
               onOpenChange={() => setOpenDeleteDialog(null)}
-            >
-              <DialogContent
-                className='w-[90vw] max-w-[500px] min-w-[300px]'
-                onClick={(e) => {
-                  e.stopPropagation();
-                }}
-              >
-                <DialogHeader>
-                  <DialogTitle>북마크 삭제</DialogTitle>
-                  <DialogDescription>북마크를 삭제하시겠습니까?</DialogDescription>
-                </DialogHeader>
-                <DialogFooter>
-                  <div className='flex gap-2 justify-center mt-4 sm:mt-0'>
-                    <button
-                      className='text-sm border rounded px-4 py-2'
-                      onClick={() => setOpenDeleteDialog(null)}
-                    >
-                      취소
-                    </button>
-
-                    <button
-                      className='bg-[#4C71C0] text-[#fff] text-sm rounded px-4 py-2'
-                      onClick={() => {
-                        deleteBookmark(row.original.id);
-                        setOpenDeleteDialog(null);
-                      }}
-                    >
-                      확인
-                    </button>
-                  </div>
-                </DialogFooter>
-              </DialogContent>
-            </Dialog>
+              title='북마크 삭제'
+              description='북마크를 삭제하시겠습니까?'
+              footer={footer}
+              contentClassName='w-[90vw] max-w-[500px] min-w-[300px]'
+              onClick={(e: React.MouseEvent) => {
+                e.stopPropagation();
+              }}
+            />
           </>
         );
       },
