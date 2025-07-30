@@ -560,7 +560,7 @@ export const usePatchHiring = (options?: UseMutationOptions<void, Error, HiringD
 // =========================================
 // ============== toggle bookmark
 // =========================================
-const toggleBookmark = async (hiringId: string): Promise<void> => {
+const toggleBookmark = async (hiringId: string): Promise<boolean> => {
   const supabase = createBrowserSupabaseClient();
 
   await new Promise((resolve) => setTimeout(resolve, 500));
@@ -585,6 +585,7 @@ const toggleBookmark = async (hiringId: string): Promise<void> => {
   }
 
   if (existingBookmark) {
+    // 북마크 삭제
     const { error: deleteError } = await supabase
       .from('bookmarks_hiring')
       .delete()
@@ -592,12 +593,15 @@ const toggleBookmark = async (hiringId: string): Promise<void> => {
       .eq('hiring_id', hiringId);
 
     if (deleteError) throw new Error(deleteError.message);
+    return false;
   } else {
+    // 북마크 추가
     const { error: insertError } = await supabase
       .from('bookmarks_hiring')
       .insert([{ user_id: user.id, hiring_id: hiringId }]);
 
     if (insertError) throw new Error(insertError.message);
+    return true;
   }
 };
 
@@ -605,7 +609,7 @@ export const useToggleBookmark = () => {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const router = useRouter();
-  return useMutation<void, Error, string, { previousBookmark: unknown }>({
+  return useMutation<boolean, Error, string, { previousBookmark: unknown }>({
     mutationFn: toggleBookmark,
     onMutate: async (hiringId) => {
       await queryClient.cancelQueries({
@@ -619,9 +623,7 @@ export const useToggleBookmark = () => {
 
       return { previousBookmark };
     },
-    onSuccess: async (_, hiringId) => {
-      const isBookmarked = queryClient.getQueryData<boolean>(['bookmarksHiring', hiringId]);
-
+    onSuccess: async (isBookmarked, hiringId) => {
       toast({
         title: isBookmarked ? '북마크가 추가되었습니다.' : '북마크가 삭제되었습니다.',
         variant: 'default',
