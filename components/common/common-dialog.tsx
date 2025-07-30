@@ -108,6 +108,7 @@ interface CommonDialogProps {
   onClick?: (event: React.MouseEvent<HTMLDivElement>) => void;
   onInteractOutside?: (event: Event) => void;
   onEscapeKeyDown?: (event: KeyboardEvent) => void;
+  hiddenTitle?: string;
 }
 
 const CommonDialog: React.FC<CommonDialogProps> = ({
@@ -127,6 +128,7 @@ const CommonDialog: React.FC<CommonDialogProps> = ({
   onClick,
   onInteractOutside,
   onEscapeKeyDown,
+  hiddenTitle,
 }) => {
   const getSizeClassName = (size: string) => {
     switch (size) {
@@ -156,6 +158,8 @@ const CommonDialog: React.FC<CommonDialogProps> = ({
         onInteractOutside={onInteractOutside}
         onEscapeKeyDown={onEscapeKeyDown}
       >
+        {hiddenTitle && !title && <DialogTitle className='sr-only'>{hiddenTitle}</DialogTitle>}
+
         {(title || description) && (
           <DialogHeader className={headerClassName}>
             {title && <DialogTitle>{title}</DialogTitle>}

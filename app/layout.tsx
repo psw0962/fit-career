@@ -2,7 +2,7 @@ import Script from 'next/script';
 import type { Metadata } from 'next';
 import Nav from '@/components/common/nav';
 import Footer from '@/components/common/footer';
-import ReactQueryClientProvider from '@/config/react-query-client-provider';
+import ReactQueryClientProvider from '@/lib/react-query/react-query-client-provider';
 import AdsenseAd from '@/components/common/adsense-ad';
 import AdsenseInit from '@/components/common/adsense-init';
 import { Toaster } from '@/components/common/toaster';

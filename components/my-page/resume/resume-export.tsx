@@ -52,10 +52,10 @@ export default function ResumeExport({
             <CommonDialog
               open={showPreview}
               onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}
-              contentClassName='w-[60vw] min-w-[300px] h-full'
-              className='p-0'
+              size='full'
+              hiddenTitle='이력서 미리보기'
             >
-              <div className='mt-5 w-full h-full'>
+              <div className='mt-5 w-full h-[80vh]'>
                 <PDFViewer width='100%' height='100%'>
                   <ResumeDocument data={data} />
                 </PDFViewer>
@@ -69,6 +69,7 @@ export default function ResumeExport({
               onOpenChange={(isOpen) => !isOpen && setShowPreview(false)}
               contentClassName='w-[90vw] min-w-[300px] h-[80vh]'
               className='p-0'
+              hiddenTitle='이력서 미리보기'
             >
               <div className='mt-5 w-full h-full'>
                 <ResumePreview data={data} />
