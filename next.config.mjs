@@ -4,6 +4,7 @@ import withBundleAnalyzer from '@next/bundle-analyzer';
 const nextConfig = {
   poweredByHeader: false,
   compress: true,
+  turbopack: {},
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },

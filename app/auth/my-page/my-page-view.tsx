@@ -90,16 +90,6 @@ export default function MyPageView() {
 
           <Tabs.Trigger
             ref={(el) => {
-              tabRefs.current['enterprise'] = el;
-            }}
-            className={getClassName('enterprise')}
-            value='enterprise'
-          >
-            기업 프로필
-          </Tabs.Trigger>
-
-          <Tabs.Trigger
-            ref={(el) => {
               tabRefs.current['resume'] = el;
             }}
             className={getClassName('resume')}
@@ -126,6 +116,16 @@ export default function MyPageView() {
             value='bookmarks-hiring'
           >
             북마크한 채용공고
+          </Tabs.Trigger>
+
+          <Tabs.Trigger
+            ref={(el) => {
+              tabRefs.current['enterprise'] = el;
+            }}
+            className={getClassName('enterprise')}
+            value='enterprise'
+          >
+            기업 프로필
           </Tabs.Trigger>
 
           {enterpriseProfileData && enterpriseProfileData.length > 0 && (

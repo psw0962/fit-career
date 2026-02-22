@@ -20,20 +20,39 @@ export default function NavAuth({
       {isLoading ? (
         <Spinner width='16px' height='16px' />
       ) : userData !== undefined && userData ? (
-        <div className='flex gap-3 items-center'>
-          <Link href='/auth/my-page' passHref>
+        <div className='flex gap-2 items-center'>
+          <Link href='/auth/my-page'>
             <div
-              className='relative w-8 h-8 cursor-pointer'
+              className='flex items-center gap-1 cursor-pointer bg-[#4C71C0] text-white rounded py-1.5 px-2'
               onClick={() => setIsMobileMenuOpen(false)}
             >
+              <div className='relative w-4 h-4'>
+                <Image
+                  className='rounded-full'
+                  src={'/svg/person.svg'}
+                  alt='my-page'
+                  sizes='16px'
+                  fill
+                  priority
+                  style={{ objectFit: 'cover' }}
+                />
+              </div>
+              <p className='text-xs font-bold'>마이페이지</p>
+            </div>
+          </Link>
+
+          <div
+            className='flex gap-1 items-center cursor-pointer border rounded py-1.5 px-2'
+            onClick={() => {
+              logout();
+              setIsMobileMenuOpen(false);
+            }}
+          >
+            <div className='relative w-4 h-4'>
               <Image
                 className='rounded-full'
-                src={
-                  userData.user_metadata?.avatar_url
-                    ? userData.user_metadata?.avatar_url
-                    : '/svg/logo.svg'
-                }
-                alt='user-avatar'
+                src={'/svg/logout.svg'}
+                alt='logout'
                 sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
                 fill
                 priority
@@ -41,15 +60,7 @@ export default function NavAuth({
                 blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
               />
             </div>
-          </Link>
 
-          <div
-            className='flex gap-10 items-center cursor-pointer border rounded py-2 px-2'
-            onClick={() => {
-              logout();
-              setIsMobileMenuOpen(false);
-            }}
-          >
             <p className='text-xs font-bold'>로그아웃</p>
           </div>
         </div>

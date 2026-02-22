@@ -486,11 +486,15 @@ export default function ResumeEditView({ resumeId }: { resumeId: string }) {
       </div>
 
       <div className='flex flex-col mb-20'>
-        <p className='text-2xl font-bold mb-2'>간단 소개</p>
+        <p className='text-2xl font-bold mb-2'>자기소개</p>
 
         <div className='text-xs mb-7 p-2 bg-[#EAEAEC] rounded break-keep'>
-          <p>• 본인의 업무 경험을 기반으로 핵심 역량과 업무 스킬을 간단히 작성해 주세요.</p>
-          <p>• 3~5줄로 요약하여 작성하는 것을 추천해요.</p>
+          <p>• 본인의 업무 경험을 기반으로 핵심 역량과 업무 스킬을 작성해 주세요.</p>
+          <p>
+            • 단순한 경력 나열보다는 "어떤 대상에게, 어떤 방식으로, 어떤 결과를 만들었는지" 를
+            중심으로 작성하면 더욱 효과적이에요.
+          </p>
+          <p>• 자신만의 지도 철학이나 강점이 드러나도록 작성해 보세요.</p>
         </div>
 
         <EditorContent editor={editor} />
