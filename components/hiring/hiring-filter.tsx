@@ -187,13 +187,15 @@ export default function HiringFilter({
 
       {totalPages > 1 && (
         <div className='flex justify-center items-center gap-2 mt-4'>
-          <button
-            className='min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
-            onClick={() => handlePageChange(startPage - 1)}
-            disabled={startPage === 1}
-          >
-            이전
-          </button>
+          {totalPages > pageGroupSize && (
+            <button
+              className='min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
+              onClick={() => handlePageChange(startPage - 1)}
+              disabled={startPage === 1}
+            >
+              이전
+            </button>
+          )}
 
           {Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i).map((page) => (
             <button
@@ -208,13 +210,15 @@ export default function HiringFilter({
             </button>
           ))}
 
-          <button
-            className='min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
-            onClick={() => handlePageChange(endPage + 1)}
-            disabled={endPage === totalPages}
-          >
-            다음
-          </button>
+          {totalPages > pageGroupSize && (
+            <button
+              className='min-w-[32px] h-8 p-2 flex items-center justify-center rounded text-sm border hover:bg-gray-100 disabled:opacity-50'
+              onClick={() => handlePageChange(endPage + 1)}
+              disabled={endPage === totalPages}
+            >
+              다음
+            </button>
+          )}
         </div>
       )}
     </>

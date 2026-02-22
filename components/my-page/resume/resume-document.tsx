@@ -188,7 +188,7 @@ export default function ResumeDocument({ data }: { data: ResumeDataResponse }) {
         </View>
 
         <View style={pdfStyles.section}>
-          <Text style={pdfStyles.subTitleText}>간단 소개</Text>
+          <Text style={pdfStyles.subTitleText}>자기소개</Text>
 
           {renderHtmlToPdf(data.introduction)}
         </View>

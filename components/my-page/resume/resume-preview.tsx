@@ -47,9 +47,9 @@ export default function ResumePreview({ data }: { data: ResumeDataResponse }) {
         <p className='mb-1'>이메일 : {data.email}</p>
       </div>
 
-      {/* 간단 소개 */}
+      {/* 자기소개 */}
       <div className='mb-6'>
-        <h2 className='text-lg font-semibold mb-2'>간단 소개</h2>
+        <h2 className='text-lg font-semibold mb-2'>자기소개</h2>
         <div className='mb-2' dangerouslySetInnerHTML={{ __html: data.introduction }} />
       </div>
 

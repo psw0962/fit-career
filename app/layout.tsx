@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   description:
     '핏커리어(FIT Career)에서 피트니스 취업, 이직, 커리어 콘텐츠, 중고 거래, 대회 정보를 확인하세요.',
   keywords:
-    '핏커리어, fitcareer, 취업, 이직, 커리어, 중고 거래, 대회, 피트니스 정보, 피트니스 커리어, 피트니스 취업, 피트니스 이직, 피트니스 커리어 콘텐츠, 피트니스 중고 거래, 피트니스 대회 정보',
+    '핏커리어, fitcareer, 트레이너 채용, 퍼스널 트레이너 채용, 피트니스 채용, 피트니스 채용 플랫폼, 헬스기구 중고거래, 피트니스 정보, 피트니스 커리어, 피트니스 취업, 피트니스 이직, 피트니스 커리어 콘텐츠, 피트니스 중고 거래, 피트니스 대회 정보',
   metadataBase: new URL('https://fitcareer.co.kr'),
   openGraph: {
     title: '핏커리어(FIT Career) - 피트니스의 모든 정보',
