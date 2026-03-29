@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Address, useDaumPostcodePopup } from 'react-daum-postcode';
 import GlobalSpinner from '@/components/common/global-spinner';
@@ -16,6 +16,21 @@ import {
   usePostEnterpriseProfile,
 } from '@/api/auth';
 import dynamic from 'next/dynamic';
+import imageCompression from 'browser-image-compression';
+import {
+  DndContext,
+  DragEndEvent,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import { SortableContext, arrayMove, horizontalListSortingStrategy } from '@dnd-kit/sortable';
+
+const SortableImageDnd = dynamic(() => import('@/components/common/sortable-image-dnd'), {
+  loading: () => <GlobalSpinner />,
+  ssr: false,
+});
 
 const TextEditor = dynamic(() => import('@/components/common/text-editor'), {
   loading: () => <GlobalSpinner />,
@@ -47,6 +62,68 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
   const [description, setDescription] = useState<string>('');
   const [settingLogo, setSettingLogo] = useState<File[]>([]);
   const [currentLogo, setCurrentLogo] = useState<string>('');
+
+  interface UploadedImage {
+    id: string;
+    file: File | string;
+  }
+  const [galleryImages, setGalleryImages] = useState<UploadedImage[]>([]);
+
+  const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 2 } });
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: { delay: 150, tolerance: 5 },
+  });
+  const sensors = useSensors(mouseSensor, touchSensor);
+
+  const handleGalleryImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const fileArray = Array.from(files);
+      const compressed: UploadedImage[] = [];
+
+      for (const file of fileArray) {
+        try {
+          const compressedBlob = await imageCompression(file, {
+            maxSizeMB: 0.8,
+            maxWidthOrHeight: 1024,
+            useWebWorker: true,
+          });
+          const uniqueId = `${Date.now()}-${Math.round(Math.random() * 1e9)}-${file.name}`;
+          const compressedFile = new File([compressedBlob], file.name, { type: file.type });
+          compressed.push({ id: uniqueId, file: compressedFile });
+        } catch (error) {
+          console.error('Image compression error:', error);
+        }
+      }
+
+      setGalleryImages((prev) => {
+        const total = prev.length + compressed.length;
+        if (total > 5) {
+          toast({
+            title: '회사 전경 이미지는 최대 5개까지 업로드할 수 있습니다.',
+            variant: 'warning',
+          });
+          return prev;
+        }
+        return [...prev, ...compressed];
+      });
+    }
+    event.target.value = '';
+  };
+
+  const removeGalleryImage = (id: string) => {
+    setGalleryImages((prev) => prev.filter((img) => img.id !== id));
+  };
+
+  const handleGalleryDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+    setGalleryImages((prev) => {
+      const oldIndex = prev.findIndex((img) => img.id === active.id);
+      const newIndex = prev.findIndex((img) => img.id === over.id);
+      return arrayMove(prev, oldIndex, newIndex);
+    });
+  }, []);
 
   const daumPostCodeHandler = (data: Address) => {
     setAddress({
@@ -157,6 +234,7 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
         address_search_key: address.zoneAddress,
         description,
         settingLogo,
+        settingImages: galleryImages.map((img) => img.file),
       });
     } else {
       return patchMutate({
@@ -168,6 +246,10 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
         description,
         settingLogo,
         currentLogo,
+        settingImages: galleryImages.map((img) => img.file),
+        currentImages: galleryImages
+          .filter((img) => typeof img.file === 'string')
+          .map((img) => img.file as string),
       });
     }
   };
@@ -204,6 +286,14 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
       });
       setEstablishment(enterpriseProfile[0].establishment);
       setDescription(enterpriseProfile[0].description);
+
+      const existingImages: UploadedImage[] = (enterpriseProfile[0].images || []).map(
+        (url: string) => ({
+          id: url,
+          file: url,
+        }),
+      );
+      setGalleryImages(existingImages);
     }
   }, [enterpriseProfile]);
 
@@ -443,6 +533,62 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
           className='border p-2 rounded focus:outline-none'
           placeholder='내용을 입력하세요...'
         />
+      </div>
+
+      {/* gallery images */}
+      <div className='flex flex-col mt-20 mb-4'>
+        <label className='text-2xl font-bold mb-2'>회사 전경 이미지</label>
+
+        <div className='text-xs p-2 bg-[#EAEAEC] rounded break-keep mb-2'>
+          <p className='font-bold text-sm'>• 이미지는 최대 5개까지 업로드 가능해요</p>
+          <p className='text-sm'>
+            • <span className='font-bold'>가로 방향</span>의 사진이 회사의 전체적인 모습을 더 잘
+            보여줄 수 있습니다.
+          </p>
+          <p className='text-sm'>• 이미지 파일 확장자는 jpg, jpeg, png, webp만 지원해요.</p>
+          <p className='text-sm'>• 이미지를 드래그하면 순서를 변경할 수 있어요.</p>
+        </div>
+
+        <label className='relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded cursor-pointer'>
+          <div className='flex gap-2 items-center justify-center'>
+            <Image
+              src='/svg/upload.svg'
+              alt='upload'
+              width={32}
+              height={32}
+              className='invert brightness-0'
+            />
+            <p className='text-sm text-white'>이미지 업로드</p>
+          </div>
+          <input
+            type='file'
+            className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+            multiple
+            accept='image/jpeg, image/jpg, image/png, image/webp'
+            onChange={handleGalleryImageUpload}
+          />
+        </label>
+
+        {galleryImages.length > 0 && <div className='border border-gray-300 my-4'></div>}
+
+        <DndContext sensors={sensors} onDragEnd={handleGalleryDragEnd}>
+          <SortableContext
+            items={galleryImages.map((img) => img.id)}
+            strategy={horizontalListSortingStrategy}
+          >
+            <div className='flex flex-wrap gap-3'>
+              {galleryImages.map((img, index) => (
+                <SortableImageDnd
+                  key={img.id}
+                  id={img.id}
+                  index={index}
+                  image={img.file}
+                  onRemove={() => removeGalleryImage(img.id)}
+                />
+              ))}
+            </div>
+          </SortableContext>
+        </DndContext>
       </div>
 
       <div className='flex justify-center mt-10'>

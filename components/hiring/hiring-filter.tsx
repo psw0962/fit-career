@@ -160,7 +160,7 @@ export default function HiringFilter({
                           fill
                           priority={currentPage === 1 && hiringData.data.indexOf(x) < 2}
                           sizes='20px'
-                          style={{ objectFit: 'contain' }}
+                          // style={{ objectFit: 'contain' }}
                         />
                       </div>
 

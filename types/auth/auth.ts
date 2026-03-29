@@ -21,4 +21,6 @@ export interface EnterpriseProfile {
   description: string;
   settingLogo?: File[];
   currentLogo?: string;
+  settingImages?: (File | string)[];
+  currentImages?: string[];
 }
