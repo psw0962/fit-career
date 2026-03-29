@@ -91,6 +91,7 @@ export interface HiringDataResponse {
     address_search_key: string;
     description: string;
     logo: string[];
+    images: string[];
     establishment: string;
     industry: string;
     industry_etc: boolean;

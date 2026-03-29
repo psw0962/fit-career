@@ -49,8 +49,8 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
 
   return (
     <div className='flex flex-col'>
-      {hiringData.data[0].images.length > 0 ? (
-        <BasicCarousel slides={hiringData.data[0].images} />
+      {(hiringData.data[0].enterprise_profile?.images?.length ?? 0) > 0 ? (
+        <BasicCarousel slides={hiringData.data[0].enterprise_profile?.images} />
       ) : (
         <div className='text-xl h-60 p-10 border rounded flex items-center justify-center'>
           업로드된 회사 이미지가 없습니다.
@@ -68,7 +68,7 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
               }
               alt='enterprise logo'
               className='rounded'
-              style={{ objectFit: 'contain' }}
+              // style={{ objectFit: 'contain' }}
               fill
               priority
               sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
@@ -166,7 +166,7 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
                         fill
                         priority
                         sizes='20px'
-                        style={{ objectFit: 'contain' }}
+                        // style={{ objectFit: 'contain' }}
                       />
                     </div>
 

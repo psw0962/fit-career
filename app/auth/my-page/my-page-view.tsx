@@ -32,22 +32,41 @@ const BookmarksHiring = dynamic(() => import('@/components/my-page/bookmarks-hir
   ssr: false,
 });
 
+const PERSONAL_TABS = ['profile', 'resume', 'submitted', 'bookmarks-hiring'];
+const ENTERPRISE_TABS = ['enterprise', 'employment'];
+
 export default function MyPageView() {
   const tabRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
 
   const [activeTab, setActiveTab] = useSessionStorage('activeTab', 'profile');
+  const [activeMode, setActiveMode] = useSessionStorage<'personal' | 'enterprise'>(
+    'activeMode',
+    'personal',
+  );
 
   const { data: userData, isLoading: isUserDataLoading } = useGetUserData();
   const { data: enterpriseProfileData, isLoading: isEnterpriseProfileLoading } =
     useGetEnterpriseProfile(userData?.id ?? '');
 
-  const getClassName = (value: string) => {
-    return `px-2 py-1 text-sm ${
-      activeTab === value
-        ? 'border-2 rounded border-[#4C71C0] z-10'
-        : 'border-2 rounded border-transparent text-[#C3C4C5] z-0'
-    }`;
+  const hasEnterpriseProfile = enterpriseProfileData && enterpriseProfileData.length > 0;
+
+  const handleModeChange = (mode: 'personal' | 'enterprise') => {
+    setActiveMode(mode);
+    if (mode === 'personal') {
+      setActiveTab('profile');
+    } else {
+      setActiveTab('enterprise');
+    }
   };
+
+  // 현재 탭이 선택된 모드와 맞지 않으면 모드를 보정
+  useEffect(() => {
+    if (ENTERPRISE_TABS.includes(activeTab)) {
+      setActiveMode('enterprise');
+    } else if (PERSONAL_TABS.includes(activeTab)) {
+      setActiveMode('personal');
+    }
+  }, []);
 
   useEffect(() => {
     const activeTabRef = tabRefs.current[activeTab];
@@ -64,6 +83,14 @@ export default function MyPageView() {
     return <GlobalSpinner />;
   }
 
+  const getTabClassName = (value: string) => {
+    return `px-3 py-1.5 text-sm transition-colors ${
+      activeTab === value
+        ? 'border-2 rounded border-[#4C71C0] text-[#4C71C0] font-medium z-10'
+        : 'border-2 rounded border-transparent text-[#C3C4C5] z-0'
+    }`;
+  };
+
   return (
     <div>
       <div className='flex justify-between items-center'>
@@ -72,72 +99,99 @@ export default function MyPageView() {
         </p>
       </div>
 
-      <Tabs.Root
-        className='pt-4'
-        defaultValue={activeTab}
-        onValueChange={(value) => setActiveTab(value)}
-      >
+      {/* 모드 스위처 */}
+      <div className='flex gap-2 mt-5'>
+        <button
+          onClick={() => handleModeChange('personal')}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            activeMode === 'personal'
+              ? 'bg-[#4C71C0] text-white'
+              : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+          }`}
+        >
+          <span>👤</span>
+          개인
+        </button>
+        <button
+          onClick={() => handleModeChange('enterprise')}
+          className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            activeMode === 'enterprise'
+              ? 'bg-[#4C71C0] text-white'
+              : 'bg-gray-100 text-gray-400 hover:bg-gray-200'
+          }`}
+        >
+          <span>🏢</span>
+          기업
+        </button>
+      </div>
+
+      {/* 서브 탭 */}
+      <Tabs.Root className='pt-3' value={activeTab} onValueChange={(value) => setActiveTab(value)}>
         <Tabs.List className='relative flex whitespace-nowrap overflow-auto pb-2'>
-          <Tabs.Trigger
-            ref={(el) => {
-              tabRefs.current['profile'] = el;
-            }}
-            className={getClassName('profile')}
-            value='profile'
-          >
-            프로필
-          </Tabs.Trigger>
+          {activeMode === 'personal' && (
+            <>
+              <Tabs.Trigger
+                ref={(el) => {
+                  tabRefs.current['profile'] = el;
+                }}
+                className={getTabClassName('profile')}
+                value='profile'
+              >
+                프로필
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                ref={(el) => {
+                  tabRefs.current['resume'] = el;
+                }}
+                className={getTabClassName('resume')}
+                value='resume'
+              >
+                내 이력서
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                ref={(el) => {
+                  tabRefs.current['submitted'] = el;
+                }}
+                className={getTabClassName('submitted')}
+                value='submitted'
+              >
+                지원한 채용공고
+              </Tabs.Trigger>
+              <Tabs.Trigger
+                ref={(el) => {
+                  tabRefs.current['bookmarks-hiring'] = el;
+                }}
+                className={getTabClassName('bookmarks-hiring')}
+                value='bookmarks-hiring'
+              >
+                북마크한 채용공고
+              </Tabs.Trigger>
+            </>
+          )}
 
-          <Tabs.Trigger
-            ref={(el) => {
-              tabRefs.current['resume'] = el;
-            }}
-            className={getClassName('resume')}
-            value='resume'
-          >
-            내 이력서
-          </Tabs.Trigger>
-
-          <Tabs.Trigger
-            ref={(el) => {
-              tabRefs.current['submitted'] = el;
-            }}
-            className={getClassName('submitted')}
-            value='submitted'
-          >
-            지원한 채용공고
-          </Tabs.Trigger>
-
-          <Tabs.Trigger
-            ref={(el) => {
-              tabRefs.current['bookmarks-hiring'] = el;
-            }}
-            className={getClassName('bookmarks-hiring')}
-            value='bookmarks-hiring'
-          >
-            북마크한 채용공고
-          </Tabs.Trigger>
-
-          <Tabs.Trigger
-            ref={(el) => {
-              tabRefs.current['enterprise'] = el;
-            }}
-            className={getClassName('enterprise')}
-            value='enterprise'
-          >
-            기업 프로필
-          </Tabs.Trigger>
-
-          {enterpriseProfileData && enterpriseProfileData.length > 0 && (
-            <Tabs.Trigger
-              ref={(el) => {
-                tabRefs.current['employment'] = el;
-              }}
-              className={getClassName('employment')}
-              value='employment'
-            >
-              등록한 채용공고
-            </Tabs.Trigger>
+          {activeMode === 'enterprise' && (
+            <>
+              <Tabs.Trigger
+                ref={(el) => {
+                  tabRefs.current['enterprise'] = el;
+                }}
+                className={getTabClassName('enterprise')}
+                value='enterprise'
+              >
+                기업 프로필
+              </Tabs.Trigger>
+              {hasEnterpriseProfile && (
+                <Tabs.Trigger
+                  ref={(el) => {
+                    tabRefs.current['employment'] = el;
+                  }}
+                  className={getTabClassName('employment')}
+                  value='employment'
+                >
+                  등록한 채용공고
+                </Tabs.Trigger>
+              )}
+            </>
           )}
         </Tabs.List>
 
@@ -147,24 +201,19 @@ export default function MyPageView() {
           <Tabs.Content value='profile'>
             <Profile />
           </Tabs.Content>
-
-          <Tabs.Content value='enterprise'>
-            <EnterpriseProfile />
-          </Tabs.Content>
-
           <Tabs.Content value='resume'>
             <ResumeList />
           </Tabs.Content>
-
           <Tabs.Content value='submitted'>
             <ResumeSubmitted />
           </Tabs.Content>
-
           <Tabs.Content value='bookmarks-hiring'>
             <BookmarksHiring />
           </Tabs.Content>
-
-          {enterpriseProfileData && enterpriseProfileData.length > 0 && (
+          <Tabs.Content value='enterprise'>
+            <EnterpriseProfile />
+          </Tabs.Content>
+          {hasEnterpriseProfile && (
             <Tabs.Content value='employment'>
               <HiringPosts />
             </Tabs.Content>

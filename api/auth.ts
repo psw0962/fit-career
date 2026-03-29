@@ -212,6 +212,25 @@ const postEnterpriseProfile = async (data: EnterpriseProfile) => {
     imageUrls.push(url.data.publicUrl);
   }
 
+  const galleryUrls: string[] = [];
+
+  for (const image of data?.settingImages || []) {
+    if (typeof image === 'string') {
+      galleryUrls.push(image);
+    } else {
+      const { data: uploadData, error } = await supabase.storage
+        .from('profile')
+        .upload(`profile/enterprise_images/${Date.now()}-${image.name}`, image);
+
+      if (error) {
+        throw new Error(`${error.message}`);
+      }
+
+      const url = supabase.storage.from('profile').getPublicUrl(uploadData.path);
+      galleryUrls.push(url.data.publicUrl);
+    }
+  }
+
   const { error } = await supabase.from('enterprise_profile').insert([
     {
       name: data.name,
@@ -222,6 +241,7 @@ const postEnterpriseProfile = async (data: EnterpriseProfile) => {
       address_search_key: data.address_search_key,
       description: data.description,
       logo: imageUrls,
+      images: galleryUrls,
     },
   ]);
 
@@ -279,7 +299,7 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
 
   const { data: enterpriseData, error: enterpriseError } = await supabase
     .from('enterprise_profile')
-    .select('logo')
+    .select('logo, images')
     .eq('user_id', userData?.user?.id)
     .single();
 
@@ -320,6 +340,38 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
     }
   }
 
+  // gallery images
+  const currentGalleryImages: string[] = enterpriseData?.images || [];
+  const finalGalleryUrls: string[] = [];
+
+  for (const image of data?.settingImages || []) {
+    if (typeof image === 'string') {
+      finalGalleryUrls.push(image);
+    } else {
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('profile')
+        .upload(`profile/enterprise_images/${Date.now()}-${image.name}`, image);
+
+      if (uploadError) {
+        throw new Error(`${uploadError.message}`);
+      }
+
+      const url = supabase.storage.from('profile').getPublicUrl(uploadData.path);
+      finalGalleryUrls.push(url.data.publicUrl);
+    }
+  }
+
+  const imagesToDelete = currentGalleryImages.filter((img) => !finalGalleryUrls.includes(img));
+  for (const imgUrl of imagesToDelete) {
+    const path = imgUrl.split('/').slice(-1)[0];
+    const { error: deleteError } = await supabase.storage
+      .from('profile')
+      .remove([`profile/enterprise_images/${path}`]);
+    if (deleteError) {
+      console.error(`Failed to delete image: ${deleteError.message}`);
+    }
+  }
+
   const { error } = await supabase
     .from('enterprise_profile')
     .update({
@@ -331,6 +383,7 @@ const patchEnterpriseProfile = async (data: EnterpriseProfile) => {
       address_search_key: data.address_search_key,
       description: data.description,
       logo: logosChanged ? newLogos : currentLogos,
+      images: finalGalleryUrls,
     })
     .eq('user_id', userData?.user?.id);
 
