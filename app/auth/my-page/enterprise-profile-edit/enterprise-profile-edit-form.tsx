@@ -84,8 +84,8 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
       for (const file of fileArray) {
         try {
           const compressedBlob = await imageCompression(file, {
-            maxSizeMB: 0.8,
-            maxWidthOrHeight: 1024,
+            maxSizeMB: 0.3,
+            maxWidthOrHeight: 1920,
             useWebWorker: true,
           });
           const uniqueId = `${Date.now()}-${Math.round(Math.random() * 1e9)}-${file.name}`;

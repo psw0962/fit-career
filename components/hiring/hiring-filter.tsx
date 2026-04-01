@@ -12,7 +12,7 @@ import { useCheckIsBookmarked, useToggleBookmark } from '@/api/hiring';
 
 const HiringCardSkeleton = () => (
   <div className='relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded animate-pulse'>
-    <div className='relative w-full aspect-[4/3] mx-auto mb-4 bg-gray-200 rounded'></div>
+    <div className='relative w-full aspect-square mx-auto mb-4 bg-gray-200 rounded overflow-hidden'></div>
     <div className='w-full flex flex-col gap-2'>
       <div className='h-5 bg-gray-200 rounded w-3/4'></div>
       <div className='flex items-center gap-1 mt-2'>
@@ -106,7 +106,7 @@ export default function HiringFilter({
                 }}
               >
                 <div className='relative h-full flex flex-col gap-2 p-2 sm:p-3 border rounded cursor-pointer'>
-                  <div className='relative w-full aspect-[4/3] mx-auto mb-4 border rounded'>
+                  <div className='relative w-full aspect-square mx-auto mb-4 border rounded overflow-hidden'>
                     {!imagesLoaded[x.id] && (
                       <div className='absolute inset-0 bg-gray-100 rounded' />
                     )}
@@ -120,7 +120,7 @@ export default function HiringFilter({
                       priority={currentPage === 1 && hiringData.data.indexOf(x) < 2}
                       onLoad={() => handleImageLoad(x.id)}
                       quality={70}
-                      sizes='(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
+                      sizes='(max-width: 640px) 50vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw'
                       placeholder='blur'
                       blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkqAcAAIUAgUW0RjgAAAAASUVORK5CYII='
                     />

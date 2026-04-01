@@ -10,7 +10,7 @@ import { calculateYearsInBusiness } from '@/functions/calculateYearsInBusiness';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import GlobalSpinner from '@/components/common/global-spinner';
-import BasicCarousel from '@/components/common/carousel/basic-carousel';
+import ResponsiveImageCarousel from '@/components/common/carousel/responsive-image-carousel';
 import { HiringDataResponse } from '@/types/hiring/hiring';
 
 export default function CompanyView({ hiringId }: { hiringId: string }) {
@@ -50,7 +50,7 @@ export default function CompanyView({ hiringId }: { hiringId: string }) {
   return (
     <div className='flex flex-col'>
       {(hiringData.data[0].enterprise_profile?.images?.length ?? 0) > 0 ? (
-        <BasicCarousel slides={hiringData.data[0].enterprise_profile?.images} />
+        <ResponsiveImageCarousel slides={hiringData.data[0].enterprise_profile?.images ?? []} />
       ) : (
         <div className='text-xl h-60 p-10 border rounded flex items-center justify-center'>
           업로드된 회사 이미지가 없습니다.
