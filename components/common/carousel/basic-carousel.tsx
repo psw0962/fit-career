@@ -31,22 +31,34 @@ export default function BasicCarousel(props: ThumbnailCarouselProps) {
   }, [emblaMainApi, onSelect]);
 
   return (
-    <div className='w-full max-w-[720px] mx-auto'>
+    <div className='w-full'>
       <div className='relative rounded overflow-hidden'>
         <div className='overflow-hidden' ref={emblaMainRef}>
           <div className='flex'>
             {slides &&
               slides.map((imageUrl, index) => (
                 <div key={index} className='flex-shrink-0 w-full'>
-                  <div className='relative w-full aspect-[16/9] overflow-hidden border rounded'>
+                  <div className='relative w-full h-[240px] sm:h-[380px] overflow-hidden border rounded bg-black'>
+                    <Image
+                      src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
+                      alt=''
+                      aria-hidden
+                      fill
+                      sizes='100vw'
+                      style={{
+                        objectFit: 'cover',
+                        filter: 'blur(24px)',
+                        transform: 'scale(1.1)',
+                        opacity: 0.5,
+                      }}
+                    />
                     <Image
                       src={slides.length !== 0 ? imageUrl : '/svg/logo.svg'}
                       alt={`${index}번째 이미지`}
-                      style={{ objectFit: 'cover' }}
-                      className='rounded'
+                      style={{ objectFit: 'contain' }}
                       fill
                       priority={selectedIndex === index}
-                      sizes='(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'
+                      sizes='100vw'
                       placeholder='blur'
                       blurDataURL='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAFklEQVR42mN8//HLfwYiAOOoQvoqBABbWyZJf74GZgAAAABJRU5ErkJggg=='
                     />

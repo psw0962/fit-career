@@ -1,6 +1,6 @@
 'use client';
 
-import BasicCarousel from '@/components/common/carousel/basic-carousel';
+import ResponsiveImageCarousel from '@/components/common/carousel/responsive-image-carousel';
 import { useCheckIsBookmarked, useGetHiring, useToggleBookmark } from '@/api/hiring';
 import Image from 'next/image';
 import { Map } from 'react-kakao-maps-sdk';
@@ -51,7 +51,7 @@ export default function HiringDetailView({ hiringId }: { hiringId: string }): Re
   return (
     <div>
       {hiringData.data[0].images.length > 0 ? (
-        <BasicCarousel slides={hiringData.data[0].images} />
+        <ResponsiveImageCarousel slides={hiringData.data[0].images} />
       ) : (
         <div className='text-xl h-60 p-10 border rounded flex items-center justify-center'>
           업로드된 회사 이미지가 없습니다.
