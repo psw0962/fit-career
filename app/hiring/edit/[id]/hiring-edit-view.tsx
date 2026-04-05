@@ -64,6 +64,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
   const [content, setContent] = useState('');
   const [deadLine, setDeadLine] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const [images, setImages] = useState<UploadedImage[]>([]);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   const editor = useEditor({
     extensions: [StarterKit],
@@ -115,7 +116,19 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
+    if (!files) return;
+
+    if (images.length + files.length > 5) {
+      toast({
+        title: '회사 이미지는 최대 5개까지 업로드할 수 있습니다.',
+        variant: 'warning',
+      });
+      event.target.value = '';
+      return;
+    }
+
+    setIsCompressing(true);
+    try {
       const fileArray = Array.from(files);
       const compressedImages: UploadedImage[] = [];
 
@@ -139,17 +152,9 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
         }
       }
 
-      setImages((prev) => {
-        const totalImages = prev.length + compressedImages.length;
-        if (totalImages > 5) {
-          toast({
-            title: '회사 이미지는 최대 5개까지 업로드할 수 있습니다.',
-            variant: 'warning',
-          });
-          return prev;
-        }
-        return [...prev, ...compressedImages];
-      });
+      setImages((prev) => [...prev, ...compressedImages]);
+    } finally {
+      setIsCompressing(false);
     }
 
     event.target.value = '';
@@ -347,6 +352,8 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
 
   return (
     <div className='flex flex-col'>
+      {isCompressing && <GlobalSpinner fixed label='이미지 업로드중...' />}
+
       <p className='text-2xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]'>
         채용공고 수정
       </p>
@@ -613,7 +620,7 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
           <p className='text-sm'>• 이미지를 드래그하면 업로드될 이미지 순서를 변경할 수 있어요.</p>
         </div>
 
-        <div className='relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer'>
+        <label className='relative py-1 px-4 bg-[#4C71C0] text-white font-bold w-fit rounded mt-2 cursor-pointer'>
           <div className='flex gap-2 items-center justify-center'>
             <Image
               src='/svg/upload.svg'
@@ -631,8 +638,9 @@ export default function HiringEditView({ hiringId }: { hiringId: string }) {
             multiple
             accept='image/jpeg, image/jpg, image/png, image/webp'
             onChange={handleImageUpload}
+            disabled={isCompressing}
           />
-        </div>
+        </label>
       </div>
 
       {images.length > 0 && <div className='border border-gray-300 my-4'></div>}

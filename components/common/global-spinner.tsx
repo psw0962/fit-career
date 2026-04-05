@@ -6,12 +6,16 @@ interface DotSpinnerProps {
   width?: string;
   height?: string;
   dotColor?: string;
+  label?: string;
+  fixed?: boolean;
 }
 
 export default function GlobalSpinner({
   width = '1.5rem',
   height = '1.5rem',
   dotColor = '#114784',
+  label,
+  fixed = false,
 }: DotSpinnerProps) {
   React.useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -23,7 +27,7 @@ export default function GlobalSpinner({
 
   return (
     <div
-      className='absolute inset-0 flex items-center justify-center z-50 bg-white/80 backdrop-blur-sm'
+      className={`${fixed ? 'fixed' : 'absolute'} inset-0 flex flex-col items-center justify-center z-50 bg-white/80 backdrop-blur-sm`}
       onClick={(e) => e.preventDefault()}
       onTouchStart={(e) => e.preventDefault()}
       style={{ cursor: 'not-allowed' }}
@@ -56,6 +60,11 @@ export default function GlobalSpinner({
           }}
         ></div>
       </div>
+      {label && (
+        <p className='mt-4 text-sm font-bold' style={{ color: dotColor }}>
+          {label}
+        </p>
+      )}
     </div>
   );
 }

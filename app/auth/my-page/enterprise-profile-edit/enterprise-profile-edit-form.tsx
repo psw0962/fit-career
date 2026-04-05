@@ -68,6 +68,7 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
     file: File | string;
   }
   const [galleryImages, setGalleryImages] = useState<UploadedImage[]>([]);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   const mouseSensor = useSensor(MouseSensor, { activationConstraint: { distance: 2 } });
   const touchSensor = useSensor(TouchSensor, {
@@ -77,7 +78,19 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
 
   const handleGalleryImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
+    if (!files) return;
+
+    if (galleryImages.length + files.length > 5) {
+      toast({
+        title: '회사 전경 이미지는 최대 5개까지 업로드할 수 있습니다.',
+        variant: 'warning',
+      });
+      event.target.value = '';
+      return;
+    }
+
+    setIsCompressing(true);
+    try {
       const fileArray = Array.from(files);
       const compressed: UploadedImage[] = [];
 
@@ -96,18 +109,11 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
         }
       }
 
-      setGalleryImages((prev) => {
-        const total = prev.length + compressed.length;
-        if (total > 5) {
-          toast({
-            title: '회사 전경 이미지는 최대 5개까지 업로드할 수 있습니다.',
-            variant: 'warning',
-          });
-          return prev;
-        }
-        return [...prev, ...compressed];
-      });
+      setGalleryImages((prev) => [...prev, ...compressed]);
+    } finally {
+      setIsCompressing(false);
     }
+
     event.target.value = '';
   };
 
@@ -303,6 +309,8 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
 
   return (
     <div>
+      {isCompressing && <GlobalSpinner fixed label='이미지 업로드중...' />}
+
       {/* logo */}
       <div className='flex flex-col mb-20'>
         <label className='text-2xl font-bold mb-2'>회사 로고</label>
@@ -566,6 +574,7 @@ export default function EnterpriseProfileEditForm(): React.ReactElement {
             multiple
             accept='image/jpeg, image/jpg, image/png, image/webp'
             onChange={handleGalleryImageUpload}
+            disabled={isCompressing}
           />
         </label>
 

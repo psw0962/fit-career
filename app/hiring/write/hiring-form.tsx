@@ -91,6 +91,7 @@ export default function HiringForm() {
   `);
   const [deadLine, setDeadLine] = useState<string>(format(new Date(), 'yyyy-MM-dd'));
   const [images, setImages] = useState<UploadedImage[]>([]);
+  const [isCompressing, setIsCompressing] = useState(false);
 
   const { mutate: postHring, status: postHringStatus } = usePostHiring();
   const { data: userData, isLoading: userDataLoading } = useGetUserData();
@@ -127,7 +128,19 @@ export default function HiringForm() {
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
-    if (files) {
+    if (!files) return;
+
+    if (images.length + files.length > 5) {
+      toast({
+        title: '회사 이미지는 최대 5개까지 업로드할 수 있습니다.',
+        variant: 'warning',
+      });
+      event.target.value = '';
+      return;
+    }
+
+    setIsCompressing(true);
+    try {
       const fileArray = Array.from(files);
       const compressedImages: UploadedImage[] = [];
 
@@ -151,17 +164,9 @@ export default function HiringForm() {
         }
       }
 
-      setImages((prev) => {
-        const totalImages = prev.length + compressedImages.length;
-        if (totalImages > 5) {
-          toast({
-            title: '회사 이미지는 최대 5개까지 업로드할 수 있습니다.',
-            variant: 'warning',
-          });
-          return prev;
-        }
-        return [...prev, ...compressedImages];
-      });
+      setImages((prev) => [...prev, ...compressedImages]);
+    } finally {
+      setIsCompressing(false);
     }
 
     event.target.value = '';
@@ -313,6 +318,8 @@ export default function HiringForm() {
 
   return (
     <div className='flex flex-col'>
+      {isCompressing && <GlobalSpinner fixed label='이미지 업로드중...' />}
+
       <p className='text-2xl font-bold mb-4 underline underline-offset-4 decoration-[#4C71C0]'>
         채용공고 등록
       </p>
@@ -608,6 +615,7 @@ export default function HiringForm() {
             multiple
             accept='image/jpeg, image/jpg, image/png, image/webp'
             onChange={handleImageUpload}
+            disabled={isCompressing}
           />
         </label>
       </div>
